@@ -9,7 +9,7 @@ build/
 *.iml
 .idea/
 .vscode/
-pubspec.lock  # apps: keep? For an app it's often committed; ignore until stack settled.
+# pubspec.lock НЕ игнорируем: это приложение — лок коммитим для воспроизводимых сборок.
 
 # Android
 android/.gradle/
