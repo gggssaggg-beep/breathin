@@ -1,17 +1,85 @@
-# breathin
+# Дыши — приложение дыхательных практик
 
-A new Flutter project.
+Кроссплатформенное (Android/iOS) приложение дыхательных практик: техники со
+счётом фаз и по таймеру, обратная связь голосом/звуком/метрономом/вибрацией,
+работа **с выключенным экраном и в фоне**. Offline-first; сеть нужна только для
+будущих соцфункций.
 
-## Getting Started
+- ТЗ: [`ТЗ_приложение_дыхательных_практик.md`](ТЗ_приложение_дыхательных_практик.md)
+- План и архитектура: [`ПЛАН_и_архитектура.md`](ПЛАН_и_архитектура.md)
 
-This project is a starting point for a Flutter application.
+## Ключевая идея архитектуры
 
-A few resources to get you started if this is your first Flutter project:
+Точность фаз ±50 мс при выключенном экране недостижима на `Timer`/`Future.delayed`
+(Android Doze / засыпание iOS). Поэтому сессия **детерминированно компилируется в
+единый аудио-таймлайн** (`SessionPlanCompiler` → `TimelineRenderer`), который
+играет аудио-железо; его позиция — единственный источник времени, из неё
+`PhaseEngine` выводит состояние экрана, вибрацию и звук. Подробно — ПЛАН §3.3.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Стек
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Flutter 3.44.x / Dart 3.12.x. Основные слои — в `lib/`:
+
+| Путь | Что |
+|---|---|
+| `lib/domain/` | Чистый Dart: модели, каталог техник, `SessionPlanCompiler`, `PhaseEngine` |
+| `lib/services/audio/` | `WavIo`, `TimelineRenderer` (микс плана в PCM) |
+| `lib/services/haptics/` | Вибро-паттерны фаз |
+| `lib/services/update/` | OTA-обновления через GitHub Releases (клиентское ядро) |
+| `lib/features/` | UI: home, session, settings |
+| `tools/` | Python-скрипты генерации ассетов |
+
+## Разработка
+
+### Требования
+- Flutter SDK (stable). В этой среде установлен в `C:\src\flutter` — добавьте в PATH:
+  ```powershell
+  $env:Path = "C:\src\flutter\bin;$env:Path"
+  ```
+- Python 3 + `numpy` — только для перегенерации аудио-ассетов.
+
+### Тесты и анализ
+```powershell
+flutter analyze
+flutter test
+```
+
+> ⚠️ **Ловушка окружения (песочница):** здесь localhost проксируется
+> (`HTTP(S)_PROXY=127.0.0.1:...`, `NO_PROXY` пуст), из-за чего `flutter test`
+> падает с `Invalid WebSocket upgrade request` (тест-раннер поднимает локальный
+> VM-service). Перед прогоном:
+> ```powershell
+> $env:NO_PROXY = "localhost,127.0.0.1,::1"
+> ```
+
+### Аудио-ассеты
+Набор синтезируется детерминированно (100 % код, без внешних источников):
+```powershell
+python tools/generate_audio.py --out assets/audio
+```
+Результат (`assets/audio/**`, WAV 44.1 кГц/16 бит/моно) коммитится в репозиторий.
+WAV намеренно — микс в таймлайн без кодек-паддинга (важно для ±50 мс). Подробно —
+ПЛАН §10.
+
+## OTA-обновления (GitHub Releases)
+
+Приложение при открытии тихо проверяет `releases/latest` выбранного репозитория,
+сравнивает версию и (при включённой галочке «Автообновление») скачивает APK.
+Реализовано клиентское ядро (`lib/services/update/`, покрыто тестами).
+
+**Ограничение платформы:** установка APK в обход стора — **только Android**
+(Apple это запрещает); на iOS механизм деградирует до проверки версии/ссылки.
+
+Чтобы включить в бою, осталось (нужны репозиторий и устройство):
+1. Создать GitHub-репозиторий с релизами; прописать `owner/repo`.
+2. Добавить слой скачивания+установки APK (пакет `ota_update`) и Android-разрешение
+   `REQUEST_INSTALL_PACKAGES`.
+3. Вызвать `UpdateService.check` при старте и подключить к `SettingsScreen`.
+
+## Статус
+
+MVP в работе. Готово: каркас, аудио-ассеты, компилятор плана, рендерер таймлайна,
+`PhaseEngine`, вибро-паттерны, оболочка UI, ядро OTA. Осталось: аудио-обвязка
+(`audio_service`/`just_audio`) и инструментальная проверка ±50 мс на устройствах,
+полный каталог из 12 техник, локализация RU/EN, статистика, онбординг. Дорожная
+карта партиями — ПЛАН §9.
