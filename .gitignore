@@ -1,0 +1,44 @@
+# === Flutter / Dart ===
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+.idea/
+.vscode/
+pubspec.lock  # apps: keep? For an app it's often committed; ignore until stack settled.
+
+# Android
+android/.gradle/
+android/local.properties
+android/key.properties
+*.keystore
+*.jks
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+**/DerivedData/
+
+# === Python (dev tools: tools/*.py) ===
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# === Generated / runtime audio ===
+# Synthesized asset set IS committed (assets/audio/**). But large runtime
+# session renders and any scratch WAV are not:
+tools/_out/
+*.session.wav
+*.tmp.wav
+
+# === Misc ===
+.DS_Store
+Thumbs.db
