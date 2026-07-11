@@ -15,8 +15,8 @@ const String authRedirectUrl = 'dyshi://auth';
 
 bool get authConfigured => supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 
-/// Google-провайдер: станет true, когда владелец пришлёт Client ID/secret
-/// из Google Cloud и провайдер будет включён в Supabase (docs/SUPABASE_SETUP.md
-/// §2). До этого кнопка Google в UI скрыта — работает гостевой профиль
-/// (анонимный вход, включён в проекте 2026-07-12).
-const bool googleAuthEnabled = false;
+/// Google-провайдер включён в Supabase 2026-07-12 (Client ID/secret владельца
+/// вписаны в конфиг проекта через Management API; docs/SUPABASE_SETUP.md §2
+/// закрыт). Кнопки в UI: «Войти через Google» и «Привязать Google» для
+/// гостевого профиля (identity linking, uid сохраняется).
+const bool googleAuthEnabled = true;
