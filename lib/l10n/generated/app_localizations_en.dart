@@ -207,4 +207,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTooltip => 'Settings';
+
+  @override
+  String get setupTitle => 'Set up';
+
+  @override
+  String get endModeCycles => 'Cycles';
+
+  @override
+  String get endModeTimer => 'Timer';
+
+  @override
+  String get cyclesLabel => 'Number of cycles';
+
+  @override
+  String get timerLabel => 'Timer, min';
+
+  @override
+  String get phasesSection => 'Phase durations';
+
+  @override
+  String get keepRatioLabel => 'Keep ratio';
+
+  @override
+  String get simplifiedLabel => 'Simplified mode';
+
+  @override
+  String get tempoLabel => 'Pace';
+
+  @override
+  String get resetToClassic => 'Reset to classic';
+
+  @override
+  String get feedbackSection => 'Feedback';
+
+  @override
+  String get channelVoice => 'Voice';
+
+  @override
+  String get channelSound => 'Sound';
+
+  @override
+  String get channelMetronome => 'Metronome';
+
+  @override
+  String get channelVibration => 'Vibration';
+
+  @override
+  String get channelVisual => 'Visual mode';
+
+  @override
+  String get prepLabel => 'Preparation, s';
+
+  @override
+  String get phaseInhale => 'Inhale';
+
+  @override
+  String get phaseHoldIn => 'Hold';
+
+  @override
+  String get phaseExhale => 'Exhale';
+
+  @override
+  String get phaseHoldOut => 'Hold';
+
+  @override
+  String secondsShort(String n) {
+    return '$n s';
+  }
 }

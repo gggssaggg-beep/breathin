@@ -85,5 +85,33 @@
       "n": { "type": "int" }
     }
   },
-  "settingsTooltip": "Settings"
+  "settingsTooltip": "Settings",
+
+  "setupTitle": "Set up",
+  "endModeCycles": "Cycles",
+  "endModeTimer": "Timer",
+  "cyclesLabel": "Number of cycles",
+  "timerLabel": "Timer, min",
+  "phasesSection": "Phase durations",
+  "keepRatioLabel": "Keep ratio",
+  "simplifiedLabel": "Simplified mode",
+  "tempoLabel": "Pace",
+  "resetToClassic": "Reset to classic",
+  "feedbackSection": "Feedback",
+  "channelVoice": "Voice",
+  "channelSound": "Sound",
+  "channelMetronome": "Metronome",
+  "channelVibration": "Vibration",
+  "channelVisual": "Visual mode",
+  "prepLabel": "Preparation, s",
+  "phaseInhale": "Inhale",
+  "phaseHoldIn": "Hold",
+  "phaseExhale": "Exhale",
+  "phaseHoldOut": "Hold",
+  "secondsShort": "{n} s",
+  "@secondsShort": {
+    "placeholders": {
+      "n": { "type": "String" }
+    }
+  }
 }
