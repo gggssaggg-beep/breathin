@@ -4,14 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
-  group('AuthService без конфигурации (гостевой режим)', () {
-    test('константы пока пустые — auth выключен', () {
-      expect(authConfigured, isFalse);
+  group('AuthService без init (тесты, ранний старт)', () {
+    test('конфигурация проекта заполнена', () {
+      expect(authConfigured, isTrue);
+      expect(supabaseUrl, startsWith('https://'));
+      expect(supabaseAnonKey, startsWith('sb_publishable_'));
     });
 
-    test('все методы — безопасные no-op', () async {
+    test('до init все методы — безопасные no-op (isReady == false)', () async {
       const auth = AuthService();
-      expect(auth.isConfigured, isFalse);
+      expect(auth.isReady, isFalse);
       expect(auth.currentUser, isNull);
       await expectLater(auth.onAuthStateChange, emitsDone);
       // Не бросают и не ходят в сеть (Supabase.initialize не вызывался —

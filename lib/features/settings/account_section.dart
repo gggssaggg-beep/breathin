@@ -34,7 +34,7 @@ class _AccountSectionState extends State<AccountSection> {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
-    if (!widget.auth.isConfigured) {
+    if (!widget.auth.isReady) {
       return Card(
         child: ListTile(
           leading: const BreathinIcon(BreathinIcons.user),

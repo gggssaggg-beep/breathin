@@ -1,19 +1,18 @@
-# Supabase для «Дыши» — что нужно сделать владельцу (один раз, ~15 минут)
+# Supabase для «Дыши» — что нужно сделать владельцу (~10 минут)
 
 Включает вход через Google (ТЗ §4). Код в приложении уже готов
-(`lib/services/auth/`), от вас — только клики в двух консолях.
-Процедура та же, что делалась для Astra (`C:\purba\astro_app\docs\SUPABASE_SETUP.md`),
-отличаются только имена и deep link.
+(`lib/services/auth/`). Процедура та же, что делалась для Astra
+(`C:\purba\astro_app\docs\SUPABASE_SETUP.md`), но Supabase-часть уже
+СДЕЛАНА Claude через Management API (2026-07-12, по Personal Access Token
+владельца) — остался только Google (раздел 2).
 
-## 1. Проект Supabase (~5 мин)
+## 1. Проект Supabase — ✅ СДЕЛАНО (Management API)
 
-1. **supabase.com** → Sign in (GitHub-аккаунт gggssaggg-beep).
-2. **New project**: имя `dyshi`, пароль БД сгенерировать и СОХРАНИТЬ,
-   регион `Central EU (Frankfurt)`, тариф Free.
-3. **Project Settings → API** → скопировать и прислать в чат два значения
-   (они НЕ секретные, пойдут в код):
-   - `Project URL` (вида `https://xxxx.supabase.co`)
-   - `anon public` / `publishable` ключ.
+- Проект `dyshi`, ref `qfxghribrmeakxsexyjq`, регион Frankfurt, тариф Free.
+- `Project URL` и publishable-ключ вписаны в `lib/services/auth/auth_config.dart`.
+- Redirect URL `dyshi://auth` прописан (раздел 3 тоже закрыт).
+- Пароль БД сгенерирован и передан владельцу в чате — сохранить; при утере
+  сбрасывается через Dashboard → Project Settings → Database.
 
 ## 2. Google-вход (~10 мин)
 
@@ -27,26 +26,28 @@
    проверил…» у новых пользователей — нормально (Дополнительно → Перейти).
 3. **Credentials → Create Credentials → OAuth client ID**: тип **Web
    application**, имя `Dyshi Supabase`; в **Authorized redirect URIs**
-   добавить Callback URL из Supabase (**Authentication → Sign In / Up →
-   Google**, вида `https://xxxx.supabase.co/auth/v1/callback`) → Create →
-   получить Client ID + Client secret.
-4. В Supabase **Authentication → Sign In / Up → Google**: включить тумблер,
-   вставить Client ID и Client secret, Save.
+   добавить ровно эту строку:
 
-## 3. URL приложения в Supabase (обязательно)
+   `https://qfxghribrmeakxsexyjq.supabase.co/auth/v1/callback`
 
-**Supabase → Authentication → URL Configuration → Redirect URLs** →
-Add URL: `dyshi://auth` (deep link возврата в приложение; уже прописан в
-AndroidManifest и Info.plist). Site URL можно не менять (веб-версии нет).
+   → Create → показать **Client ID** и **Client secret**.
+4. **Прислать Client ID и Client secret в чат** — Claude включит
+   Google-провайдер в Supabase через API. (Либо самостоятельно: Supabase →
+   Authentication → Sign In / Up → Google → тумблер + вставить оба значения.)
 
-## 4. Прислать в чат
+## 3. URL приложения в Supabase — ✅ СДЕЛАНО
 
-- Project URL + anon key (шаг 1.3);
-- «Google включён» (шаг 2.4).
+`dyshi://auth` уже в Redirect URLs (и в Site URL); в приложении deep link
+прописан в AndroidManifest и Info.plist.
 
-После этого Claude вписывает URL/ключ в `lib/services/auth/auth_config.dart`
-— и кнопка «Войти через Google» в настройках оживает. Без этих значений
-приложение работает как раньше (гостевой режим, ни одного сетевого вызова).
+## Примечание про имя «Дыши»
+
+Пользователь видит имя приложения в двух местах: на лаунчере телефона
+(«Дыши» — уже прописано в Android label и CFBundleDisplayName) и на экране
+Google-входа (берётся из **App name** consent screen — шаг 2.2, задать
+`Дыши`). Мелкая строка «to continue to qfxghribrmeakxsexyjq.supabase.co»
+на Google-экране остаётся — убирается только платным custom domain
+Supabase, для нашего масштаба не требуется.
 
 ## Как устроен вход (справка)
 
