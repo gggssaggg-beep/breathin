@@ -1,0 +1,80 @@
+import '../models/session_record.dart';
+
+/// Агрегации локальной статистики практик (ТЗ §5, ПЛАН П11): календарь,
+/// минуты, streak. Чистый Dart; все даты — локальные (пояс устройства,
+/// без сети — ТЗ §7). День определяется календарной датой локального времени.
+abstract final class PracticeStats {
+  /// Календарная дата (без времени) для локального момента [t].
+  static DateTime dayKey(DateTime t) => DateTime(t.year, t.month, t.day);
+
+  /// Дни месяца [year]-[month], в которые была практика (номера 1..31).
+  static Set<int> practisedDays(
+    Iterable<SessionRecord> records,
+    int year,
+    int month,
+  ) {
+    return records
+        .where((r) => r.startedAt.year == year && r.startedAt.month == month)
+        .map((r) => r.startedAt.day)
+        .toSet();
+  }
+
+  /// Сумма минут практики по дням месяца: день → минуты (округление вверх,
+  /// чтобы минутная сессия не выглядела нулём).
+  static Map<int, int> minutesByDay(
+    Iterable<SessionRecord> records,
+    int year,
+    int month,
+  ) {
+    final result = <int, int>{};
+    for (final r in records) {
+      if (r.startedAt.year != year || r.startedAt.month != month) continue;
+      result.update(
+        r.startedAt.day,
+        (m) => m + (r.durationSec + 59) ~/ 60,
+        ifAbsent: () => (r.durationSec + 59) ~/ 60,
+      );
+    }
+    return result;
+  }
+
+  /// Минуты практики за месяц.
+  static int minutesInMonth(
+    Iterable<SessionRecord> records,
+    int year,
+    int month,
+  ) =>
+      minutesByDay(records, year, month)
+          .values
+          .fold(0, (a, b) => a + b);
+
+  /// Число сессий за месяц.
+  static int sessionsInMonth(
+    Iterable<SessionRecord> records,
+    int year,
+    int month,
+  ) =>
+      records
+          .where((r) => r.startedAt.year == year && r.startedAt.month == month)
+          .length;
+
+  /// Streak — число дней подряд с практикой, заканчивая сегодня.
+  ///
+  /// Правило: если сегодня практики ещё не было, серия НЕ рвётся до конца
+  /// дня — отсчёт начинается со вчера (стандартное поведение streak-механик).
+  /// [today] — для тестируемости; по умолчанию — текущая локальная дата.
+  static int streakDays(Iterable<SessionRecord> records, {DateTime? today}) {
+    final days = records.map((r) => dayKey(r.startedAt)).toSet();
+    if (days.isEmpty) return 0;
+    var cursor = dayKey(today ?? DateTime.now());
+    if (!days.contains(cursor)) {
+      cursor = cursor.subtract(const Duration(days: 1));
+    }
+    var streak = 0;
+    while (days.contains(cursor)) {
+      streak++;
+      cursor = cursor.subtract(const Duration(days: 1));
+    }
+    return streak;
+  }
+}
