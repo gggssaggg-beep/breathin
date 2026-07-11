@@ -12,10 +12,19 @@ class SessionPlanCompiler {
   const SessionPlanCompiler();
 
   SessionPlan compile(Technique technique, SessionConfig config) {
-    if (config.phaseSeconds.length != technique.phases.length) {
+    final specs = technique.phases;
+    if (specs == null) {
+      // Timer-техники — режим `timer` компилятора (П10), Вим Хоф — свой
+      // движок (П18); фазовый конвейер применим только к counted.
+      throw ArgumentError(
+        'Техника ${technique.id} (${technique.type.name}) не компилируется '
+        'фазовым конвейером',
+      );
+    }
+    if (config.phaseSeconds.length != specs.length) {
       throw ArgumentError(
         'phaseSeconds (${config.phaseSeconds.length}) != '
-        'technique.phases (${technique.phases.length})',
+        'technique.phases (${specs.length})',
       );
     }
 
@@ -50,11 +59,11 @@ class SessionPlanCompiler {
 
     var t = config.prepSeconds * 1000;
     for (var c = 0; c < cycles; c++) {
-      for (var p = 0; p < technique.phases.length; p++) {
+      for (var p = 0; p < specs.length; p++) {
         events.add(EngineEvent(
           tMs: t,
           type: EngineEventType.phaseStart,
-          phase: technique.phases[p].kind,
+          phase: specs[p].kind,
           cycleIndex: c,
         ));
         t += phaseMs[p];
