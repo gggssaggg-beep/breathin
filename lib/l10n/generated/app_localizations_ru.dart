@@ -211,4 +211,72 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingsTooltip => 'Настройки';
+
+  @override
+  String get setupTitle => 'Настройка';
+
+  @override
+  String get endModeCycles => 'Циклы';
+
+  @override
+  String get endModeTimer => 'Таймер';
+
+  @override
+  String get cyclesLabel => 'Количество циклов';
+
+  @override
+  String get timerLabel => 'Таймер, мин';
+
+  @override
+  String get phasesSection => 'Длительности фаз';
+
+  @override
+  String get keepRatioLabel => 'Держать пропорцию';
+
+  @override
+  String get simplifiedLabel => 'Упрощённый режим';
+
+  @override
+  String get tempoLabel => 'Темп';
+
+  @override
+  String get resetToClassic => 'Сбросить к классике';
+
+  @override
+  String get feedbackSection => 'Сопровождение';
+
+  @override
+  String get channelVoice => 'Голос';
+
+  @override
+  String get channelSound => 'Звук';
+
+  @override
+  String get channelMetronome => 'Метроном';
+
+  @override
+  String get channelVibration => 'Вибрация';
+
+  @override
+  String get channelVisual => 'Визуальный режим';
+
+  @override
+  String get prepLabel => 'Подготовка, с';
+
+  @override
+  String get phaseInhale => 'Вдох';
+
+  @override
+  String get phaseHoldIn => 'Задержка';
+
+  @override
+  String get phaseExhale => 'Выдох';
+
+  @override
+  String get phaseHoldOut => 'Задержка';
+
+  @override
+  String secondsShort(String n) {
+    return '$n с';
+  }
 }

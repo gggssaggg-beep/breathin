@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:breathin/domain/catalog/techniques.dart';
 import 'package:breathin/features/catalog/technique_card_screen.dart';
 import 'package:breathin/features/catalog/technique_subtitle.dart';
-import 'package:breathin/features/session/session_runner.dart';
+import 'package:breathin/features/session_setup/session_setup_screen.dart';
 import 'package:breathin/l10n/generated/app_localizations.dart';
 import 'package:breathin/l10n/generated/app_localizations_en.dart';
 
@@ -20,6 +21,10 @@ Widget _wrap(Widget child, {Locale locale = const Locale('en')}) {
 }
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   // --- (а) counted-техника box: описание, польза, безопасность, кнопка Start ---
   group('TechniqueCardScreen — box (counted)', () {
     testWidgets('показывает описание, пользу, безопасность и активную кнопку Start', (
@@ -45,7 +50,7 @@ void main() {
       expect(btn.onPressed, isNotNull);
     });
 
-    testWidgets('тап по Start открывает SessionRunner', (tester) async {
+    testWidgets('тап по Start открывает SessionSetupScreen', (tester) async {
       await tester.pumpWidget(
         _wrap(TechniqueCardScreen(technique: boxBreathing)),
       );
@@ -53,11 +58,10 @@ void main() {
 
       await tester.tap(find.widgetWithText(FilledButton, 'Start'));
       // pump без duration — выполняет один кадр анимации (route push).
-      // Не используем pumpAndSettle, т.к. Ticker в SessionRunner крутится бесконечно.
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(SessionRunner), findsOneWidget);
+      expect(find.byType(SessionSetupScreen), findsOneWidget);
     });
   });
 

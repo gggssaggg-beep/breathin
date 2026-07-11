@@ -85,5 +85,33 @@
       "n": { "type": "int" }
     }
   },
-  "settingsTooltip": "Настройки"
+  "settingsTooltip": "Настройки",
+
+  "setupTitle": "Настройка",
+  "endModeCycles": "Циклы",
+  "endModeTimer": "Таймер",
+  "cyclesLabel": "Количество циклов",
+  "timerLabel": "Таймер, мин",
+  "phasesSection": "Длительности фаз",
+  "keepRatioLabel": "Держать пропорцию",
+  "simplifiedLabel": "Упрощённый режим",
+  "tempoLabel": "Темп",
+  "resetToClassic": "Сбросить к классике",
+  "feedbackSection": "Сопровождение",
+  "channelVoice": "Голос",
+  "channelSound": "Звук",
+  "channelMetronome": "Метроном",
+  "channelVibration": "Вибрация",
+  "channelVisual": "Визуальный режим",
+  "prepLabel": "Подготовка, с",
+  "phaseInhale": "Вдох",
+  "phaseHoldIn": "Задержка",
+  "phaseExhale": "Выдох",
+  "phaseHoldOut": "Задержка",
+  "secondsShort": "{n} с",
+  "@secondsShort": {
+    "placeholders": {
+      "n": { "type": "String" }
+    }
+  }
 }

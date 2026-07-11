@@ -403,6 +403,138 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Настройки'**
   String get settingsTooltip;
+
+  /// No description provided for @setupTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройка'**
+  String get setupTitle;
+
+  /// No description provided for @endModeCycles.
+  ///
+  /// In ru, this message translates to:
+  /// **'Циклы'**
+  String get endModeCycles;
+
+  /// No description provided for @endModeTimer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Таймер'**
+  String get endModeTimer;
+
+  /// No description provided for @cyclesLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Количество циклов'**
+  String get cyclesLabel;
+
+  /// No description provided for @timerLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Таймер, мин'**
+  String get timerLabel;
+
+  /// No description provided for @phasesSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Длительности фаз'**
+  String get phasesSection;
+
+  /// No description provided for @keepRatioLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Держать пропорцию'**
+  String get keepRatioLabel;
+
+  /// No description provided for @simplifiedLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Упрощённый режим'**
+  String get simplifiedLabel;
+
+  /// No description provided for @tempoLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Темп'**
+  String get tempoLabel;
+
+  /// No description provided for @resetToClassic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить к классике'**
+  String get resetToClassic;
+
+  /// No description provided for @feedbackSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сопровождение'**
+  String get feedbackSection;
+
+  /// No description provided for @channelVoice.
+  ///
+  /// In ru, this message translates to:
+  /// **'Голос'**
+  String get channelVoice;
+
+  /// No description provided for @channelSound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Звук'**
+  String get channelSound;
+
+  /// No description provided for @channelMetronome.
+  ///
+  /// In ru, this message translates to:
+  /// **'Метроном'**
+  String get channelMetronome;
+
+  /// No description provided for @channelVibration.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вибрация'**
+  String get channelVibration;
+
+  /// No description provided for @channelVisual.
+  ///
+  /// In ru, this message translates to:
+  /// **'Визуальный режим'**
+  String get channelVisual;
+
+  /// No description provided for @prepLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подготовка, с'**
+  String get prepLabel;
+
+  /// No description provided for @phaseInhale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох'**
+  String get phaseInhale;
+
+  /// No description provided for @phaseHoldIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задержка'**
+  String get phaseHoldIn;
+
+  /// No description provided for @phaseExhale.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдох'**
+  String get phaseExhale;
+
+  /// No description provided for @phaseHoldOut.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задержка'**
+  String get phaseHoldOut;
+
+  /// No description provided for @secondsShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} с'**
+  String secondsShort(String n);
 }
 
 class _AppLocalizationsDelegate

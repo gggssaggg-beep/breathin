@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/engine/session_plan_compiler.dart';
-import '../../domain/models/session_config.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
-import '../session/session_runner.dart';
+import '../session_setup/session_setup_screen.dart';
 import 'technique_icons.dart';
 import 'technique_subtitle.dart';
 
@@ -147,11 +145,10 @@ class TechniqueCardScreen extends StatelessWidget {
   }
 
   void _startSession(BuildContext context) {
-    final t = technique;
-    final plan = const SessionPlanCompiler()
-        .compile(t, SessionConfig.classic(t));
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => SessionRunner(plan: plan)),
+      MaterialPageRoute(
+        builder: (_) => SessionSetupScreen(technique: technique),
+      ),
     );
   }
 }
