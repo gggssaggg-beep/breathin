@@ -299,4 +299,43 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get authNotConfiguredNote =>
       'Вход через Google станет доступен в одном из ближайших обновлений.';
+
+  @override
+  String get statsTitle => 'Практика';
+
+  @override
+  String get statsTooltip => 'Календарь практик';
+
+  @override
+  String streakLabel(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'дня подряд',
+      many: 'дней подряд',
+      few: 'дня подряд',
+      one: 'день подряд',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get monthMinutesLabel => 'минут за месяц';
+
+  @override
+  String monthSessionsLabel(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'сессии',
+      many: 'сессий',
+      few: 'сессии',
+      one: 'сессия',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsEmpty =>
+      'Пока нет ни одной практики. Начните с любой техники — здесь появится календарь.';
 }

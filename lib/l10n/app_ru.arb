@@ -120,5 +120,22 @@
   "signOutAction": "Выйти",
   "accountGuest": "Гостевой режим",
   "accountGuestNote": "Практика и настройки работают без аккаунта. Вход понадобится для друзей и общей ленты.",
-  "authNotConfiguredNote": "Вход через Google станет доступен в одном из ближайших обновлений."
+  "authNotConfiguredNote": "Вход через Google станет доступен в одном из ближайших обновлений.",
+
+  "statsTitle": "Практика",
+  "statsTooltip": "Календарь практик",
+  "streakLabel": "{n, plural, one {день подряд} few {дня подряд} many {дней подряд} other {дня подряд}}",
+  "@streakLabel": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "monthMinutesLabel": "минут за месяц",
+  "monthSessionsLabel": "{n, plural, one {сессия} few {сессии} many {сессий} other {сессии}}",
+  "@monthSessionsLabel": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "statsEmpty": "Пока нет ни одной практики. Начните с любой техники — здесь появится календарь."
 }

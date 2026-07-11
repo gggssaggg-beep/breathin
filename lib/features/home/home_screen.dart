@@ -10,6 +10,7 @@ import '../catalog/technique_card_screen.dart';
 import '../catalog/technique_icons.dart';
 import '../catalog/technique_subtitle.dart';
 import '../settings/settings_screen.dart';
+import '../stats/stats_screen.dart';
 
 /// Главный экран: сетка техник (ТЗ §6.2).
 ///
@@ -26,6 +27,13 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.appTitle),
         actions: [
+          IconButton(
+            icon: const BreathinIcon(BreathinIcons.calendar),
+            tooltip: l.statsTooltip,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => StatsScreen()),
+            ),
+          ),
           IconButton(
             icon: const BreathinIcon(BreathinIcons.settings),
             tooltip: l.settingsTooltip,

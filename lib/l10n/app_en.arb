@@ -120,5 +120,22 @@
   "signOutAction": "Sign out",
   "accountGuest": "Guest mode",
   "accountGuestNote": "Practice and settings work without an account. Sign-in will be needed for friends and the shared feed.",
-  "authNotConfiguredNote": "Google sign-in will become available in an upcoming update."
+  "authNotConfiguredNote": "Google sign-in will become available in an upcoming update.",
+
+  "statsTitle": "Practice",
+  "statsTooltip": "Practice calendar",
+  "streakLabel": "{n, plural, one {day streak} other {day streak}}",
+  "@streakLabel": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "monthMinutesLabel": "minutes this month",
+  "monthSessionsLabel": "{n, plural, one {session} other {sessions}}",
+  "@monthSessionsLabel": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "statsEmpty": "No practice yet. Start with any technique — your calendar will appear here."
 }

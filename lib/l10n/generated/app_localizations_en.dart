@@ -295,4 +295,39 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authNotConfiguredNote =>
       'Google sign-in will become available in an upcoming update.';
+
+  @override
+  String get statsTitle => 'Practice';
+
+  @override
+  String get statsTooltip => 'Practice calendar';
+
+  @override
+  String streakLabel(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'day streak',
+      one: 'day streak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get monthMinutesLabel => 'minutes this month';
+
+  @override
+  String monthSessionsLabel(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'sessions',
+      one: 'session',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsEmpty =>
+      'No practice yet. Start with any technique — your calendar will appear here.';
 }
