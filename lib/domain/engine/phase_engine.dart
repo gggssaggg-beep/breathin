@@ -16,6 +16,9 @@ class SessionState {
   final int prepRemainingMs; // > 0 только на стадии prep
   final int sessionElapsedMs;
   final int sessionDurationMs;
+  /// Порядковый номер фазы внутри текущего цикла (0-based).
+  /// -1 во время подготовки и по завершении.
+  final int phaseIndexInCycle;
 
   const SessionState({
     required this.stage,
@@ -27,6 +30,7 @@ class SessionState {
     required this.prepRemainingMs,
     required this.sessionElapsedMs,
     required this.sessionDurationMs,
+    this.phaseIndexInCycle = -1,
   });
 
   /// Прогресс текущей фазы 0..1 (для анимации фигуры дыхания).
@@ -45,7 +49,10 @@ class _Segment {
   final int endMs;
   final PhaseKind phase;
   final int cycleIndex;
-  const _Segment(this.startMs, this.endMs, this.phase, this.cycleIndex);
+  /// Индекс фазы внутри цикла (0-based).
+  final int phaseIndexInCycle;
+  const _Segment(
+      this.startMs, this.endMs, this.phase, this.cycleIndex, this.phaseIndexInCycle);
 }
 
 /// Диспетчер сессии: чистая проекция позиции воспроизведения в [SessionState]
@@ -69,11 +76,17 @@ class PhaseEngine {
     final starts = plan.phaseStarts.toList()
       ..sort((a, b) => a.tMs.compareTo(b.tMs));
     final segs = <_Segment>[];
+    // Считаем phaseIndexInCycle: внутри каждого цикла — порядковый номер фазы.
+    // Для этого считаем, сколько phaseStart-событий предшествует текущему
+    // в том же цикле.
+    final phasesPerCycle = <int, int>{}; // cycleIndex → счётчик
     for (var i = 0; i < starts.length; i++) {
       final end =
           i + 1 < starts.length ? starts[i + 1].tMs : plan.totalDurationMs;
-      segs.add(_Segment(starts[i].tMs, end, starts[i].phase!,
-          starts[i].cycleIndex!));
+      final ci = starts[i].cycleIndex!;
+      final phaseIdx = phasesPerCycle[ci] ?? 0;
+      phasesPerCycle[ci] = phaseIdx + 1;
+      segs.add(_Segment(starts[i].tMs, end, starts[i].phase!, ci, phaseIdx));
     }
     return segs;
   }
@@ -94,6 +107,7 @@ class PhaseEngine {
         prepRemainingMs: 0,
         sessionElapsedMs: dur,
         sessionDurationMs: dur,
+        phaseIndexInCycle: -1,
       );
     }
 
@@ -108,6 +122,7 @@ class PhaseEngine {
         prepRemainingMs: _firstPhaseStartMs - pos,
         sessionElapsedMs: pos,
         sessionDurationMs: dur,
+        phaseIndexInCycle: -1,
       );
     }
 
@@ -131,6 +146,7 @@ class PhaseEngine {
       prepRemainingMs: 0,
       sessionElapsedMs: pos,
       sessionDurationMs: dur,
+      phaseIndexInCycle: seg.phaseIndexInCycle,
     );
   }
 
