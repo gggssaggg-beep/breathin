@@ -9,6 +9,7 @@ import '../../ui/icons/breathin_icons.dart';
 import '../catalog/technique_card_screen.dart';
 import '../catalog/technique_icons.dart';
 import '../catalog/technique_subtitle.dart';
+import '../challenges/challenges_screen.dart';
 import '../settings/settings_screen.dart';
 import '../stats/stats_screen.dart';
 
@@ -27,6 +28,13 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.appTitle),
         actions: [
+          IconButton(
+            icon: const BreathinIcon(BreathinIcons.trophy),
+            tooltip: l.challengesTooltip,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ChallengesScreen()),
+            ),
+          ),
           IconButton(
             icon: const BreathinIcon(BreathinIcons.calendar),
             tooltip: l.statsTooltip,
