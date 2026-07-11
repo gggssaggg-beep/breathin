@@ -655,6 +655,144 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Привязать Google — сохранить профиль навсегда'**
   String get linkGoogleAction;
+
+  /// No description provided for @challengesTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Челленджи'**
+  String get challengesTitle;
+
+  /// No description provided for @challengesTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'Челленджи с друзьями'**
+  String get challengesTooltip;
+
+  /// No description provided for @challengesSignInHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Челленджи — соревнование с друзьями: кто больше практикует. Создайте профиль или войдите, чтобы начать.'**
+  String get challengesSignInHint;
+
+  /// No description provided for @challengesEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет челленджей. Создайте свой и пришлите код друзьям — или введите код друга.'**
+  String get challengesEmpty;
+
+  /// No description provided for @createChallengeAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать челлендж'**
+  String get createChallengeAction;
+
+  /// No description provided for @joinByCodeAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ввести код'**
+  String get joinByCodeAction;
+
+  /// No description provided for @challengeTitleLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название'**
+  String get challengeTitleLabel;
+
+  /// No description provided for @challengeTitleDefault.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дышим вместе'**
+  String get challengeTitleDefault;
+
+  /// No description provided for @metricLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Метрика'**
+  String get metricLabel;
+
+  /// No description provided for @metricSessions.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сессии'**
+  String get metricSessions;
+
+  /// No description provided for @metricMinutes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Минуты'**
+  String get metricMinutes;
+
+  /// No description provided for @metricStreak.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дни подряд'**
+  String get metricStreak;
+
+  /// No description provided for @targetLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цель'**
+  String get targetLabel;
+
+  /// No description provided for @durationLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Длительность, дней'**
+  String get durationLabel;
+
+  /// No description provided for @codeFieldLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код приглашения'**
+  String get codeFieldLabel;
+
+  /// No description provided for @codeNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Челлендж с таким кодом не найден'**
+  String get codeNotFound;
+
+  /// No description provided for @joinedChallenge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы присоединились: {title}'**
+  String joinedChallenge(String title);
+
+  /// No description provided for @challengeCodeShare.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код для друзей: {code}'**
+  String challengeCodeShare(String code);
+
+  /// No description provided for @codeCopied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код скопирован'**
+  String get codeCopied;
+
+  /// No description provided for @challengeUntil.
+  ///
+  /// In ru, this message translates to:
+  /// **'до {date}'**
+  String challengeUntil(String date);
+
+  /// No description provided for @challengeFinished.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершён'**
+  String get challengeFinished;
+
+  /// No description provided for @commonCreate.
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать'**
+  String get commonCreate;
+
+  /// No description provided for @commonJoin.
+  ///
+  /// In ru, this message translates to:
+  /// **'Присоединиться'**
+  String get commonJoin;
 }
 
 class _AppLocalizationsDelegate

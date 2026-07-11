@@ -146,5 +146,44 @@
   "signOutAnonWarning": "A guest profile cannot be restored after signing out: challenges and nickname will be lost. Sign out?",
   "commonCancel": "Cancel",
   "commonSave": "Save",
-  "linkGoogleAction": "Link Google — keep your profile forever"
+  "linkGoogleAction": "Link Google — keep your profile forever",
+
+  "challengesTitle": "Challenges",
+  "challengesTooltip": "Challenges with friends",
+  "challengesSignInHint": "Challenges are friendly competitions: who practises more. Create a profile or sign in to start.",
+  "challengesEmpty": "No challenges yet. Create one and share the code with friends — or enter a friend's code.",
+  "createChallengeAction": "Create challenge",
+  "joinByCodeAction": "Enter code",
+  "challengeTitleLabel": "Title",
+  "challengeTitleDefault": "Breathe together",
+  "metricLabel": "Metric",
+  "metricSessions": "Sessions",
+  "metricMinutes": "Minutes",
+  "metricStreak": "Day streak",
+  "targetLabel": "Target",
+  "durationLabel": "Duration, days",
+  "codeFieldLabel": "Invite code",
+  "codeNotFound": "No challenge found for this code",
+  "joinedChallenge": "You joined: {title}",
+  "@joinedChallenge": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "challengeCodeShare": "Code for friends: {code}",
+  "@challengeCodeShare": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "codeCopied": "Code copied",
+  "challengeUntil": "until {date}",
+  "@challengeUntil": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "challengeFinished": "Finished",
+  "commonCreate": "Create",
+  "commonJoin": "Join"
 }
