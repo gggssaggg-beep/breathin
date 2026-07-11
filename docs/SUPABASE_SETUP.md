@@ -14,7 +14,17 @@
 - Пароль БД сгенерирован и передан владельцу в чате — сохранить; при утере
   сбрасывается через Dashboard → Project Settings → Database.
 
-## 2. Google-вход (~10 мин)
+## 2. Google-вход — ✅ СДЕЛАНО (2026-07-12)
+
+Владелец создал в Google Cloud (новая консоль Auth Platform) проект
+`dyshi-502118`, consent screen «Дыши» и Web-клиент `Dyshi Supabase` с
+callback-URI проекта; Client ID/secret включены в Supabase через
+Management API (`external_google_enabled=true`), в приложении
+`googleAuthEnabled=true`. Не забыть: **Audience → Publish app** (если
+статус Testing — входят только тестовые адреса). Исходные шаги ниже —
+для истории/воспроизведения.
+
+### Исходная инструкция (выполнена)
 
 1. **console.cloud.google.com** → New Project → имя `dyshi`.
    (Отдельный проект, а не Astra: имя приложения на экране согласия Google
