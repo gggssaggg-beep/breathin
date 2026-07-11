@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/session_log_repository.dart';
+import '../../domain/catalog/techniques.dart';
 import '../../domain/models/session_record.dart';
+import '../../domain/models/technique.dart';
 import '../../domain/stats/practice_stats.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../l10n/technique_texts.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../catalog/technique_icons.dart';
 
 /// Экран «Практика» (ТЗ §5, П11): календарь месяца с отметками дней,
 /// streak и суммы за месяц. Данные — локальная история сессий.
@@ -81,6 +85,8 @@ class _StatsScreenState extends State<StatsScreen> {
                     ),
                     const SizedBox(height: 16),
                     _MonthTotals(records: records, year: _year, month: _month),
+                    const SizedBox(height: 16),
+                    _ByTechnique(records: records, year: _year, month: _month),
                   ],
                 ),
     );
@@ -303,6 +309,89 @@ class _DayCell extends StatelessWidget {
               : theme.colorScheme.onSurface,
           fontWeight: practised ? FontWeight.w600 : null,
         ),
+      ),
+    );
+  }
+}
+
+/// Разбивка месяца по техникам: иконка, название, сессии · минуты.
+class _ByTechnique extends StatelessWidget {
+  final List<SessionRecord> records;
+  final int year;
+  final int month;
+  const _ByTechnique({
+    required this.records,
+    required this.year,
+    required this.month,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final rows = PracticeStats.byTechnique(records, year, month);
+    if (rows.isEmpty) return const SizedBox.shrink();
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 4),
+              child: Text(l.byTechniqueLabel,
+                  style: theme.textTheme.titleSmall),
+            ),
+            for (final (id, agg) in rows) _row(context, id, agg),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _row(
+    BuildContext context,
+    String id,
+    ({int sessions, int minutes}) agg,
+  ) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    // Записи старых версий каталога не должны ронять экран.
+    Technique? t;
+    try {
+      t = techniqueById(id);
+    } on ArgumentError {
+      t = null;
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          if (t != null)
+            BreathinIcon(
+              iconDataFor(t.icon),
+              size: 22,
+              color: theme.colorScheme.primary,
+            )
+          else
+            const SizedBox(width: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              t != null ? l.techniqueName(t) : id,
+              style: theme.textTheme.bodyLarge,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            '${agg.sessions} ${l.monthSessionsLabel(agg.sessions)}'
+            ' · ${l.minutesShort(agg.minutes)}',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
     );
   }

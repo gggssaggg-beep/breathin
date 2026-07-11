@@ -55,6 +55,24 @@ void main() {
     expect(find.textContaining('sessions'), findsOneWidget);
   });
 
+  testWidgets('разбивка по техникам: название и «сессии · минуты»',
+      (tester) async {
+    final repo = SessionLogRepository();
+    await repo.add(rec(DateTime(2026, 7, 11, 8))); // box, 5 мин
+    await repo.add(rec(DateTime(2026, 7, 12, 9), durationSec: 240));
+    await tester.pumpWidget(
+      wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 12, 20))),
+    );
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Box Breathing'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Box Breathing'), findsOneWidget);
+    expect(find.text('2 sessions · 9 min'), findsOneWidget);
+  });
+
   testWidgets('навигация к прошлому месяцу и запрет будущего', (tester) async {
     final repo = SessionLogRepository();
     await repo.add(rec(DateTime(2026, 7, 12, 9)));

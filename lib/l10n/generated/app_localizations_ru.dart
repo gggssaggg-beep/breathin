@@ -338,4 +338,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get statsEmpty =>
       'Пока нет ни одной практики. Начните с любой техники — здесь появится календарь.';
+
+  @override
+  String get byTechniqueLabel => 'По техникам';
 }

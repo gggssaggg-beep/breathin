@@ -58,6 +58,27 @@ abstract final class PracticeStats {
           .where((r) => r.startedAt.year == year && r.startedAt.month == month)
           .length;
 
+  /// Разбивка месяца по техникам: id → (сессии, минуты), отсортирована
+  /// по минутам по убыванию.
+  static List<(String, ({int sessions, int minutes}))> byTechnique(
+    Iterable<SessionRecord> records,
+    int year,
+    int month,
+  ) {
+    final acc = <String, (int, int)>{};
+    for (final r in records) {
+      if (r.startedAt.year != year || r.startedAt.month != month) continue;
+      final prev = acc[r.techniqueId] ?? (0, 0);
+      acc[r.techniqueId] =
+          (prev.$1 + 1, prev.$2 + (r.durationSec + 59) ~/ 60);
+    }
+    final entries = [
+      for (final e in acc.entries)
+        (e.key, (sessions: e.value.$1, minutes: e.value.$2)),
+    ]..sort((a, b) => b.$2.minutes.compareTo(a.$2.minutes));
+    return entries;
+  }
+
   /// Streak — число дней подряд с практикой, заканчивая сегодня.
   ///
   /// Правило: если сегодня практики ещё не было, серия НЕ рвётся до конца

@@ -607,6 +607,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Пока нет ни одной практики. Начните с любой техники — здесь появится календарь.'**
   String get statsEmpty;
+
+  /// No description provided for @byTechniqueLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'По техникам'**
+  String get byTechniqueLabel;
 }
 
 class _AppLocalizationsDelegate
