@@ -355,4 +355,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get linkGoogleAction => 'Link Google — keep your profile forever';
+
+  @override
+  String get challengesTitle => 'Challenges';
+
+  @override
+  String get challengesTooltip => 'Challenges with friends';
+
+  @override
+  String get challengesSignInHint =>
+      'Challenges are friendly competitions: who practises more. Create a profile or sign in to start.';
+
+  @override
+  String get challengesEmpty =>
+      'No challenges yet. Create one and share the code with friends — or enter a friend\'s code.';
+
+  @override
+  String get createChallengeAction => 'Create challenge';
+
+  @override
+  String get joinByCodeAction => 'Enter code';
+
+  @override
+  String get challengeTitleLabel => 'Title';
+
+  @override
+  String get challengeTitleDefault => 'Breathe together';
+
+  @override
+  String get metricLabel => 'Metric';
+
+  @override
+  String get metricSessions => 'Sessions';
+
+  @override
+  String get metricMinutes => 'Minutes';
+
+  @override
+  String get metricStreak => 'Day streak';
+
+  @override
+  String get targetLabel => 'Target';
+
+  @override
+  String get durationLabel => 'Duration, days';
+
+  @override
+  String get codeFieldLabel => 'Invite code';
+
+  @override
+  String get codeNotFound => 'No challenge found for this code';
+
+  @override
+  String joinedChallenge(String title) {
+    return 'You joined: $title';
+  }
+
+  @override
+  String challengeCodeShare(String code) {
+    return 'Code for friends: $code';
+  }
+
+  @override
+  String get codeCopied => 'Code copied';
+
+  @override
+  String challengeUntil(String date) {
+    return 'until $date';
+  }
+
+  @override
+  String get challengeFinished => 'Finished';
+
+  @override
+  String get commonCreate => 'Create';
+
+  @override
+  String get commonJoin => 'Join';
 }

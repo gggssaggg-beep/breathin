@@ -146,5 +146,44 @@
   "signOutAnonWarning": "Гостевой профиль нельзя восстановить после выхода: челленджи и ник будут потеряны. Выйти?",
   "commonCancel": "Отмена",
   "commonSave": "Сохранить",
-  "linkGoogleAction": "Привязать Google — сохранить профиль навсегда"
+  "linkGoogleAction": "Привязать Google — сохранить профиль навсегда",
+
+  "challengesTitle": "Челленджи",
+  "challengesTooltip": "Челленджи с друзьями",
+  "challengesSignInHint": "Челленджи — соревнование с друзьями: кто больше практикует. Создайте профиль или войдите, чтобы начать.",
+  "challengesEmpty": "Пока нет челленджей. Создайте свой и пришлите код друзьям — или введите код друга.",
+  "createChallengeAction": "Создать челлендж",
+  "joinByCodeAction": "Ввести код",
+  "challengeTitleLabel": "Название",
+  "challengeTitleDefault": "Дышим вместе",
+  "metricLabel": "Метрика",
+  "metricSessions": "Сессии",
+  "metricMinutes": "Минуты",
+  "metricStreak": "Дни подряд",
+  "targetLabel": "Цель",
+  "durationLabel": "Длительность, дней",
+  "codeFieldLabel": "Код приглашения",
+  "codeNotFound": "Челлендж с таким кодом не найден",
+  "joinedChallenge": "Вы присоединились: {title}",
+  "@joinedChallenge": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "challengeCodeShare": "Код для друзей: {code}",
+  "@challengeCodeShare": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "codeCopied": "Код скопирован",
+  "challengeUntil": "до {date}",
+  "@challengeUntil": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "challengeFinished": "Завершён",
+  "commonCreate": "Создать",
+  "commonJoin": "Присоединиться"
 }

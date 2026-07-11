@@ -364,4 +364,81 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get linkGoogleAction =>
       'Привязать Google — сохранить профиль навсегда';
+
+  @override
+  String get challengesTitle => 'Челленджи';
+
+  @override
+  String get challengesTooltip => 'Челленджи с друзьями';
+
+  @override
+  String get challengesSignInHint =>
+      'Челленджи — соревнование с друзьями: кто больше практикует. Создайте профиль или войдите, чтобы начать.';
+
+  @override
+  String get challengesEmpty =>
+      'Пока нет челленджей. Создайте свой и пришлите код друзьям — или введите код друга.';
+
+  @override
+  String get createChallengeAction => 'Создать челлендж';
+
+  @override
+  String get joinByCodeAction => 'Ввести код';
+
+  @override
+  String get challengeTitleLabel => 'Название';
+
+  @override
+  String get challengeTitleDefault => 'Дышим вместе';
+
+  @override
+  String get metricLabel => 'Метрика';
+
+  @override
+  String get metricSessions => 'Сессии';
+
+  @override
+  String get metricMinutes => 'Минуты';
+
+  @override
+  String get metricStreak => 'Дни подряд';
+
+  @override
+  String get targetLabel => 'Цель';
+
+  @override
+  String get durationLabel => 'Длительность, дней';
+
+  @override
+  String get codeFieldLabel => 'Код приглашения';
+
+  @override
+  String get codeNotFound => 'Челлендж с таким кодом не найден';
+
+  @override
+  String joinedChallenge(String title) {
+    return 'Вы присоединились: $title';
+  }
+
+  @override
+  String challengeCodeShare(String code) {
+    return 'Код для друзей: $code';
+  }
+
+  @override
+  String get codeCopied => 'Код скопирован';
+
+  @override
+  String challengeUntil(String date) {
+    return 'до $date';
+  }
+
+  @override
+  String get challengeFinished => 'Завершён';
+
+  @override
+  String get commonCreate => 'Создать';
+
+  @override
+  String get commonJoin => 'Присоединиться';
 }
