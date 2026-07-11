@@ -4,7 +4,16 @@ import '../../domain/engine/session_plan.dart';
 import '../../domain/models/technique.dart';
 
 /// Логический звук в наборе. Резолвится из [EngineEvent] (см. ниже).
-enum ClipId { inhale, holdIn, exhale, holdOut, prepBeep, gong }
+enum ClipId {
+  inhale,
+  holdIn,
+  exhale,
+  holdOut,
+  prepBeep,
+  gong,
+  tick,
+  tickAccent,
+}
 
 /// Набор декодированных PCM-клипов одного sample rate (ПЛАН §10.2).
 class SoundBank {
@@ -33,6 +42,8 @@ class TimelineRenderer {
         return ClipId.prepBeep;
       case EngineEventType.gong:
         return ClipId.gong;
+      case EngineEventType.metronomeTick:
+        return e.accent ? ClipId.tickAccent : ClipId.tick;
       case EngineEventType.sessionEnd:
         return null;
       case EngineEventType.phaseStart:
