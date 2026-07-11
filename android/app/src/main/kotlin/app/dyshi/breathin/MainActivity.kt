@@ -1,5 +1,7 @@
 package app.dyshi.breathin
 
-import io.flutter.embedding.android.FlutterActivity
+import com.ryanheise.audioservice.AudioServiceActivity
 
-class MainActivity : FlutterActivity()
+// AudioServiceActivity — требование audio_service: связывает Flutter-движок
+// с медиа-сервисом (фоновое воспроизведение таймлайна сессии, ПЛАН §3.3).
+class MainActivity : AudioServiceActivity()

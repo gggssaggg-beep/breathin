@@ -57,15 +57,25 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     }
   }
 
-  /// Запускает сессию: сохраняет настройки, компилирует план, открывает раннер.
+  /// Запускает сессию: сохраняет настройки, компилирует план (метроном
+  /// вшивается в таймлайн на этапе компиляции), открывает раннер.
   Future<void> _startSession() async {
     final s = _settings!;
     await _repo.save(s);
     if (!mounted) return;
-    final plan = const SessionPlanCompiler().compile(_t, s.toSessionConfig(_t));
+    final plan = const SessionPlanCompiler().compile(
+      _t,
+      s.toSessionConfig(_t),
+      metronome: s.feedback.metronome,
+    );
     await Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (_) => SessionRunner(plan: plan, technique: _t)),
+        builder: (_) => SessionRunner(
+          plan: plan,
+          technique: _t,
+          feedback: s.feedback,
+        ),
+      ),
     );
   }
 

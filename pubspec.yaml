@@ -45,6 +45,13 @@ dependencies:
   # OTA: текущая версия приложения и открытие URL APK-ассета релиза.
   package_info_plus: ^8.0.0
   url_launcher: ^6.3.0
+  # Аудио-ядро П4 ч.2 (ПЛАН §3.3): таймлайн сессии играет аудио-железо.
+  just_audio: ^0.9.40
+  audio_service: ^0.18.15
+  audio_session: ^0.1.21
+  path_provider: ^2.1.4
+  # Вибро-паттерны смены фаз (ТЗ §3.3).
+  vibration: ^2.0.0
 
 dev_dependencies:
   flutter_test:
