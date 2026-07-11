@@ -40,6 +40,21 @@ void main() {
       expect(PracticeStats.sessionsInMonth(july, 2026, 7), 4);
     });
 
+    test('byTechnique: агрегация и сортировка по минутам', () {
+      final mixed = [
+        rec(DateTime(2026, 7, 1), durationSec: 120), // box: 2 мин
+        rec(DateTime(2026, 7, 2), durationSec: 120), // box: ещё 2 мин
+        rec(DateTime(2026, 7, 3), durationSec: 600, tech: 'coherent'), // 10
+        rec(DateTime(2026, 6, 1), durationSec: 6000, tech: 'two_ten'), // вне
+      ];
+      final rows = PracticeStats.byTechnique(mixed, 2026, 7);
+      expect(rows, hasLength(2));
+      expect(rows[0].$1, 'coherent'); // 10 мин — первым
+      expect(rows[0].$2, (sessions: 1, minutes: 10));
+      expect(rows[1].$1, 'box');
+      expect(rows[1].$2, (sessions: 2, minutes: 4));
+    });
+
     group('streakDays', () {
       test('серия, заканчивающаяся сегодня', () {
         final records = [

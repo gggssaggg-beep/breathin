@@ -330,4 +330,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get statsEmpty =>
       'No practice yet. Start with any technique — your calendar will appear here.';
+
+  @override
+  String get byTechniqueLabel => 'By technique';
 }

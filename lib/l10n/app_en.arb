@@ -137,5 +137,6 @@
       "n": { "type": "int" }
     }
   },
-  "statsEmpty": "No practice yet. Start with any technique — your calendar will appear here."
+  "statsEmpty": "No practice yet. Start with any technique — your calendar will appear here.",
+  "byTechniqueLabel": "By technique"
 }
