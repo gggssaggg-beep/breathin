@@ -571,6 +571,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Вход через Google станет доступен в одном из ближайших обновлений.'**
   String get authNotConfiguredNote;
+
+  /// No description provided for @statsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Практика'**
+  String get statsTitle;
+
+  /// No description provided for @statsTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'Календарь практик'**
+  String get statsTooltip;
+
+  /// No description provided for @streakLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one {день подряд} few {дня подряд} many {дней подряд} other {дня подряд}}'**
+  String streakLabel(int n);
+
+  /// No description provided for @monthMinutesLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'минут за месяц'**
+  String get monthMinutesLabel;
+
+  /// No description provided for @monthSessionsLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one {сессия} few {сессии} many {сессий} other {сессии}}'**
+  String monthSessionsLabel(int n);
+
+  /// No description provided for @statsEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет ни одной практики. Начните с любой техники — здесь появится календарь.'**
+  String get statsEmpty;
 }
 
 class _AppLocalizationsDelegate
