@@ -360,4 +360,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get commonSave => 'Сохранить';
+
+  @override
+  String get linkGoogleAction =>
+      'Привязать Google — сохранить профиль навсегда';
 }

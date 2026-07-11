@@ -145,5 +145,6 @@
   "nicknameDialogTitle": "Challenge nickname",
   "signOutAnonWarning": "A guest profile cannot be restored after signing out: challenges and nickname will be lost. Sign out?",
   "commonCancel": "Cancel",
-  "commonSave": "Save"
+  "commonSave": "Save",
+  "linkGoogleAction": "Link Google — keep your profile forever"
 }
