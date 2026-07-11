@@ -1,0 +1,88 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Breathe",
+
+  "tech_box_name": "Box Breathing",
+  "tech_box_desc": "A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting.",
+  "tech_box_benefit": "Quickly reduces stress and anxiety, restores focus, and calms the nervous system through an even, rhythmic breathing pattern.",
+
+  "tech_triangle_name": "Triangle Breathing",
+  "tech_triangle_desc": "A three-phase technique: inhale, hold, exhale — no second pause. The pattern forms a triangle: smooth yet structured with a brief retention. Each phase duration is adjustable from 2 to 10 seconds.",
+  "tech_triangle_benefit": "Gently calms the mind and releases tension, and serves as a good stepping stone toward more advanced breath-hold practices.",
+
+  "tech_four_seven_eight_name": "4-7-8",
+  "tech_four_seven_eight_desc": "Andrew Weil's technique: inhale for 4 counts, hold for 7, slow exhale for 8. The phase ratio is fixed; a tempo multiplier (×0.5 / ×0.75 / ×1 / ×1.25) lets you slow down or speed up the cycle. Beginners are advised to start with 4 cycles.",
+  "tech_four_seven_eight_benefit": "Effectively reduces anxiety and aids sleep: the long hold and extended exhale activate the parasympathetic nervous system.",
+
+  "tech_four_two_four_name": "4-2-4",
+  "tech_four_two_four_desc": "A gentle balancing technique: inhale for 4 counts, short hold for 2, exhale for 4. All phases are adjustable from 2 to 10 seconds. The emphasis can shift toward relaxation or mild invigoration depending on pace.",
+  "tech_four_two_four_benefit": "Balances the nervous system, relieves mild tension, and fits naturally into short breaks throughout the day.",
+
+  "tech_two_eight_name": "2-8",
+  "tech_two_eight_desc": "Extended-exhale technique with a 1:4 ratio — a short 2-second inhale and a long 8-second exhale. The phase ratio can be maintained or adjusted independently. No breath holds required, making it easy to learn.",
+  "tech_two_eight_benefit": "A long exhale directly activates the parasympathetic nervous system, relieving physical and emotional tension and promoting relaxation.",
+
+  "tech_two_ten_name": "2-10",
+  "tech_two_ten_desc": "A deeper version of 2-8 with a 1:5 ratio — inhale for 2 seconds, exhale for 10. The even longer exhale intensifies the relaxation response. Phase ratio is adjustable.",
+  "tech_two_ten_benefit": "Pronounced parasympathetic activation and deep relaxation: ideal for relieving strong stress and preparing for sleep.",
+
+  "tech_four_sixteen_eight_name": "4-16-8",
+  "tech_four_sixteen_eight_desc": "Pranayama ratio 1:4:2 — inhale 4, hold 16, exhale 8. A simplified 4-8-8 mode is offered by default; experienced practitioners can switch to the full pattern. The base scales proportionally — e.g. 3-12-6 or 5-20-10. Recommended for those who have already mastered foundational techniques. Beginners: no more than 4 cycles.",
+  "tech_four_sixteen_eight_benefit": "Deeply trains the respiratory system, develops breath retention capacity, and enhances concentration and energy levels.",
+
+  "tech_coherent_name": "Coherent Breathing",
+  "tech_coherent_desc": "Slow breathing at about 5–6 breaths per minute: equal-length inhale and exhale (5.5 seconds each by default), no holds. Phase duration is adjustable from 4 to 7 seconds. The technique is gentle and suitable for extended sessions.",
+  "tech_coherent_benefit": "Balances heart rate variability (HRV), reduces chronic stress, and improves the equilibrium between sympathetic and parasympathetic activity.",
+
+  "tech_diaphragmatic_name": "Diaphragmatic Breathing",
+  "tech_diaphragmatic_desc": "Free abdominal breathing by timer: breathe deeply, letting the belly rise on the inhale and fall on the exhale — no counting or holds. A voice instruction plays at the start of the session. An optional ambient background sound is available.",
+  "tech_diaphragmatic_benefit": "Relieves muscle tension, improves oxygenation, and teaches the correct breathing pattern that underlies all other techniques.",
+
+  "tech_nadi_shodhana_name": "Nadi Shodhana",
+  "tech_nadi_shodhana_desc": "Alternate-nostril breathing from the yoga tradition: alternately closing the right and left nostril, you synchronise the two brain hemispheres. Practised by timer; optional audio cues for nostril alternation are available with a configurable interval, or a completely free mode.",
+  "tech_nadi_shodhana_benefit": "Calms the mind, improves focus and nervous system balance, and is traditionally used to prepare for meditation.",
+
+  "tech_sound_breath_name": "Sound Breath",
+  "tech_sound_breath_desc": "Mindful breathing with vocalisation (Ujjayi) or humming (Bhramari 'bee breath'). Practised by timer; a voice instruction plays at the start. For Bhramari, optional cues — 'inhale / hum on exhale' — are available.",
+  "tech_sound_breath_benefit": "Deeply calms the nervous system through vibration and conscious sound, reduces anxiety, improves focus, and helps enter a meditative state.",
+
+  "tech_wim_hof_name": "Wim Hof Method",
+  "tech_wim_hof_desc": "An intensive technique: each round consists of 30–40 deep active breaths, followed by a full exhale and a breath hold on empty lungs (until the urge to breathe returns), then a deep inhale and a 15-second hold. Typically 3–4 rounds. Number of breaths, pace, number of rounds, and hold duration are all configurable. Retention times per round are displayed after the session.",
+  "tech_wim_hof_benefit": "Builds stress resilience, boosts energy levels, improves cold adaptation, and develops conscious control of the respiratory system.",
+
+  "safety_low": "Breathe at a comfortable pace. If you feel dizzy or uncomfortable, stop the exercise and breathe normally.",
+  "safety_holds_generic": "This technique includes breath holds. Mild tingling in the limbs is normal; dizziness or tunnel vision is a signal to stop and breathe freely. Never practise this technique in water, while driving, or in any situation that requires focused attention.",
+  "safety_intense": "IMPORTANT: never perform this technique in water, while driving, while standing, or while operating machinery — loss of consciousness is possible.\n\nContraindications: pregnancy, epilepsy, cardiovascular disease, high blood pressure, panic disorders, recent surgery, glaucoma. If any of these apply to you, consult a doctor before practising.\n\nStart with 3–4 cycles and increase gradually.",
+
+  "startSession": "Start",
+  "comingSoonStage2": "Coming in a future update",
+  "sectionDescription": "About",
+  "sectionBenefit": "Benefits",
+  "sectionSafety": "Safety",
+  "cyclesShort": "{n, plural, one {{n} cycle} other {{n} cycles}}",
+  "@cyclesShort": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "minutesShort": "{n} min",
+  "@minutesShort": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "roundsShort": "{n, plural, one {{n} round} other {{n} rounds}}",
+  "@roundsShort": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "noviceCyclesHint": "Beginners: no more than {n} cycles",
+  "@noviceCyclesHint": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "settingsTooltip": "Settings"
+}
