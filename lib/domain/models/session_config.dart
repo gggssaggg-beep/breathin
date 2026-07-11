@@ -27,13 +27,19 @@ class SessionConfig {
     this.prepSeconds = 3,
   });
 
-  /// Классические настройки техники: длительности из дефолтов фаз, завершение
-  /// по `defaultCycles`. Кнопка «Сбросить к классике» (ТЗ §3.2) даёт ровно это.
+  /// Классические настройки техники: длительности из дефолтных фаз (для
+  /// 4-16-8 — упрощённый паттерн, ТЗ §2.1), завершение по `defaultCycles`.
+  /// Кнопка «Сбросить к классике» (ТЗ §3.2) даёт ровно это.
+  /// Только для counted-техник; timer/wimHof конфигурируются иначе (П10/П18).
   factory SessionConfig.classic(Technique t, {int prepSeconds = 3}) {
+    final phases = t.defaultPhases;
+    if (phases == null) {
+      throw ArgumentError('У техники ${t.id} нет фазовой структуры');
+    }
     return SessionConfig(
       endMode: EndMode.cycles,
       cycles: t.defaultCycles,
-      phaseSeconds: t.phases.map((p) => p.defaultSec).toList(),
+      phaseSeconds: phases.map((p) => p.defaultSec).toList(),
       prepSeconds: prepSeconds,
     );
   }
