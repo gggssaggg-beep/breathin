@@ -15,6 +15,41 @@ double breathFraction(SessionState state) {
   };
 }
 
+/// «Визуальная подпись» кадра: всё, что реально видно на экране сессии,
+/// сведённое к сравнимому значению (record). Если подпись не изменилась —
+/// кадр можно НЕ перестраивать.
+///
+/// Энергосбережение: тикер идёт 60 Гц, но у круга на задержках фигура
+/// статична (breathFraction константен), на подготовке меняется лишь цифра
+/// раз в секунду — без подписи экран перестраивался бы 60 раз/с всю сессию.
+/// Непрерывный прогресс квантуется до подпиксельного шага (движение точки
+/// и «дыхание» круга остаются гладкими):
+/// * фигура — 1/512 фазы (~0.5 px на стороне 230 px);
+/// * прогресс-бар — 1/200 сессии (~2 px на всю ширину).
+Object visualSignature(SessionState s, VisualShape shape) {
+  final int figureQ;
+  if (shape == VisualShape.circle) {
+    // Круг зависит только от breathFraction: на задержках он константен.
+    figureQ = (breathFraction(s) * 512).round();
+  } else {
+    // Точка на периметре движется в каждой фазе, включая задержки.
+    figureQ = s.phase == null ? -1 : (s.phaseProgress * 512).round();
+  }
+  final barQ = s.sessionDurationMs <= 0
+      ? 0
+      : 200 * s.sessionElapsedMs ~/ s.sessionDurationMs;
+  return (
+    s.stage,
+    s.phase,
+    s.phaseIndexInCycle,
+    s.cycleIndex,
+    (s.prepRemainingMs / 1000).ceil(),
+    s.phaseRemainingSec,
+    figureQ,
+    barQ,
+  );
+}
+
 /// Возвращает позицию точки на периметре скруглённого квадрата/треугольника.
 ///
 /// [shape] — фигура (square или triangle).

@@ -106,7 +106,8 @@ class SessionView extends StatelessWidget {
         final sec = (state.prepRemainingMs / 1000).ceil();
         return ('Приготовьтесь', '$sec');
       case SessionStage.finished:
-        return ('Готово', '🌬️');
+        // Текстовый глиф, не эмодзи: эмодзи ОС-зависимы (RESOURCES_ICONS).
+        return ('Готово', '✓');
       case SessionStage.breathing:
         return (phaseLabelRu(state.phase!), '${state.phaseRemainingSec}');
     }

@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/engine/session_plan.dart';
 import '../../domain/models/technique.dart';
+import 'breathing_painter.dart';
 import 'session_view.dart';
 
 /// Визуальный прогон сессии: гонит [PhaseEngine] от Stopwatch через [Ticker]
@@ -33,6 +34,7 @@ class _SessionRunnerState extends State<SessionRunner>
   final Stopwatch _clock = Stopwatch();
   int _lastMs = 0;
   late SessionState _state;
+  Object? _signature;
 
   // Порог диспетчеризации: включаем реальную рассылку событий на устройстве.
   static const bool _dispatchFeedback = false;
@@ -58,7 +60,13 @@ class _SessionRunnerState extends State<SessionRunner>
     }
     _lastMs = pos;
     final s = _engine.stateAt(pos);
-    if (mounted) setState(() => _state = s);
+    // Энергосбережение: перестраиваем экран только когда меняется видимое
+    // (у круга на задержках и на подготовке — ~1 кадр/с вместо 60).
+    final sig = visualSignature(s, widget.shape);
+    if (sig != _signature) {
+      _signature = sig;
+      if (mounted) setState(() => _state = s);
+    }
     if (s.isFinished) {
       _ticker.stop();
       _clock.stop();
