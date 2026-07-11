@@ -649,6 +649,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Сохранить'**
   String get commonSave;
+
+  /// No description provided for @linkGoogleAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привязать Google — сохранить профиль навсегда'**
+  String get linkGoogleAction;
 }
 
 class _AppLocalizationsDelegate

@@ -145,5 +145,6 @@
   "nicknameDialogTitle": "Имя в челленджах",
   "signOutAnonWarning": "Гостевой профиль нельзя восстановить после выхода: челленджи и ник будут потеряны. Выйти?",
   "commonCancel": "Отмена",
-  "commonSave": "Сохранить"
+  "commonSave": "Сохранить",
+  "linkGoogleAction": "Привязать Google — сохранить профиль навсегда"
 }

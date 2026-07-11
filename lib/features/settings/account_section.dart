@@ -165,17 +165,36 @@ class _AccountSectionState extends State<AccountSection> {
         ? l.guestProfileLabel
         : (user.email ?? l.guestProfileLabel);
     return Card(
-      child: ListTile(
-        leading: CircleAvatar(
-          child: Text(title.isEmpty ? '?' : title.characters.first.toUpperCase()),
-        ),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        onTap: _editNickname, // тап по строке — сменить ник
-        trailing: TextButton(
-          onPressed: () => _signOut(user),
-          child: Text(l.signOutAction),
-        ),
+      child: Column(
+        children: [
+          ListTile(
+            leading: CircleAvatar(
+              child: Text(
+                  title.isEmpty ? '?' : title.characters.first.toUpperCase()),
+            ),
+            title: Text(title),
+            subtitle: Text(subtitle),
+            onTap: _editNickname, // тап по строке — сменить ник
+            trailing: TextButton(
+              onPressed: () => _signOut(user),
+              child: Text(l.signOutAction),
+            ),
+          ),
+          // Гостю предлагаем сделать профиль постоянным (id сохраняется —
+          // челленджи/ник/история не теряются).
+          if (user.isAnonymous && googleAuthEnabled)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: const BreathinIcon(BreathinIcons.login, size: 20),
+                  label: Text(l.linkGoogleAction),
+                  onPressed: () => widget.auth.linkGoogleIdentity(),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

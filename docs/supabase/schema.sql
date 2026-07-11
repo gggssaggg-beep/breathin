@@ -48,6 +48,27 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
+-- Облачная копия истории практик: перенос данных на новое устройство и
+-- честный прогресс челленджей. id — клиентский (см. SessionRecord.id),
+-- уникален в паре с user_id; upsert делает синк идемпотентным.
+create table if not exists public.sessions (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  id text not null,
+  technique_id text not null,
+  started_at timestamptz not null,
+  duration_sec int not null,
+  cycles int not null,
+  completed boolean not null default true,
+  created_at timestamptz not null default now(),
+  primary key (user_id, id)
+);
+alter table public.sessions enable row level security;
+
+drop policy if exists "sessions own all" on public.sessions;
+create policy "sessions own all" on public.sessions
+  for all to authenticated
+  using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 -- Челленджи: соревнование по коду-приглашению (без системы друзей в v1 —
 -- код случайный, ввод кода = согласие участвовать).
 create table if not exists public.challenges (

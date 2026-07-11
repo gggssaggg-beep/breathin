@@ -352,4 +352,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonSave => 'Save';
+
+  @override
+  String get linkGoogleAction => 'Link Google — keep your profile forever';
 }

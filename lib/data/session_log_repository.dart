@@ -39,4 +39,26 @@ class SessionLogRepository {
       jsonEncode({'schema': 1, 'records': records}),
     );
   }
+
+  /// Вливает записи из облака: дедупликация по id, локальные не трогаются.
+  /// Возвращает число реально добавленных.
+  Future<int> mergeAll(Iterable<SessionRecord> incoming) async {
+    final existing = await all();
+    final knownIds = existing.map((r) => r.id).toSet();
+    final fresh =
+        incoming.where((r) => !knownIds.contains(r.id)).toList(growable: false);
+    if (fresh.isEmpty) return 0;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _key,
+      jsonEncode({
+        'schema': 1,
+        'records': [
+          for (final r in existing) r.toJson(),
+          for (final r in fresh) r.toJson(),
+        ],
+      }),
+    );
+    return fresh.length;
+  }
 }

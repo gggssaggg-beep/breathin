@@ -120,6 +120,19 @@ class AuthService {
         .update({'display_name': name}).eq('id', user.id);
   }
 
+  /// Привязка Google к гостевому профилю (identity linking): user id
+  /// НЕ меняется — челленджи, ник и облачная история сохраняются, а профиль
+  /// становится постоянным (вход с любого устройства). Ключевой механизм
+  /// «без потери данных» при старте с анонимного входа.
+  Future<void> linkGoogleIdentity() async {
+    if (!isReady) return;
+    await Supabase.instance.client.auth.linkIdentity(
+      OAuthProvider.google,
+      redirectTo: authRedirectUrl,
+      authScreenLaunchMode: LaunchMode.externalApplication,
+    );
+  }
+
   Future<void> signOut() async {
     if (!isReady) return;
     await Supabase.instance.client.auth.signOut();
