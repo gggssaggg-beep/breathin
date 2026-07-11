@@ -113,5 +113,12 @@
     "placeholders": {
       "n": { "type": "String" }
     }
-  }
+  },
+
+  "accountSection": "Аккаунт",
+  "signInGoogle": "Войти через Google",
+  "signOutAction": "Выйти",
+  "accountGuest": "Гостевой режим",
+  "accountGuestNote": "Практика и настройки работают без аккаунта. Вход понадобится для друзей и общей ленты.",
+  "authNotConfiguredNote": "Вход через Google станет доступен в одном из ближайших обновлений."
 }

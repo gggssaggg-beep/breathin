@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   intl: any # версию пинит flutter_localizations
   shared_preferences: ^2.3.0
+  # Auth (Google через Supabase OAuth + deep link) и бэкенд соцфункций этапа 2.
+  supabase_flutter: ^2.8.0
 
 dev_dependencies:
   flutter_test:

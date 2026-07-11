@@ -535,6 +535,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'{n} с'**
   String secondsShort(String n);
+
+  /// No description provided for @accountSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аккаунт'**
+  String get accountSection;
+
+  /// No description provided for @signInGoogle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Войти через Google'**
+  String get signInGoogle;
+
+  /// No description provided for @signOutAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выйти'**
+  String get signOutAction;
+
+  /// No description provided for @accountGuest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Гостевой режим'**
+  String get accountGuest;
+
+  /// No description provided for @accountGuestNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Практика и настройки работают без аккаунта. Вход понадобится для друзей и общей ленты.'**
+  String get accountGuestNote;
+
+  /// No description provided for @authNotConfiguredNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вход через Google станет доступен в одном из ближайших обновлений.'**
+  String get authNotConfiguredNote;
 }
 
 class _AppLocalizationsDelegate

@@ -18,6 +18,16 @@
 	<string>breathin</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<!-- Deep link возврата из Google-входа (Supabase OAuth): dyshi://auth -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>dyshi</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

@@ -113,5 +113,12 @@
     "placeholders": {
       "n": { "type": "String" }
     }
-  }
+  },
+
+  "accountSection": "Account",
+  "signInGoogle": "Sign in with Google",
+  "signOutAction": "Sign out",
+  "accountGuest": "Guest mode",
+  "accountGuestNote": "Practice and settings work without an account. Sign-in will be needed for friends and the shared feed.",
+  "authNotConfiguredNote": "Google sign-in will become available in an upcoming update."
 }
