@@ -350,6 +350,12 @@ abstract class AppLocalizations {
   /// **'Появится в одном из следующих обновлений'**
   String get comingSoonStage2;
 
+  /// No description provided for @comingSoonBadge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скоро'**
+  String get comingSoonBadge;
+
   /// No description provided for @sectionDescription.
   ///
   /// In ru, this message translates to:

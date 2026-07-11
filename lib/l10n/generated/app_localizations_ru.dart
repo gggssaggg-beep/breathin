@@ -162,6 +162,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get comingSoonStage2 => 'Появится в одном из следующих обновлений';
 
   @override
+  String get comingSoonBadge => 'Скоро';
+
+  @override
   String get sectionDescription => 'Описание';
 
   @override

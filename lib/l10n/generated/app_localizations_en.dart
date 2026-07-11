@@ -162,6 +162,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comingSoonStage2 => 'Coming in a future update';
 
   @override
+  String get comingSoonBadge => 'Soon';
+
+  @override
   String get sectionDescription => 'About';
 
   @override
