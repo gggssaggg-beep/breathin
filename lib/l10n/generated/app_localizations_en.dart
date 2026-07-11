@@ -333,4 +333,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get byTechniqueLabel => 'By technique';
+
+  @override
+  String get createGuestProfile => 'Create profile (no sign-up)';
+
+  @override
+  String get guestProfileLabel => 'Guest profile';
+
+  @override
+  String get nicknameDialogTitle => 'Challenge nickname';
+
+  @override
+  String get signOutAnonWarning =>
+      'A guest profile cannot be restored after signing out: challenges and nickname will be lost. Sign out?';
+
+  @override
+  String get commonCancel => 'Cancel';
+
+  @override
+  String get commonSave => 'Save';
 }

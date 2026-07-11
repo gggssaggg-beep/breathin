@@ -138,5 +138,12 @@
     }
   },
   "statsEmpty": "No practice yet. Start with any technique — your calendar will appear here.",
-  "byTechniqueLabel": "By technique"
+  "byTechniqueLabel": "By technique",
+
+  "createGuestProfile": "Create profile (no sign-up)",
+  "guestProfileLabel": "Guest profile",
+  "nicknameDialogTitle": "Challenge nickname",
+  "signOutAnonWarning": "A guest profile cannot be restored after signing out: challenges and nickname will be lost. Sign out?",
+  "commonCancel": "Cancel",
+  "commonSave": "Save"
 }

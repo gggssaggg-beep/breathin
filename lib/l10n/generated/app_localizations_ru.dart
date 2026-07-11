@@ -341,4 +341,23 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get byTechniqueLabel => 'По техникам';
+
+  @override
+  String get createGuestProfile => 'Создать профиль (без регистрации)';
+
+  @override
+  String get guestProfileLabel => 'Гостевой профиль';
+
+  @override
+  String get nicknameDialogTitle => 'Имя в челленджах';
+
+  @override
+  String get signOutAnonWarning =>
+      'Гостевой профиль нельзя восстановить после выхода: челленджи и ник будут потеряны. Выйти?';
+
+  @override
+  String get commonCancel => 'Отмена';
+
+  @override
+  String get commonSave => 'Сохранить';
 }

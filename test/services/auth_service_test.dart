@@ -19,6 +19,9 @@ void main() {
       // Не бросают и не ходят в сеть (Supabase.initialize не вызывался —
       // при попытке обращения был бы AssertionError изнутри пакета).
       await auth.signInWithGoogle();
+      await auth.signInAnonymously();
+      expect(await auth.fetchDisplayName(), isNull);
+      await auth.updateDisplayName('X');
       await auth.signOut();
     });
   });

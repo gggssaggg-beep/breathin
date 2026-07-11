@@ -613,6 +613,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'По техникам'**
   String get byTechniqueLabel;
+
+  /// No description provided for @createGuestProfile.
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать профиль (без регистрации)'**
+  String get createGuestProfile;
+
+  /// No description provided for @guestProfileLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Гостевой профиль'**
+  String get guestProfileLabel;
+
+  /// No description provided for @nicknameDialogTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя в челленджах'**
+  String get nicknameDialogTitle;
+
+  /// No description provided for @signOutAnonWarning.
+  ///
+  /// In ru, this message translates to:
+  /// **'Гостевой профиль нельзя восстановить после выхода: челленджи и ник будут потеряны. Выйти?'**
+  String get signOutAnonWarning;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отмена'**
+  String get commonCancel;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить'**
+  String get commonSave;
 }
 
 class _AppLocalizationsDelegate
