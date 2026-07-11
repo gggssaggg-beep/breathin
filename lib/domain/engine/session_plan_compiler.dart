@@ -11,7 +11,13 @@ import 'session_plan.dart';
 class SessionPlanCompiler {
   const SessionPlanCompiler();
 
-  SessionPlan compile(Technique technique, SessionConfig config) {
+  /// [metronome] — вшить тики метронома (ТЗ §3.3): каждый круглую секунду
+  /// дыхательной части, с акцентом на тиках, совпадающих с началом фазы.
+  SessionPlan compile(
+    Technique technique,
+    SessionConfig config, {
+    bool metronome = false,
+  }) {
     final specs = technique.phases;
     if (specs == null) {
       // Timer-техники — режим `timer` компилятора (П10), Вим Хоф — свой
@@ -70,12 +76,41 @@ class SessionPlanCompiler {
       }
     }
 
+    if (metronome) {
+      // Тики: от первого вдоха до гонга (гонговый момент не тикает).
+      // Акцент — на тиках, совпадающих с началом какой-либо фазы; при
+      // целых длительностях фаз (шаг слайдера 0.5 c возможен, но старты фаз
+      // на полусекундах в тик не попадают) сравнение по точному tMs честно.
+      final phaseStartTimes = {
+        for (final e in events)
+          if (e.type == EngineEventType.phaseStart) e.tMs,
+      };
+      for (var tick = config.prepSeconds * 1000; tick < t; tick += 1000) {
+        events.add(EngineEvent(
+          tMs: tick,
+          type: EngineEventType.metronomeTick,
+          accent: phaseStartTimes.contains(tick),
+        ));
+      }
+    }
+
     // Гонг совпадает с концом последней фазы; сессия логически завершается там же.
     events.add(EngineEvent(tMs: t, type: EngineEventType.gong));
     events.add(EngineEvent(tMs: t, type: EngineEventType.sessionEnd));
 
+    // Контракт SessionPlan — события упорядочены по времени (тики метронома
+    // добавлялись после фазовых). List.sort в Dart НЕстабильна — держим
+    // порядок вставки при равном tMs вторичным ключом-индексом
+    // (фаза раньше её акцент-тика).
+    final indexed = events.asMap().entries.toList()
+      ..sort((a, b) {
+        final byTime = a.value.tMs.compareTo(b.value.tMs);
+        return byTime != 0 ? byTime : a.key.compareTo(b.key);
+      });
+    final ordered = [for (final e in indexed) e.value];
+
     return SessionPlan(
-      events: events,
+      events: ordered,
       totalCycles: cycles,
       totalDurationMs: t,
     );

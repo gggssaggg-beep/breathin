@@ -1,11 +1,11 @@
 import '../models/technique.dart';
 
-/// Тип события на таймлайне сессии. В срезе №1 — минимальный набор; голосовые
-/// подсказки, тики метронома и вибро-события добавляются в следующих партиях
+/// Тип события на таймлайне сессии. Голосовые подсказки добавятся в П8
 /// (см. ПЛАН §3.3).
 enum EngineEventType {
   prepCountdown, // бип обратного отсчёта «3…2…1»
   phaseStart,    // начало фазы цикла
+  metronomeTick, // тик метронома (раз в секунду; accent — на смене фазы)
   gong,          // гонг завершения
   sessionEnd,    // логический конец сессии
 }
@@ -20,6 +20,7 @@ class EngineEvent {
   final PhaseKind? phase;    // для phaseStart
   final int? cycleIndex;     // 0-based, для phaseStart
   final int? countdownValue; // для prepCountdown (3, 2, 1)
+  final bool accent;         // для metronomeTick: тик на смене фазы
 
   const EngineEvent({
     required this.tMs,
@@ -27,6 +28,7 @@ class EngineEvent {
     this.phase,
     this.cycleIndex,
     this.countdownValue,
+    this.accent = false,
   });
 
   @override
