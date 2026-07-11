@@ -4,6 +4,8 @@ import '../../domain/catalog/techniques.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../ui/icons/breathin_icon.dart';
+import '../../ui/icons/breathin_icons.dart';
 import '../catalog/technique_card_screen.dart';
 import '../catalog/technique_icons.dart';
 import '../catalog/technique_subtitle.dart';
@@ -25,7 +27,7 @@ class HomeScreen extends StatelessWidget {
         title: Text(l.appTitle),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const BreathinIcon(BreathinIcons.settings),
             tooltip: l.settingsTooltip,
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const SettingsScreen()),
@@ -93,8 +95,8 @@ class _TechniqueGridCard extends StatelessWidget {
                 backgroundColor: isDimmed
                     ? theme.colorScheme.surfaceContainerHighest
                     : theme.colorScheme.primaryContainer,
-                child: Icon(
-                  iconFor(t.icon),
+                child: BreathinIcon(
+                  iconDataFor(t.icon),
                   color: isDimmed
                       ? theme.colorScheme.onSurfaceVariant
                       : theme.colorScheme.onPrimaryContainer,

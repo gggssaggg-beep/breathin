@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/models/technique.dart';
+import '../../ui/icons/breathin_icon.dart';
+import '../../ui/icons/breathin_icons.dart';
 import 'breathing_painter.dart';
 import 'phase_labels.dart';
 
@@ -44,7 +46,7 @@ class SessionView extends StatelessWidget {
               const SizedBox(height: 16),
               FilledButton.tonalIcon(
                 onPressed: onPauseStop,
-                icon: const Icon(Icons.stop_rounded),
+                icon: const BreathinIcon(BreathinIcons.playerStop, size: 20),
                 label: const Text('Пауза / стоп'),
               ),
             ],

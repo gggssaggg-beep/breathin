@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../services/update/update_service.dart';
+import '../../ui/icons/breathin_icon.dart';
+import '../../ui/icons/breathin_icons.dart';
 
 /// Секция настроек «Обновления» (ТЗ §6.8 + запрос пользователя): галочка
 /// «Автообновление» (вкл по умолчанию) и карточка доступного обновления с
@@ -38,7 +40,7 @@ class UpdateSection extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Icon(Icons.system_update_rounded,
+                  BreathinIcon(BreathinIcons.download,
                       color: theme.colorScheme.primary),
                   const SizedBox(width: 16),
                   Expanded(
@@ -65,7 +67,7 @@ class UpdateSection extends StatelessWidget {
         else
           ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.check_circle_outline_rounded),
+            leading: const BreathinIcon(BreathinIcons.circleCheck),
             title: Text(
               result.availability == UpdateAvailability.checkFailed
                   ? 'Не удалось проверить обновления'

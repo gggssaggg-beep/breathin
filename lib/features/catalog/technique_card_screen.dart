@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../ui/icons/breathin_icon.dart';
 import '../session_setup/session_setup_screen.dart';
 import 'technique_icons.dart';
 import 'technique_subtitle.dart';
@@ -44,8 +45,8 @@ class TechniqueCardScreen extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 48,
                       backgroundColor: theme.colorScheme.primaryContainer,
-                      child: Icon(
-                        iconFor(t.icon),
+                      child: BreathinIcon(
+                        iconDataFor(t.icon),
                         size: 48,
                         color: theme.colorScheme.onPrimaryContainer,
                       ),
