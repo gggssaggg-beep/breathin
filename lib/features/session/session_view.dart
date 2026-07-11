@@ -2,19 +2,26 @@ import 'package:flutter/material.dart';
 
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/models/technique.dart';
+import 'breathing_painter.dart';
 import 'phase_labels.dart';
 
 /// Презентационный экран сессии: чистая функция от [SessionState]. Не знает про
 /// аудио, плеер и таймеры — состояние подаёт контроллер. Поэтому тестируется
 /// обычным виджет-тестом (ПЛАН §7, ТЗ §6.5).
 ///
-/// Дыхательная фигура здесь — простой масштабируемый круг по [phaseProgress];
-/// точные фигуры (квадрат/треугольник, CustomPainter) — партия П9.
+/// Дыхательная фигура — CustomPainter [BreathingPainter] (партия П9):
+/// круг, квадрат или треугольник по [shape].
 class SessionView extends StatelessWidget {
   final SessionState state;
+  final VisualShape shape;
   final VoidCallback? onPauseStop;
 
-  const SessionView({super.key, required this.state, this.onPauseStop});
+  const SessionView({
+    super.key,
+    required this.state,
+    required this.shape,
+    this.onPauseStop,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,44 +56,38 @@ class SessionView extends StatelessWidget {
 
   Widget _breathingFigure(ThemeData theme) {
     final (title, number) = _titleAndNumber();
-    // Круг «дышит»: на вдохе растёт, на выдохе сжимается; на задержках держит.
-    final scale = switch (state.phase) {
-      PhaseKind.inhale => 0.6 + 0.4 * state.phaseProgress,
-      PhaseKind.exhale => 1.0 - 0.4 * state.phaseProgress,
-      PhaseKind.holdIn => 1.0,
-      PhaseKind.holdOut => 0.6,
-      null => 0.8,
-    };
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           height: 260,
           width: 260,
-          child: Center(
-            child: AnimatedScale(
-              scale: scale,
-              duration: const Duration(milliseconds: 250),
-              child: Container(
-                height: 240,
-                width: 240,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: theme.colorScheme.primaryContainer,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  number,
-                  style: theme.textTheme.displayMedium?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w300,
-                  ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Дыхательная фигура (CustomPainter)
+              CustomPaint(
+                size: const Size(260, 260),
+                painter: BreathingPainter(
+                  shape: shape,
+                  state: state,
+                  primary: theme.colorScheme.primary,
+                  outline: theme.colorScheme.outline,
                 ),
               ),
-            ),
+              // Число секунд поверх фигуры
+              Text(
+                number,
+                style: theme.textTheme.displayMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 28),
+        // Заголовок фазы под фигурой
         Text(
           title,
           style: theme.textTheme.headlineSmall,
@@ -96,7 +97,7 @@ class SessionView extends StatelessWidget {
     );
   }
 
-  /// Заголовок и крупное число в круге для текущей стадии.
+  /// Заголовок и крупное число для текущей стадии.
   (String, String) _titleAndNumber() {
     switch (state.stage) {
       case SessionStage.prep:

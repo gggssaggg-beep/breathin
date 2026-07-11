@@ -64,7 +64,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     if (!mounted) return;
     final plan = const SessionPlanCompiler().compile(_t, s.toSessionConfig(_t));
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => SessionRunner(plan: plan)),
+      MaterialPageRoute(builder: (_) => SessionRunner(plan: plan, shape: _t.visual)),
     );
   }
 

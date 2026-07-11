@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/engine/session_plan.dart';
+import '../../domain/models/technique.dart';
 import 'session_view.dart';
 
 /// Визуальный прогон сессии: гонит [PhaseEngine] от Stopwatch через [Ticker]
@@ -14,7 +15,12 @@ import 'session_view.dart';
 /// _onTick подключается диспетчеризация вибрации/звука через eventsInWindow.
 class SessionRunner extends StatefulWidget {
   final SessionPlan plan;
-  const SessionRunner({super.key, required this.plan});
+  final VisualShape shape;
+  const SessionRunner({
+    super.key,
+    required this.plan,
+    this.shape = VisualShape.circle,
+  });
 
   @override
   State<SessionRunner> createState() => _SessionRunnerState();
@@ -73,5 +79,5 @@ class _SessionRunnerState extends State<SessionRunner>
 
   @override
   Widget build(BuildContext context) =>
-      SessionView(state: _state, onPauseStop: _pauseStop);
+      SessionView(state: _state, shape: widget.shape, onPauseStop: _pauseStop);
 }

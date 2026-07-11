@@ -11,6 +11,7 @@ SessionState breathing({
   int totalCycles = 10,
   int phaseElapsedMs = 0,
   int phaseDurationMs = 4000,
+  int phaseIndexInCycle = 0,
 }) =>
     SessionState(
       stage: SessionStage.breathing,
@@ -22,10 +23,16 @@ SessionState breathing({
       prepRemainingMs: 0,
       sessionElapsedMs: 5000,
       sessionDurationMs: 163000,
+      phaseIndexInCycle: phaseIndexInCycle,
     );
 
-Widget wrap(SessionState s, {VoidCallback? onPauseStop}) => MaterialApp(
-      home: SessionView(state: s, onPauseStop: onPauseStop),
+Widget wrap(
+  SessionState s, {
+  VoidCallback? onPauseStop,
+  VisualShape shape = VisualShape.circle,
+}) =>
+    MaterialApp(
+      home: SessionView(state: s, shape: shape, onPauseStop: onPauseStop),
     );
 
 void main() {
@@ -58,6 +65,7 @@ void main() {
       prepRemainingMs: 2500,
       sessionElapsedMs: 500,
       sessionDurationMs: 163000,
+      phaseIndexInCycle: -1,
     )));
     expect(find.text('Приготовьтесь'), findsOneWidget);
     expect(find.text('3'), findsOneWidget); // ceil(2500/1000)
@@ -75,6 +83,7 @@ void main() {
       prepRemainingMs: 0,
       sessionElapsedMs: 163000,
       sessionDurationMs: 163000,
+      phaseIndexInCycle: -1,
     )));
     expect(find.text('Готово'), findsOneWidget);
   });
@@ -84,5 +93,20 @@ void main() {
     await tester.pumpWidget(wrap(breathing(), onPauseStop: () => tapped = true));
     await tester.tap(find.byType(FilledButton));
     expect(tapped, isTrue);
+  });
+
+  testWidgets('SessionView с shape=square рендерится без ошибок', (tester) async {
+    await tester.pumpWidget(wrap(
+      breathing(
+        phase: PhaseKind.inhale,
+        phaseIndexInCycle: 0,
+        phaseElapsedMs: 0,
+        phaseDurationMs: 4000,
+      ),
+      shape: VisualShape.square,
+    ));
+    // Должен отрендериться без исключений; проверяем наличие ключевых виджетов
+    expect(find.text('Вдох'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }
