@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Foreground adaptive icon: точка-«я» и три кольца-ряби дыхания (наружу
+     тоньше и бледнее). Геометрия — assets/icon/icon.svg × 108/512, в пределах
+     safe-zone Ø66dp: максимальный радиус 30 + штрих/2 ≈ 31.2dp < 33dp. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M 54 40 A 14 14 0 1 0 54 68 A 14 14 0 1 0 54 40 Z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="3.6"/>
+    <path
+        android:pathData="M 54 31.6 A 22.4 22.4 0 1 0 54 76.4 A 22.4 22.4 0 1 0 54 31.6 Z"
+        android:strokeColor="#96FFFFFF"
+        android:strokeWidth="3"/>
+    <path
+        android:pathData="M 54 23.2 A 30.8 30.8 0 1 0 54 84.8 A 30.8 30.8 0 1 0 54 23.2 Z"
+        android:strokeColor="#5AFFFFFF"
+        android:strokeWidth="2.3"/>
+    <path
+        android:pathData="M 54 48.5 A 5.5 5.5 0 1 0 54 59.5 A 5.5 5.5 0 1 0 54 48.5 Z"
+        android:fillColor="#FFFFFFFF"/>
+</vector>

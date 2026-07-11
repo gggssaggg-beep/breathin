@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/auth/auth_service.dart';
+import '../../ui/icons/breathin_icon.dart';
+import '../../ui/icons/breathin_icons.dart';
 
 /// Секция «Аккаунт» экрана настроек (ТЗ §4: гостевой режим + вход).
 ///
@@ -35,7 +37,7 @@ class _AccountSectionState extends State<AccountSection> {
     if (!widget.auth.isConfigured) {
       return Card(
         child: ListTile(
-          leading: const Icon(Icons.person_outline),
+          leading: const BreathinIcon(BreathinIcons.user),
           title: Text(l.accountGuest),
           subtitle: Text('${l.accountGuestNote}\n${l.authNotConfiguredNote}'),
           isThreeLine: true,
@@ -60,7 +62,7 @@ class _AccountSectionState extends State<AccountSection> {
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.tonalIcon(
-                      icon: const Icon(Icons.login_rounded),
+                      icon: const BreathinIcon(BreathinIcons.login, size: 20),
                       label: Text(l.signInGoogle),
                       onPressed: () => widget.auth.signInWithGoogle(),
                     ),

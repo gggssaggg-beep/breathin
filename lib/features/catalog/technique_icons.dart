@@ -1,35 +1,35 @@
-import 'package:flutter/material.dart';
-
 import '../../domain/models/technique.dart';
+import '../../ui/icons/breathin_icons.dart';
 
-/// Маппер семантической иконки техники в [IconData] (Material Icons).
+/// Маппер семантической иконки техники в [BreathinIconData]
+/// (собственный набор в стиле Tabler, MIT — см. lib/ui/icons/).
 /// Выделен в отдельный файл, чтобы переиспользовать на главном экране
 /// и на карточке техники.
-IconData iconFor(TechniqueIcon icon) {
+BreathinIconData iconDataFor(TechniqueIcon icon) {
   switch (icon) {
     case TechniqueIcon.square:
-      return Icons.crop_square_rounded;
+      return BreathinIcons.square;
     case TechniqueIcon.triangle:
-      return Icons.change_history_rounded;
+      return BreathinIcons.triangle;
     case TechniqueIcon.moon:
-      return Icons.nightlight_round;
+      return BreathinIcons.moon;
     case TechniqueIcon.balance:
-      return Icons.balance_rounded;
+      return BreathinIcons.scale;
     case TechniqueIcon.wave:
-      return Icons.waves_rounded;
+      return BreathinIcons.waveSine;
     case TechniqueIcon.deepWave:
-      return Icons.water_rounded;
+      return BreathinIcons.ripple;
     case TechniqueIcon.mountain:
-      return Icons.terrain_rounded;
+      return BreathinIcons.mountain;
     case TechniqueIcon.heart:
-      return Icons.favorite_rounded;
+      return BreathinIcons.heartbeat;
     case TechniqueIcon.snowflake:
-      return Icons.ac_unit_rounded;
+      return BreathinIcons.snowflake;
     case TechniqueIcon.belly:
-      return Icons.self_improvement_rounded;
+      return BreathinIcons.lungs;
     case TechniqueIcon.nostrils:
-      return Icons.air_rounded;
+      return BreathinIcons.wind;
     case TechniqueIcon.hum:
-      return Icons.graphic_eq_rounded;
+      return BreathinIcons.volume2;
   }
 }

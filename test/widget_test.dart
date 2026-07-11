@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:breathin/app/app.dart';
@@ -29,9 +28,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(const BreathinApp());
-    await tester.tap(find.byIcon(Icons.settings_outlined));
+    // Кнопка настроек — BreathinIcon (свой набор), ищем по tooltip.
+    await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
-    // В en AppLocalizations settingsTooltip='Settings'
     // На SettingsScreen должен быть текст «Автообновление» (русский hardcode)
     expect(find.text('Настройки'), findsWidgets);
     expect(find.text('Автообновление'), findsOneWidget);

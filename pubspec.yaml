@@ -40,6 +40,8 @@ dependencies:
   shared_preferences: ^2.3.0
   # Auth (Google через Supabase OAuth + deep link) и бэкенд соцфункций этапа 2.
   supabase_flutter: ^2.8.0
+  # Парсер SVG-путей для собственного иконочного набора (Tabler, MIT).
+  path_drawing: ^1.0.1
 
 dev_dependencies:
   flutter_test:
