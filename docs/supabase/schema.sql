@@ -7,9 +7,10 @@
 -- триггером из Google-метаданных при первом входе.
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
-  display_name text not null default 'Без имени',
+  display_name text not null default 'Гость',
   created_at timestamptz not null default now()
 );
+alter table public.profiles alter column display_name set default 'Гость';
 alter table public.profiles enable row level security;
 
 drop policy if exists "profiles readable by authenticated" on public.profiles;
@@ -33,7 +34,8 @@ begin
     coalesce(
       new.raw_user_meta_data->>'full_name',
       new.raw_user_meta_data->>'name',
-      split_part(coalesce(new.email, 'user'), '@', 1)
+      nullif(split_part(coalesce(new.email, ''), '@', 1), ''),
+      'Гость' -- анонимный вход: ни почты, ни метаданных
     )
   )
   on conflict (id) do nothing;

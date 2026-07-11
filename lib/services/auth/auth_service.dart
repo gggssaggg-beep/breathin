@@ -10,11 +10,15 @@ class AppUser {
   final String? displayName;
   final String? avatarUrl;
 
+  /// Гостевой (анонимный) профиль: без почты; при выходе не восстановим.
+  final bool isAnonymous;
+
   const AppUser({
     required this.id,
     this.email,
     this.displayName,
     this.avatarUrl,
+    this.isAnonymous = false,
   });
 
   factory AppUser.fromSupabase(User u) {
@@ -24,6 +28,7 @@ class AppUser {
       email: u.email,
       displayName: (meta['full_name'] ?? meta['name']) as String?,
       avatarUrl: (meta['avatar_url'] ?? meta['picture']) as String?,
+      isAnonymous: u.isAnonymous,
     );
   }
 }
@@ -84,6 +89,35 @@ class AuthService {
       redirectTo: authRedirectUrl,
       authScreenLaunchMode: LaunchMode.externalApplication,
     );
+  }
+
+  /// Гостевой профиль (анонимный вход): аккаунт без почты и пароля —
+  /// достаточно для челленджей. Провайдер включён в проекте Supabase.
+  /// Профиль в public.profiles создаёт триггер (display_name = 'Гость').
+  Future<void> signInAnonymously() async {
+    if (!isReady) return;
+    await Supabase.instance.client.auth.signInAnonymously();
+  }
+
+  /// Имя для отображения в челленджах — из public.profiles (источник
+  /// правды: чужие имена другим участникам видны только через эту таблицу).
+  Future<String?> fetchDisplayName() async {
+    final user = currentUser;
+    if (user == null) return null;
+    final row = await Supabase.instance.client
+        .from('profiles')
+        .select('display_name')
+        .eq('id', user.id)
+        .maybeSingle();
+    return row?['display_name'] as String?;
+  }
+
+  Future<void> updateDisplayName(String name) async {
+    final user = currentUser;
+    if (user == null) return;
+    await Supabase.instance.client
+        .from('profiles')
+        .update({'display_name': name}).eq('id', user.id);
   }
 
   Future<void> signOut() async {
