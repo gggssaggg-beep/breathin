@@ -185,5 +185,19 @@
   },
   "challengeFinished": "Finished",
   "commonCreate": "Create",
-  "commonJoin": "Join"
+  "commonJoin": "Join",
+
+  "updateAvailableSnack": "Update {version} available",
+  "@updateAvailableSnack": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateDownloadAction": "Get",
+  "appVersionLabel": "Version {version}",
+  "@appVersionLabel": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  }
 }

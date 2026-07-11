@@ -441,4 +441,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get commonJoin => 'Присоединиться';
+
+  @override
+  String updateAvailableSnack(String version) {
+    return 'Доступно обновление $version';
+  }
+
+  @override
+  String get updateDownloadAction => 'Скачать';
+
+  @override
+  String appVersionLabel(String version) {
+    return 'Версия $version';
+  }
 }
