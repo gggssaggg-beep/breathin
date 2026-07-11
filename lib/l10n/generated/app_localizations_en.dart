@@ -432,4 +432,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonJoin => 'Join';
+
+  @override
+  String updateAvailableSnack(String version) {
+    return 'Update $version available';
+  }
+
+  @override
+  String get updateDownloadAction => 'Get';
+
+  @override
+  String appVersionLabel(String version) {
+    return 'Version $version';
+  }
 }

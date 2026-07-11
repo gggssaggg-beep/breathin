@@ -185,5 +185,19 @@
   },
   "challengeFinished": "Завершён",
   "commonCreate": "Создать",
-  "commonJoin": "Присоединиться"
+  "commonJoin": "Присоединиться",
+
+  "updateAvailableSnack": "Доступно обновление {version}",
+  "@updateAvailableSnack": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateDownloadAction": "Скачать",
+  "appVersionLabel": "Версия {version}",
+  "@appVersionLabel": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  }
 }

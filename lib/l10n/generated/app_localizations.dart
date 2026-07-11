@@ -793,6 +793,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Присоединиться'**
   String get commonJoin;
+
+  /// No description provided for @updateAvailableSnack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно обновление {version}'**
+  String updateAvailableSnack(String version);
+
+  /// No description provided for @updateDownloadAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скачать'**
+  String get updateDownloadAction;
+
+  /// No description provided for @appVersionLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Версия {version}'**
+  String appVersionLabel(String version);
 }
 
 class _AppLocalizationsDelegate
