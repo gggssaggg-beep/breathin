@@ -279,4 +279,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String secondsShort(String n) {
     return '$n с';
   }
+
+  @override
+  String get accountSection => 'Аккаунт';
+
+  @override
+  String get signInGoogle => 'Войти через Google';
+
+  @override
+  String get signOutAction => 'Выйти';
+
+  @override
+  String get accountGuest => 'Гостевой режим';
+
+  @override
+  String get accountGuestNote =>
+      'Практика и настройки работают без аккаунта. Вход понадобится для друзей и общей ленты.';
+
+  @override
+  String get authNotConfiguredNote =>
+      'Вход через Google станет доступен в одном из ближайших обновлений.';
 }

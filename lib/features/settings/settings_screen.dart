@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/update/update_preferences.dart';
 import '../../services/update/update_service.dart';
+import 'account_section.dart';
 import 'update_section.dart';
 
 /// Экран настроек (ТЗ §6.8). Пока — только секция обновлений; голос, звуки,
@@ -28,6 +30,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          Text(AppLocalizations.of(context).accountSection,
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          const AccountSection(),
+          const SizedBox(height: 24),
           Text('Обновления', style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           UpdateSection(

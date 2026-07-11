@@ -275,4 +275,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String secondsShort(String n) {
     return '$n s';
   }
+
+  @override
+  String get accountSection => 'Account';
+
+  @override
+  String get signInGoogle => 'Sign in with Google';
+
+  @override
+  String get signOutAction => 'Sign out';
+
+  @override
+  String get accountGuest => 'Guest mode';
+
+  @override
+  String get accountGuestNote =>
+      'Practice and settings work without an account. Sign-in will be needed for friends and the shared feed.';
+
+  @override
+  String get authNotConfiguredNote =>
+      'Google sign-in will become available in an upcoming update.';
 }
