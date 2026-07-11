@@ -36,32 +36,37 @@ class AppUser {
 /// exchangeCodeForSession). Google-вход НЕ требует SHA-1/keystore —
 /// браузерный OAuth, поэтому работает и до настройки подписи APK.
 ///
-/// Пока [authConfigured] == false, все методы — безопасные no-op:
-/// приложение живёт в гостевом режиме (ТЗ §4: практика без входа).
+/// Пока [isReady] == false (нет конфигурации ИЛИ [init] не вызывался —
+/// например, в виджет-тестах), все методы — безопасные no-op: приложение
+/// живёт в гостевом режиме (ТЗ §4: практика без входа).
 class AuthService {
   const AuthService();
+
+  static bool _initialized = false;
 
   /// Инициализация Supabase; вызывать из main() ДО runApp.
   /// Без конфигурации — no-op (ни одного сетевого вызова).
   static Future<void> init() async {
-    if (!authConfigured) return;
+    if (!authConfigured || _initialized) return;
     await Supabase.initialize(
       url: supabaseUrl,
       publishableKey: supabaseAnonKey,
     );
+    _initialized = true;
   }
 
-  bool get isConfigured => authConfigured;
+  /// Auth доступен: сконфигурирован И инициализирован.
+  bool get isReady => authConfigured && _initialized;
 
   AppUser? get currentUser {
-    if (!authConfigured) return null;
+    if (!isReady) return null;
     final u = Supabase.instance.client.auth.currentUser;
     return u == null ? null : AppUser.fromSupabase(u);
   }
 
   /// Изменения сессии (вход/выход) в терминах [AppUser].
   Stream<AppUser?> get onAuthStateChange {
-    if (!authConfigured) return const Stream.empty();
+    if (!isReady) return const Stream.empty();
     return Supabase.instance.client.auth.onAuthStateChange.map(
       (s) {
         final u = s.session?.user;
@@ -73,7 +78,7 @@ class AuthService {
   /// Google-вход: системный браузер (WebView Google не пускает —
   /// disallowed_useragent, урок Astra) + возврат deep link'ом.
   Future<void> signInWithGoogle() async {
-    if (!authConfigured) return;
+    if (!isReady) return;
     await Supabase.instance.client.auth.signInWithOAuth(
       OAuthProvider.google,
       redirectTo: authRedirectUrl,
@@ -82,7 +87,7 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    if (!authConfigured) return;
+    if (!isReady) return;
     await Supabase.instance.client.auth.signOut();
   }
 }

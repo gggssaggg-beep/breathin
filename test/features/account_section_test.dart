@@ -11,8 +11,8 @@ Widget wrap(Widget child) => MaterialApp(
 
 void main() {
   testWidgets(
-      'без конфигурации Supabase — карточка гостевого режима без кнопки входа',
-      (tester) async {
+      'без AuthService.init (isReady=false) — карточка гостевого режима '
+      'без кнопки входа', (tester) async {
     await tester.pumpWidget(wrap(const AccountSection()));
     expect(find.text('Guest mode'), findsOneWidget);
     expect(find.textContaining('Sign in with Google'), findsNothing);
