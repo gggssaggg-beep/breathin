@@ -187,7 +187,7 @@ class _SessionRunnerState extends State<SessionRunner>
     // Прерывание (звонок, пауза с локскрина): плеер встал сам — отражаем в
     // UI; и наоборот, play с уведомления снимает паузу (система продолжает
     // с места остановки, без seek к началу фазы).
-    if (_audioMode && !_state.isFinished) {
+    if (_audioMode && !_state.isFinished && mounted) {
       final playing = sessionAudioHandler!.player.playing;
       if (!playing && !_paused) {
         setState(() => _paused = true);
@@ -196,10 +196,12 @@ class _SessionRunnerState extends State<SessionRunner>
       }
     }
 
-    // Вибро-канал: события, чей t попал в окно с прошлого тика. Окно шире
-    // 2 с — тикер молчал (возврат из фона в визуальном режиме): пропускаем,
-    // чтобы не выстрелить залпом все накопившиеся паттерны (ревью М2).
-    if (_canVibrate && pos > _lastMs && pos - _lastMs <= 2000) {
+    // Вибро-канал: события, чей t попал в окно с прошлого тика. На паузе
+    // молчим (ревью Р5: между нажатием «Продолжить» и seek позиция ещё
+    // старая — без guard'а окно от начала фазы стреляло бы лишний раз).
+    // Окно шире 2 с — тикер молчал (возврат из фона в визуальном режиме):
+    // пропускаем, чтобы не выстрелить залпом накопившееся (ревью М2).
+    if (_canVibrate && !_paused && pos > _lastMs && pos - _lastMs <= 2000) {
       for (final e in _engine.eventsInWindow(_lastMs, pos)) {
         final pattern = switch (e.type) {
           EngineEventType.phaseStart => VibrationPattern.forPhase(e.phase!),
@@ -242,16 +244,18 @@ class _SessionRunnerState extends State<SessionRunner>
       if (mounted) setState(() => _paused = true);
     } else {
       // Резюм с начала текущей фазы (ПЛАН §3.3 п.5): фаза целиком, не с
-      // полуслова. Вибро прошедших событий не переигрываем (_lastMs = цель);
+      // полуслова. Вибро прошедших событий не переигрываем (_lastMs = цель
+      // ПОСЛЕ seek — до него позиция плеера ещё старая, ревью Р5);
       // звуковой сигнал фазы повторится из файла — это и есть подсказка.
       final target =
           (_positionMs() - _state.phaseElapsedMs).clamp(0, 1 << 62);
-      _lastMs = target;
       if (_audioMode && handler != null) {
         await handler.seek(Duration(milliseconds: target));
+        _lastMs = target;
         await handler.play();
       } else {
         _visualBaseMs = target;
+        _lastMs = target;
         _clock
           ..reset()
           ..start();
