@@ -137,7 +137,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_wim_hof_desc =>
-      'An intensive technique: each round consists of 30–40 deep active breaths, followed by a full exhale and a breath hold on empty lungs (until the urge to breathe returns), then a deep inhale and a 15-second hold. Typically 3–4 rounds. Number of breaths, pace, number of rounds, and hold duration are all configurable. Retention times per round are displayed after the session.';
+      'An intensive technique: each round consists of 30–40 deep active breaths, followed by a full exhale and a breath hold on empty lungs (until the urge to breathe returns), then a deep inhale and a 15-second hold. Typically 3–4 rounds. Number of breaths, pace, number of rounds, and hold duration are all configurable. Retention times per round are displayed after the session. It is one and the same method at any time of day — there are no separate “morning” and “evening” versions. Best practised in the morning on an empty stomach (more energising than coffee); not recommended right before sleep.';
 
   @override
   String get tech_wim_hof_benefit =>
