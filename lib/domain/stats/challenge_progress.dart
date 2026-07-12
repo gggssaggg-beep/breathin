@@ -40,12 +40,14 @@ int challengeProgress(
       var best = 0;
       for (final d in days) {
         // Начало серии — день, которому не предшествует практикованный.
-        if (days.contains(d.subtract(const Duration(days: 1)))) continue;
+        // Шаг на день через конструктор (Dart нормализует ±day) — DST-безопасно,
+        // в отличие от Duration(days: 1), который в переходные сутки ≠ 24 ч.
+        if (days.contains(DateTime(d.year, d.month, d.day - 1))) continue;
         var len = 0;
         var cursor = d;
         while (days.contains(cursor)) {
           len++;
-          cursor = cursor.add(const Duration(days: 1));
+          cursor = DateTime(cursor.year, cursor.month, cursor.day + 1);
         }
         if (len > best) best = len;
       }
