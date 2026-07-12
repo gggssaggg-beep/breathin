@@ -36,14 +36,25 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   // сетевые цепочки и не мигать спиннером на каждый rebuild (ревью С5).
   Future<List<ChallengeView>>? _future;
   StreamSubscription<AppUser?>? _sub;
+  String? _knownUid;
 
   @override
   void initState() {
     super.initState();
+    _knownUid = widget.auth.currentUser?.id;
     // Вход завершается ВНЕ экрана (возврат deep link'ом из браузера) — гейт
-    // должен исчезнуть сам, поэтому подписываемся на изменения сессии (ревью С6).
+    // должен исчезнуть сам, поэтому подписываемся на изменения сессии (ревью
+    // С6). Перезагрузка только при СМЕНЕ пользователя: initialSession для уже
+    // вошедшего не должна дублировать сетевую цепочку первой загрузки.
     _sub = widget.auth.onAuthStateChange.listen((u) {
-      if (mounted && u != null) _reload();
+      if (!mounted) return;
+      if (u == null) {
+        _knownUid = null;
+        return;
+      }
+      if (u.id == _knownUid) return;
+      _knownUid = u.id;
+      _reload();
     });
   }
 
