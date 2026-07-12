@@ -449,4 +449,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String appVersionLabel(String version) {
     return 'Version $version';
   }
+
+  @override
+  String get challengesLoadFailed =>
+      'Couldn\'t load challenges. Check your connection.';
+
+  @override
+  String get commonRetry => 'Retry';
 }
