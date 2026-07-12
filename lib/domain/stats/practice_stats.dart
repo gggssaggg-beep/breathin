@@ -88,13 +88,16 @@ abstract final class PracticeStats {
     final days = records.map((r) => dayKey(r.startedAt)).toSet();
     if (days.isEmpty) return 0;
     var cursor = dayKey(today ?? DateTime.now());
+    // DST-безопасный шаг на день назад: Duration(days: 1) в переходные сутки
+    // короче/длиннее 24 ч и может сдвинуть дату на два дня. Конструктор с
+    // day-1 Dart нормализует (в т.ч. переход через границу месяца/года).
     if (!days.contains(cursor)) {
-      cursor = cursor.subtract(const Duration(days: 1));
+      cursor = DateTime(cursor.year, cursor.month, cursor.day - 1);
     }
     var streak = 0;
     while (days.contains(cursor)) {
       streak++;
-      cursor = cursor.subtract(const Duration(days: 1));
+      cursor = DateTime(cursor.year, cursor.month, cursor.day - 1);
     }
     return streak;
   }

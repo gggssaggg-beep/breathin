@@ -220,12 +220,18 @@ abstract final class BreathinIcons {
     'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5',
   ]);
 
+  /// Солнце — метка бодрящих техник (Tabler sun).
+  static const sun = BreathinIconData([
+    'M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0',
+    'M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7',
+  ]);
+
   /// Все иконки набора (для тестов парсинга).
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
     arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
-    trophy, copy, send,
+    trophy, copy, send, sun,
   ];
 }

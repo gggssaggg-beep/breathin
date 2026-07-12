@@ -25,6 +25,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
+  // Круглая кнопка старта: находим по ключу (влад. §5).
+  final startButton = find.byKey(const ValueKey('start_button'));
+
   // --- (а) counted-техника box: описание, польза, безопасность, кнопка Start ---
   group('TechniqueCardScreen — box (counted)', () {
     testWidgets('показывает описание, пользу, безопасность и активную кнопку Start', (
@@ -35,19 +38,22 @@ void main() {
       );
       await tester.pump();
 
-      // Секции
+      // Секции (Safety может быть ниже сгиба — доскроллим)
       expect(find.text('About'), findsOneWidget);
       expect(find.text('Benefits'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Safety'), 200);
       expect(find.text('Safety'), findsOneWidget);
 
       // Название в AppBar
       expect(find.text('Box Breathing'), findsWidgets);
 
-      // Кнопка Start активна
-      final startBtn = find.widgetWithText(FilledButton, 'Start');
-      expect(startBtn, findsOneWidget);
-      final btn = tester.widget<FilledButton>(startBtn);
-      expect(btn.onPressed, isNotNull);
+      // Подпись «Start» под кнопкой
+      expect(find.text('Start'), findsOneWidget);
+
+      // Круглая кнопка активна (InkWell.onTap не null)
+      expect(startButton, findsOneWidget);
+      final ink = tester.widget<InkWell>(startButton);
+      expect(ink.onTap, isNotNull);
     });
 
     testWidgets('тап по Start открывает SessionSetupScreen', (tester) async {
@@ -56,7 +62,7 @@ void main() {
       );
       await tester.pump();
 
-      await tester.tap(find.widgetWithText(FilledButton, 'Start'));
+      await tester.tap(startButton);
       // pump без duration — выполняет один кадр анимации (route push).
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -75,10 +81,16 @@ void main() {
       );
       await tester.pump();
 
-      final startBtn = find.widgetWithText(FilledButton, 'Start');
-      expect(startBtn, findsOneWidget);
-      final btn = tester.widget<FilledButton>(startBtn);
-      expect(btn.onPressed, isNull);
+      // Кнопка отключена: InkWell.onTap == null
+      expect(startButton, findsOneWidget);
+      final ink = tester.widget<InkWell>(startButton);
+      expect(ink.onTap, isNull);
+
+      // Тап ничего не открывает
+      await tester.tap(startButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(SessionSetupScreen), findsNothing);
 
       // Текст comingSoonStage2 (en)
       expect(find.text('Coming in a future update'), findsWidgets);

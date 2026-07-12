@@ -120,17 +120,33 @@ class _TechniqueGridCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              // Название
-              Text(
-                l.techniqueName(t),
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: isDimmed
-                      ? theme.colorScheme.onSurfaceVariant
-                      : null,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              // Название (+ солнышко у бодрящих техник, влад. §10)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      l.techniqueName(t),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: isDimmed
+                            ? theme.colorScheme.onSurfaceVariant
+                            : null,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (t.energizing) ...[
+                    const SizedBox(width: 4),
+                    const BreathinIcon(
+                      BreathinIcons.sun,
+                      size: 18,
+                      color: Color(0xFFF9A825),
+                    ),
+                  ],
+                ],
               ),
               const SizedBox(height: 4),
               // Подпись-паттерн

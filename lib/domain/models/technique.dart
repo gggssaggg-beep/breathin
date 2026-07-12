@@ -144,6 +144,10 @@ class Technique {
   /// Техника этапа 2 (Вим Хоф): видна в каталоге, но запуск отключён до П18.
   final bool stage2;
 
+  /// Бодрящая техника (влад. §10): рядом с названием показываем солнышко.
+  /// Пока единственная такая — метод Вима Хофа.
+  final bool energizing;
+
   const Technique({
     required this.id,
     required this.type,
@@ -164,6 +168,7 @@ class Technique {
     this.backgroundSoundOption = false,
     this.wimHof,
     this.stage2 = false,
+    this.energizing = false,
   });
 
   /// Паттерн, предлагаемый по умолчанию: упрощённый, если техника его задаёт

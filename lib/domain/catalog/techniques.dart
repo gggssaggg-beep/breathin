@@ -151,6 +151,7 @@ const wimHof = Technique(
   icon: TechniqueIcon.snowflake,
   wimHof: WimHofDefaults(),
   stage2: true,
+  energizing: true,
 );
 
 /// Диафрагмальное (брюшное) дыхание — свободный ритм по таймеру.
