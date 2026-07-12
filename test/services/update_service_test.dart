@@ -76,6 +76,26 @@ void main() {
     test('нет .apk среди ассетов → null', () {
       expect(parseGithubRelease(releaseJson(withApk: false)), isNull);
     });
+
+    test('несколько APK: предпочитается arm64-v8a, иначе первый', () {
+      String multi({bool withArm64 = true}) => '''
+{
+  "tag_name": "v0.3.0",
+  "draft": false,
+  "prerelease": false,
+  "assets": [
+    {"name":"breathin-0.3.0-armeabi-v7a.apk","size":1,
+     "browser_download_url":"https://x/breathin-0.3.0-armeabi-v7a.apk"},
+    ${withArm64 ? '{"name":"breathin-0.3.0-arm64-v8a.apk","size":2,'
+          '"browser_download_url":"https://x/breathin-0.3.0-arm64-v8a.apk"},' : ''}
+    {"name":"app.aab","size":3,"browser_download_url":"https://x/app.aab"}
+  ]
+}''';
+      expect(parseGithubRelease(multi())!.downloadUrl,
+          endsWith('arm64-v8a.apk'));
+      expect(parseGithubRelease(multi(withArm64: false))!.downloadUrl,
+          endsWith('armeabi-v7a.apk'));
+    });
   });
 
   group('formatBytes', () {

@@ -36,6 +36,10 @@ String formatBytes(int bytes) {
 
 /// Разобрать JSON ответа GitHub `releases/latest`. Возвращает null, если это
 /// draft/prerelease или в релизе нет APK-ассета.
+///
+/// При нескольких APK предпочитается arm64-v8a (наш релизный таргет с v0.3.0:
+/// per-ABI сборка ради бюджета ≤30 МБ, ПЛАН §11.5); иначе — первый .apk
+/// (совместимость с релизами v0.1–v0.2, где ассет один универсальный).
 UpdateInfo? parseGithubRelease(String jsonBody) {
   final root = json.decode(jsonBody);
   if (root is! Map) throw const FormatException('Ожидался JSON-объект релиза');
@@ -49,21 +53,30 @@ UpdateInfo? parseGithubRelease(String jsonBody) {
   final assets = root['assets'];
   if (assets is! List) return null;
 
-  for (final a in assets) {
-    if (a is! Map) continue;
+  UpdateInfo? fromAsset(Object? a) {
+    if (a is! Map) return null;
     final name = a['name'];
     final url = a['browser_download_url'];
-    if (name is String &&
-        name.toLowerCase().endsWith('.apk') &&
-        url is String) {
-      final size = a['size'];
-      return UpdateInfo(
-        version: version,
-        downloadUrl: url,
-        sizeBytes: size is int ? size : 0,
-        notes: root['body'] is String ? root['body'] as String : null,
-      );
+    if (name is! String ||
+        !name.toLowerCase().endsWith('.apk') ||
+        url is! String) {
+      return null;
     }
+    final size = a['size'];
+    return UpdateInfo(
+      version: version,
+      downloadUrl: url,
+      sizeBytes: size is int ? size : 0,
+      notes: root['body'] is String ? root['body'] as String : null,
+    );
   }
-  return null; // нет .apk среди ассетов
+
+  UpdateInfo? first;
+  for (final a in assets) {
+    final info = fromAsset(a);
+    if (info == null) continue;
+    if (info.downloadUrl.toLowerCase().contains('arm64-v8a')) return info;
+    first ??= info;
+  }
+  return first; // нет .apk среди ассетов → null
 }
