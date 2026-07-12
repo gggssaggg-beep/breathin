@@ -56,4 +56,27 @@ void main() {
     ));
     expect(await repo.all(), hasLength(1));
   });
+
+  test('параллельные add и mergeAll не теряют записи (очередь, ревью М12)',
+      () async {
+    final repo = SessionLogRepository();
+    SessionRecord rec(String id) => SessionRecord(
+          id: id,
+          techniqueId: 'box',
+          startedAt: DateTime(2026, 7, 12, 10),
+          durationSec: 60,
+          cyclesCompleted: 3,
+          completed: true,
+        );
+    // Без сериализации перекрывающиеся read-modify-write затирали бы
+    // друг друга (у каждого async-зазор между чтением и записью).
+    await Future.wait([
+      repo.add(rec('a')),
+      repo.mergeAll([rec('m1'), rec('m2')]),
+      repo.add(rec('b')),
+      SessionLogRepository().add(rec('c')), // другой инстанс — то же хранилище
+    ]);
+    final ids = (await repo.all()).map((r) => r.id).toSet();
+    expect(ids, {'a', 'b', 'c', 'm1', 'm2'});
+  });
 }

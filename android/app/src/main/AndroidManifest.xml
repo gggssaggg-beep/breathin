@@ -74,5 +74,13 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Android 11+ package visibility: без этого url_launcher не видит
+             браузер → Google-вход (OAuth), кнопка «Скачать» OTA и
+             телеграм-ссылки падают «не получилось» (живой баг v0.3.0). -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <category android:name="android.intent.category.BROWSABLE"/>
+            <data android:scheme="https"/>
+        </intent>
     </queries>
 </manifest>

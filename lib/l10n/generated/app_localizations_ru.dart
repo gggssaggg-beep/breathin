@@ -521,4 +521,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sessionDoneTapHint => 'Коснитесь круга, чтобы закрыть';
+
+  @override
+  String get sessionMediaTitle => 'Дыхательная сессия';
+
+  @override
+  String get sizeUnitsCsv => 'Б,КБ,МБ,ГБ';
 }

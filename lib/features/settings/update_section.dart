@@ -54,7 +54,7 @@ class UpdateSection extends StatelessWidget {
                                 result.info!.version.toString()),
                             style: theme.textTheme.titleMedium),
                         const SizedBox(height: 2),
-                        Text(result.info!.humanSize,
+                        Text(result.info!.humanSizeWith(l.sizeUnitsCsv),
                             style: theme.textTheme.bodySmall),
                       ],
                     ),

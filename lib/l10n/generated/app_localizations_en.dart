@@ -512,4 +512,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sessionDoneTapHint => 'Tap the circle to close';
+
+  @override
+  String get sessionMediaTitle => 'Breathing session';
+
+  @override
+  String get sizeUnitsCsv => 'B,KB,MB,GB';
 }

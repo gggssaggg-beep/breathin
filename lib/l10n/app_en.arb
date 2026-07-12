@@ -228,5 +228,8 @@
   "prepGetReady": "Get ready",
   "cycleLabel": "Cycle",
   "sessionDone": "Done",
-  "sessionDoneTapHint": "Tap the circle to close"
+  "sessionDoneTapHint": "Tap the circle to close",
+
+  "sessionMediaTitle": "Breathing session",
+  "sizeUnitsCsv": "B,KB,MB,GB"
 }

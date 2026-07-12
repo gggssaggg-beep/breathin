@@ -937,6 +937,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Коснитесь круга, чтобы закрыть'**
   String get sessionDoneTapHint;
+
+  /// No description provided for @sessionMediaTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхательная сессия'**
+  String get sessionMediaTitle;
+
+  /// No description provided for @sizeUnitsCsv.
+  ///
+  /// In ru, this message translates to:
+  /// **'Б,КБ,МБ,ГБ'**
+  String get sizeUnitsCsv;
 }
 
 class _AppLocalizationsDelegate

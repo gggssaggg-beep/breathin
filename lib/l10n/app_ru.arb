@@ -228,5 +228,8 @@
   "prepGetReady": "Приготовьтесь",
   "cycleLabel": "Цикл",
   "sessionDone": "Готово",
-  "sessionDoneTapHint": "Коснитесь круга, чтобы закрыть"
+  "sessionDoneTapHint": "Коснитесь круга, чтобы закрыть",
+
+  "sessionMediaTitle": "Дыхательная сессия",
+  "sizeUnitsCsv": "Б,КБ,МБ,ГБ"
 }

@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 
+import '../../l10n/system_l10n.dart';
 import 'session_audio_handler.dart';
 
 /// Глобальный обработчик аудио-сессии; null — аудио-путь недоступен
@@ -19,9 +20,11 @@ Future<void> initSessionAudio() async {
     await session.configure(const AudioSessionConfiguration.music());
     sessionAudioHandler = await AudioService.init(
       builder: SessionAudioHandler.new,
-      config: const AudioServiceConfig(
+      config: AudioServiceConfig(
         androidNotificationChannelId: 'app.dyshi.breathin.session',
-        androidNotificationChannelName: 'Дыхательная сессия',
+        // Имя канала видно в системных настройках уведомлений — по локали
+        // системы (контекста здесь ещё нет; Android обновит имя при init).
+        androidNotificationChannelName: systemL10n().sessionMediaTitle,
         androidNotificationOngoing: true,
         androidStopForegroundOnPause: true,
       ),

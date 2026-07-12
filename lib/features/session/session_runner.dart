@@ -10,6 +10,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../data/session_log_repository.dart';
 import '../../domain/engine/phase_engine.dart';
+import '../../l10n/system_l10n.dart';
 import '../../domain/engine/session_plan.dart';
 import '../../domain/models/feedback_channels.dart';
 import '../../domain/models/session_record.dart';
@@ -94,6 +95,11 @@ class _SessionRunnerState extends State<SessionRunner>
 
   /// Аудио-режим активен (плеер загружен и запущен).
   bool _audioMode = false;
+
+  /// Файл сессии загружен в плеер: стоп/dispose обязаны глушить его
+  /// безусловно (Ж1: раньше стоп смотрел на _audioMode, который при висе
+  /// _start не выставлялся — звук жил после выхода с экрана).
+  bool _audioLoaded = false;
   bool _canVibrate = false;
   StreamSubscription<ProcessingState>? _playerSub;
 
@@ -139,18 +145,26 @@ class _SessionRunnerState extends State<SessionRunner>
           _sessionWav = file;
           await handler.loadSessionFile(
             file.path,
-            title: widget.mediaTitle ?? 'Дыхательная сессия',
+            title: widget.mediaTitle ?? systemL10n().sessionMediaTitle,
             duration: Duration(milliseconds: widget.plan.totalDurationMs),
           );
-          await handler.play();
-          _audioMode = true;
           // Жизненный цикл плеера: completed — гонг дозвучал (гасим
           // сервис), idle — «Стоп» с локскрина (ревью С1, М3).
+          // Подписка и флаги — ДО play.
           _playerSub = handler.player.processingStateStream
               .listen(_onProcessingState);
+          _audioLoaded = true;
+          _audioMode = true;
+          // Ж1 (живой баг v0.3.0): play() у just_audio завершается только
+          // при паузе/стопе/конце файла — await здесь вешал _start до конца
+          // сессии: тикер не стартовал (визуал мёртв), _audioMode не
+          // выставлялся (стоп не глушил звук). Запускаем и НЕ ждём.
+          unawaited(handler.play().catchError((_) {}));
         }
       } catch (_) {
-        _audioMode = false; // не поднялось аудио — честный визуал-режим
+        // Не поднялось аудио — честный визуал-режим.
+        _audioMode = false;
+        _audioLoaded = false;
       }
     }
 
@@ -166,6 +180,7 @@ class _SessionRunnerState extends State<SessionRunner>
       // foreground-сервис (уведомление уходит). Экран остаётся: финиш
       // закрывается тапом по галочке (влад. §14).
       _audioMode = false;
+      _audioLoaded = false;
       sessionAudioHandler?.stop().ignore();
     } else if (ps == ProcessingState.idle) {
       // «Стоп» на локскрине/уведомлении (ревью М3): закрываем экран так же,
@@ -186,8 +201,9 @@ class _SessionRunnerState extends State<SessionRunner>
 
     // Прерывание (звонок, пауза с локскрина): плеер встал сам — отражаем в
     // UI; и наоборот, play с уведомления снимает паузу (система продолжает
-    // с места остановки, без seek к началу фазы).
-    if (_audioMode && !_state.isFinished && mounted) {
+    // с места остановки, без seek к началу фазы). pos > 0 — до фактического
+    // старта воспроизведения не мигаем ложной «паузой».
+    if (_audioMode && !_state.isFinished && mounted && pos > 0) {
       final playing = sessionAudioHandler!.player.playing;
       if (!playing && !_paused) {
         setState(() => _paused = true);
@@ -252,7 +268,8 @@ class _SessionRunnerState extends State<SessionRunner>
       if (_audioMode && handler != null) {
         await handler.seek(Duration(milliseconds: target));
         _lastMs = target;
-        await handler.play();
+        // Как и на старте: play() не ждём (Ж1).
+        unawaited(handler.play().catchError((_) {}));
       } else {
         _visualBaseMs = target;
         _lastMs = target;
@@ -267,7 +284,10 @@ class _SessionRunnerState extends State<SessionRunner>
   void _stopClocks() {
     _ticker.stop();
     _clock.stop();
-    if (_audioMode) {
+    // Глушим по _audioLoaded, не по _audioMode: файл в плеере — значит
+    // стоп обязан его остановить в любом состоянии (Ж1).
+    if (_audioLoaded) {
+      _audioLoaded = false;
       _audioMode = false;
       sessionAudioHandler?.stop().ignore();
     }
@@ -312,7 +332,8 @@ class _SessionRunnerState extends State<SessionRunner>
   @override
   void dispose() {
     _playerSub?.cancel();
-    if (_audioMode) sessionAudioHandler?.stop().ignore();
+    if (_audioLoaded) sessionAudioHandler?.stop().ignore();
+    _audioLoaded = false;
     // Файл сессии больше не нужен (плеер остановлен строкой выше).
     _sessionWav?.delete().then((_) {}, onError: (_) {});
     _sessionWav = null;

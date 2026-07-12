@@ -19,11 +19,16 @@ class UpdateInfo {
   /// Человекочитаемый размер, например «≈ 24.2 МБ» (ТЗ-независимо; по запросу
   /// пользователя показываем средний размер файла обновления).
   String get humanSize => formatBytes(sizeBytes);
+
+  /// То же с локализованными единицами (`l.sizeUnitsCsv`: "Б,КБ,МБ,ГБ").
+  String humanSizeWith(String unitsCsv) =>
+      formatBytes(sizeBytes, unitsCsv: unitsCsv);
 }
 
-/// Форматирование байтов в КБ/МБ/ГБ с одним знаком и префиксом «≈».
-String formatBytes(int bytes) {
-  const units = ['Б', 'КБ', 'МБ', 'ГБ'];
+/// Форматирование байтов с одним знаком и префиксом «≈». Единицы —
+/// CSV-строкой (из ARB `sizeUnitsCsv`); дефолт — русские.
+String formatBytes(int bytes, {String unitsCsv = 'Б,КБ,МБ,ГБ'}) {
+  final units = unitsCsv.split(',');
   double v = bytes.toDouble();
   var u = 0;
   while (v >= 1024 && u < units.length - 1) {
