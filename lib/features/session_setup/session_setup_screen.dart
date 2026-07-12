@@ -486,12 +486,9 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           contentPadding: EdgeInsets.zero,
           onChanged: (v) => toggle(fb.copyWith(vibration: v)),
         ),
-        SwitchListTile(
-          title: Text(l.channelVisual),
-          value: fb.visual,
-          contentPadding: EdgeInsets.zero,
-          onChanged: (v) => toggle(fb.copyWith(visual: v)),
-        ),
+        // Тумблера «Визуальный режим» нет: визуал всегда включён
+        // (решение владельца, живой отзыв v0.3.0; поле в модели осталось
+        // для совместимости сохранений).
       ],
     );
   }

@@ -43,7 +43,7 @@ class _AccountSectionState extends State<AccountSection> {
         setState(() => _user = user);
         if (user != null) _loadName();
       },
-      onError: (_) => _showError(),
+      onError: _showError,
     );
     _loadName();
   }
@@ -54,10 +54,21 @@ class _AccountSectionState extends State<AccountSection> {
     super.dispose();
   }
 
-  void _showError() {
+  void _showError([Object? error]) {
     if (!mounted) return;
+    // Текст реальной ошибки — иначе «не получилось» недиагностируемо
+    // (живой отзыв v0.3.0: Google-вход падал без деталей).
+    var detail = error?.toString() ?? '';
+    if (detail.length > 160) detail = '${detail.substring(0, 160)}…';
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context).authActionFailed)),
+      SnackBar(
+        content: Text(
+          detail.isEmpty
+              ? AppLocalizations.of(context).authActionFailed
+              : '${AppLocalizations.of(context).authActionFailed}\n$detail',
+        ),
+        duration: const Duration(seconds: 8),
+      ),
     );
   }
 
@@ -68,8 +79,8 @@ class _AccountSectionState extends State<AccountSection> {
     try {
       await action();
       return true;
-    } catch (_) {
-      _showError();
+    } catch (e) {
+      _showError(e);
       return false;
     }
   }

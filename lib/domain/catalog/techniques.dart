@@ -71,6 +71,8 @@ const fourTwoFour = Technique(
   icon: TechniqueIcon.balance,
   scaling: ScalingMode.ratioOptional,
   keepRatioDefault: false,
+  // «Подходит для дневной практики», тонизирующая акцентировка — солнышко.
+  energizing: true,
   defaultCycles: 10,
   phases: [
     PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4),
@@ -118,6 +120,8 @@ const fourSixteenEight = Technique(
   safetyKey: 'safety_intense',
   icon: TechniqueIcon.mountain,
   scaling: ScalingMode.ratioLock,
+  // «Усиливает концентрацию и энергетический тонус» — солнышко.
+  energizing: true,
   defaultCycles: 4,
   recommendedMaxCyclesNovice: 4,
   phases: [
