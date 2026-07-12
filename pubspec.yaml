@@ -54,6 +54,8 @@ dependencies:
   vibration: ^3.1.0
   # Экран не гаснет на экране сессии в визуальном режиме (ПЛАН §6.5, §8.1).
   wakelock_plus: ^1.2.0
+  # Web/PWA: Blob-URL аудио сессии (файловой системы в браузере нет).
+  web: ^1.1.0
 
 dev_dependencies:
   flutter_test:

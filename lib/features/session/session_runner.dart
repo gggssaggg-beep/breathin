@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:just_audio/just_audio.dart' show ProcessingState;
-import 'package:path_provider/path_provider.dart';
 import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -16,8 +14,8 @@ import '../../domain/models/feedback_channels.dart';
 import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
 import '../../services/audio/audio_bootstrap.dart';
-import '../../services/audio/session_audio_builder.dart';
 import '../../services/audio/sound_bank_loader.dart';
+import '../../services/audio/wav_target/session_wav_target.dart';
 import '../../services/haptics/vibration_pattern.dart';
 import '../../services/sync/session_sync_service.dart';
 import 'breathing_painter.dart';
@@ -80,9 +78,9 @@ class _SessionRunnerState extends State<SessionRunner>
   /// база + elapsed; резюм после паузы переставляет базу на начало фазы.
   int _visualBaseMs = 0;
 
-  /// WAV текущей сессии: фиксированное имя + удаление в dispose —
-  /// кэш не растёт с каждой сессией (ревью К3).
-  File? _sessionWav;
+  /// Аудио-источник сессии (io — временный файл, web — Blob-URL); cleanup
+  /// в dispose освобождает ресурс — кэш/память не растут (ревью К3).
+  SessionWavTarget? _wavTarget;
 
   late SessionState _state;
   Object? _signature;
@@ -133,18 +131,12 @@ class _SessionRunnerState extends State<SessionRunner>
         (widget.feedback.sound || widget.feedback.metronome)) {
       try {
         final bank = await loadMinimalSoundBank();
-        final dir = await getTemporaryDirectory();
-        final file = File('${dir.path}/session_current.wav');
-        final written = await writeSessionWavFile(
-          widget.plan,
-          bank,
-          widget.feedback,
-          file,
-        );
-        if (written) {
-          _sessionWav = file;
+        final target =
+            await prepareSessionWav(widget.plan, bank, widget.feedback);
+        if (target != null) {
+          _wavTarget = target;
           await handler.loadSessionFile(
-            file.path,
+            target.source,
             title: widget.mediaTitle ?? systemL10n().sessionMediaTitle,
             duration: Duration(milliseconds: widget.plan.totalDurationMs),
           );
@@ -334,9 +326,10 @@ class _SessionRunnerState extends State<SessionRunner>
     _playerSub?.cancel();
     if (_audioLoaded) sessionAudioHandler?.stop().ignore();
     _audioLoaded = false;
-    // Файл сессии больше не нужен (плеер остановлен строкой выше).
-    _sessionWav?.delete().then((_) {}, onError: (_) {});
-    _sessionWav = null;
+    // Источник сессии больше не нужен (плеер остановлен строкой выше):
+    // io — удалить файл, web — отозвать Blob-URL.
+    _wavTarget?.cleanup().ignore();
+    _wavTarget = null;
     try {
       WakelockPlus.disable().ignore();
     } catch (_) {}
