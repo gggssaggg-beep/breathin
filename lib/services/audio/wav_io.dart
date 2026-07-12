@@ -62,10 +62,11 @@ class WavIo {
     return WavData(sampleRate, samples);
   }
 
-  /// Собрать WAV-байты из PCM 16-бит моно.
-  static Uint8List encode(Int16List samples, int sampleRate) {
-    final dataBytes = samples.length * 2;
-    final out = ByteData(44 + dataBytes);
+  /// 44-байтовый заголовок для [sampleCount] сэмплов: длина известна заранее,
+  /// PCM дописывается следом чанками (потоковая запись длинных сессий, К2).
+  static Uint8List header(int sampleCount, int sampleRate) {
+    final dataBytes = sampleCount * 2;
+    final out = ByteData(44);
     _putTag(out, 0, 'RIFF');
     out.setUint32(4, 36 + dataBytes, Endian.little);
     _putTag(out, 8, 'WAVE');
@@ -79,10 +80,25 @@ class WavIo {
     out.setUint16(34, 16, Endian.little); // бит/сэмпл
     _putTag(out, 36, 'data');
     out.setUint32(40, dataBytes, Endian.little);
+    return out.buffer.asUint8List();
+  }
+
+  /// PCM-байты (little-endian, явная сериализация — не зависим от порядка
+  /// байт хоста) для дозаписи после [header].
+  static Uint8List pcmBytes(Int16List samples) {
+    final out = ByteData(samples.length * 2);
     for (var i = 0; i < samples.length; i++) {
-      out.setInt16(44 + i * 2, samples[i], Endian.little);
+      out.setInt16(i * 2, samples[i], Endian.little);
     }
     return out.buffer.asUint8List();
+  }
+
+  /// Собрать WAV-байты из PCM 16-бит моно.
+  static Uint8List encode(Int16List samples, int sampleRate) {
+    final out = Uint8List(44 + samples.length * 2);
+    out.setRange(0, 44, header(samples.length, sampleRate));
+    out.setRange(44, out.length, pcmBytes(samples));
+    return out;
   }
 
   static String _tag(Uint8List b, int o) => String.fromCharCodes(b, o, o + 4);
