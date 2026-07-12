@@ -49,6 +49,22 @@ void main() {
       expect(restored.feedback, classic.feedback);
     });
 
+    test('миграция keepRatio: legacy-ключ игнорируется (ревью Р6)', () {
+      // Старое сохранение box несёт keepRatio:true (безусловный дефолт
+      // до ratioOptional) — тумблер НЕ должен включиться сам.
+      final legacy = TechniqueSettings.fromJson(
+        boxBreathing,
+        {'keepRatio': true},
+      );
+      expect(legacy.keepRatio, isFalse);
+      // Осознанный выбор нового формата — уважается.
+      final v2 = TechniqueSettings.fromJson(
+        boxBreathing,
+        {'keepRatioV2': true},
+      );
+      expect(v2.keepRatio, isTrue);
+    });
+
     test('classic: keepRatio из keepRatioDefault техники (влад. §6)', () {
       // box/triangle/4-2-4 — тумблер появился, но выключен (привычное
       // независимое поведение); 2-8/2-10 — включён (пропорция — суть).

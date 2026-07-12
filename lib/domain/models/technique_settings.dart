@@ -115,8 +115,11 @@ class TechniqueSettings {
         'cycles': cycles,
         'timerMinutes': timerMinutes,
         'phaseSeconds': phaseSeconds,
-        'tempoMultiplier': tempoMultiplier,
-        'keepRatio': keepRatio,
+        // V2: до перевода box/triangle/4-2-4 на ratioOptional поле писалось
+        // всегда с безусловным дефолтом true — читать его нельзя, иначе у
+        // старых сохранений тумблер «держать пропорцию» включится сам
+        // (ревью Р6). Старый ключ игнорируем, выбор пользователя — в новом.
+        'keepRatioV2': keepRatio,
         'useSimplified': useSimplified,
         'feedback': feedback.toJson(),
         'prepSeconds': prepSeconds,
@@ -138,7 +141,7 @@ class TechniqueSettings {
           classic.phaseSeconds,
       tempoMultiplier: (json['tempoMultiplier'] as num?)?.toDouble() ??
           classic.tempoMultiplier,
-      keepRatio: json['keepRatio'] as bool? ?? classic.keepRatio,
+      keepRatio: json['keepRatioV2'] as bool? ?? classic.keepRatio,
       useSimplified:
           json['useSimplified'] as bool? ?? classic.useSimplified,
       feedback: json['feedback'] is Map<String, dynamic>
