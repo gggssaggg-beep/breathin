@@ -45,6 +45,15 @@ Management API (`external_google_enabled=true`), в приложении
    Google-провайдер в Supabase через API. (Либо самостоятельно: Supabase →
    Authentication → Sign In / Up → Google → тумблер + вставить оба значения.)
 
+## 2в. Веб-версия (PWA для iPhone) — нужно 1 действие владельца
+
+PWA живёт на **https://gggssaggg-beep.github.io/breathin/** (Safari → «Поделиться»
+→ «На экран „Домой“»). Чтобы **Google-вход работал в вебе**, добавить этот адрес
+в Supabase: **Authentication → URL Configuration → Redirect URLs** →
+`https://gggssaggg-beep.github.io/breathin/` (на мобилках вход идёт через
+`dyshi://auth` и уже работает; в вебе редирект = адрес страницы, поэтому его
+надо занести в whitelist). Гостевой вход и практика в вебе работают и без этого.
+
 ## 2b. Гостевой профиль — ✅ СДЕЛАНО (работает без Google)
 
 Анонимный вход (`external_anonymous_users_enabled`) включён через API
