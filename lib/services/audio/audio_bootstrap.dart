@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../../l10n/system_l10n.dart';
 import 'session_audio_handler.dart';
@@ -16,6 +17,14 @@ SessionAudioHandler? sessionAudioHandler;
 /// [sessionAudioHandler] == null.
 Future<void> initSessionAudio() async {
   try {
+    if (kIsWeb) {
+      // Веб: foreground-сервис/локскрин-контролы не нужны и не существуют,
+      // а AudioService.init на вебе (android-конфиг) — источник сбоев,
+      // роняющих звук в визуал-режим. just_audio играет Blob-URL напрямую —
+      // достаточно голого обработчика без audio_service.
+      sessionAudioHandler = SessionAudioHandler();
+      return;
+    }
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.music());
     sessionAudioHandler = await AudioService.init(

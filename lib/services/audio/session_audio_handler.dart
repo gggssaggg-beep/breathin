@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:just_audio/just_audio.dart';
 
 import '../../l10n/system_l10n.dart';
@@ -36,20 +37,27 @@ class SessionAudioHandler extends BaseAudioHandler {
     });
   }
 
-  /// Загружает WAV-файл сессии и публикует MediaItem (название на локскрине).
+  /// Загружает WAV сессии и публикует MediaItem (название на локскрине).
+  /// [source] — путь к файлу (io) или Blob-URL (web).
   Future<void> loadSessionFile(
-    String path, {
+    String source, {
     required String title,
     required Duration duration,
   }) async {
     mediaItem.add(MediaItem(
-      id: path,
+      id: source,
       title: title,
       // Альбом на локскрине — имя приложения по системной локали.
       album: systemL10n().appTitle,
       duration: duration,
     ));
-    await player.setFilePath(path);
+    // На вебе источник — Blob-URL: setFilePath (Uri.file) его не понимает,
+    // нужен setUrl. На мобилках — файловый путь.
+    if (kIsWeb) {
+      await player.setUrl(source);
+    } else {
+      await player.setFilePath(source);
+    }
   }
 
   @override
