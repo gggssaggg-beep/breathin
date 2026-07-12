@@ -10,6 +10,7 @@ import 'package:breathin/domain/models/session_config.dart';
 import 'package:breathin/services/audio/session_audio_builder.dart';
 import 'package:breathin/services/audio/timeline_renderer.dart';
 import 'package:breathin/services/audio/wav_io.dart';
+import 'package:breathin/services/audio/wav_target/session_wav_target_io.dart';
 
 /// Синтетический набор: клипы разной длины (некоторые длиннее секунды —
 /// перекрытия с тиками метронома гарантированы), детерминированные сэмплы.

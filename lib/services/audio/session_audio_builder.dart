@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import '../../domain/engine/session_plan.dart';
@@ -8,7 +7,8 @@ import 'wav_io.dart';
 
 /// Собирает WAV всей сессии из плана с учётом каналов сопровождения
 /// (ТЗ §3.3): звук фаз и/или метроном. Чистая логика поверх
-/// [TimelineRenderer] — тестируется с синтетическим [SoundBank].
+/// [TimelineRenderer] — тестируется с синтетическим [SoundBank]. Без dart:io:
+/// файл-запись живёт в io-таргете (wav_target/), web собирает Blob.
 ///
 /// Возвращает null, если аудио-каналы выключены (звук и метроном) —
 /// вызывающая сторона тогда не строит аудио-путь вовсе.
@@ -21,7 +21,7 @@ Uint8List? buildSessionWav(
   SoundBank bank,
   FeedbackChannels feedback,
 ) {
-  final filtered = _audioPlan(plan, feedback);
+  final filtered = audioPlanFor(plan, feedback);
   if (filtered == null) return null;
 
   final renderer = TimelineRenderer(sampleRate: bank.sampleRate);
@@ -30,8 +30,8 @@ Uint8List? buildSessionWav(
 }
 
 /// План только со звучащими событиями по каналам [feedback];
-/// null — аудио-каналы выключены.
-SessionPlan? _audioPlan(SessionPlan plan, FeedbackChannels feedback) {
+/// null — аудио-каналы выключены. Публичный: используется io/web-таргетами.
+SessionPlan? audioPlanFor(SessionPlan plan, FeedbackChannels feedback) {
   if (!feedback.sound && !feedback.metronome) return null;
 
   bool keep(EngineEvent e) {
@@ -52,37 +52,4 @@ SessionPlan? _audioPlan(SessionPlan plan, FeedbackChannels feedback) {
     totalCycles: plan.totalCycles,
     totalDurationMs: plan.totalDurationMs,
   );
-}
-
-/// Пишет WAV сессии в [out] чанками по [chunkSeconds]: пиковая память —
-/// O(чанка) вместо O(всей сессии) (ревью К2: часовой таймлайн, доступный из
-/// UI через таймер/100 циклов, целиком в RAM ронял процесс).
-/// true — файл записан; false — аудио-каналы выключены (файл не тронут).
-Future<bool> writeSessionWavFile(
-  SessionPlan plan,
-  SoundBank bank,
-  FeedbackChannels feedback,
-  File out, {
-  int chunkSeconds = 10,
-}) async {
-  final filtered = _audioPlan(plan, feedback);
-  if (filtered == null) return false;
-
-  final renderer = TimelineRenderer(sampleRate: bank.sampleRate);
-  final total = renderer.totalSamplesFor(filtered, bank);
-  final chunkSamples = chunkSeconds * bank.sampleRate;
-  final sink = out.openWrite();
-  try {
-    sink.add(WavIo.header(total, bank.sampleRate));
-    for (var start = 0; start < total; start += chunkSamples) {
-      final rest = total - start;
-      final chunk = Int16List(rest < chunkSamples ? rest : chunkSamples);
-      renderer.renderRange(filtered, bank, chunk, start);
-      sink.add(WavIo.pcmBytes(chunk));
-    }
-    await sink.flush();
-  } finally {
-    await sink.close();
-  }
-  return true;
 }
