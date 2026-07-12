@@ -200,5 +200,22 @@
     "placeholders": {
       "version": { "type": "String" }
     }
-  }
+  },
+
+  "settingsTitle": "Settings",
+  "updatesSection": "Updates",
+  "autoUpdateLabel": "Auto-update",
+  "autoUpdateSubtitle": "Check on launch",
+  "updateAvailableTitle": "Update {version} available",
+  "@updateAvailableTitle": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateNowAction": "Update",
+  "updateCheckFailedNote": "Couldn't check for updates",
+  "upToDateNote": "You're on the latest version",
+  "communitySection": "Community",
+  "feedbackAction": "Feedback",
+  "communityChatAction": "Our community chat"
 }

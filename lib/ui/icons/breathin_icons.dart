@@ -214,12 +214,18 @@ abstract final class BreathinIcons {
     'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1',
   ]);
 
+  /// Бумажный самолётик — обратная связь/сообщество (Tabler send).
+  static const send = BreathinIconData([
+    'M10 14l11 -11',
+    'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5',
+  ]);
+
   /// Все иконки набора (для тестов парсинга).
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
     arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
-    trophy, copy,
+    trophy, copy, send,
   ];
 }

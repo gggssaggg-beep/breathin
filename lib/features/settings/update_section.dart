@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/update/update_service.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
@@ -24,14 +25,15 @@ class UpdateSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SwitchListTile(
           value: autoUpdate,
           onChanged: onAutoUpdateChanged,
-          title: const Text('Автообновление'),
-          subtitle: const Text('Тихо загружать обновления при открытии'),
+          title: Text(l.autoUpdateLabel),
+          subtitle: Text(l.autoUpdateSubtitle),
           contentPadding: EdgeInsets.zero,
         ),
         if (result.availability == UpdateAvailability.available)
@@ -47,7 +49,9 @@ class UpdateSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Доступно обновление ${result.info!.version}',
+                        Text(
+                            l.updateAvailableTitle(
+                                result.info!.version.toString()),
                             style: theme.textTheme.titleMedium),
                         const SizedBox(height: 2),
                         Text(result.info!.humanSize,
@@ -58,7 +62,7 @@ class UpdateSection extends StatelessWidget {
                   const SizedBox(width: 8),
                   FilledButton(
                     onPressed: onUpdateNow,
-                    child: const Text('Обновить'),
+                    child: Text(l.updateNowAction),
                   ),
                 ],
               ),
@@ -70,8 +74,8 @@ class UpdateSection extends StatelessWidget {
             leading: const BreathinIcon(BreathinIcons.circleCheck),
             title: Text(
               result.availability == UpdateAvailability.checkFailed
-                  ? 'Не удалось проверить обновления'
-                  : 'Установлена последняя версия',
+                  ? l.updateCheckFailedNote
+                  : l.upToDateNote,
             ),
           ),
       ],

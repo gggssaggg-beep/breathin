@@ -5,6 +5,8 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../services/update/update_preferences.dart';
 import '../../services/update/update_runtime.dart';
 import '../../services/update/update_service.dart';
+import '../../ui/icons/breathin_icon.dart';
+import '../../ui/icons/breathin_icons.dart';
 import 'account_section.dart';
 import 'update_section.dart';
 
@@ -27,6 +29,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
+    // Персист настроек обновлений: поднимаем сохранённое значение галочки.
+    UpdatePreferencesStore().load().then((p) {
+      if (mounted) setState(() => _prefs = p);
+    });
     currentAppVersion().then((v) {
       if (mounted && v != null) setState(() => _version = v.toString());
     });
@@ -44,11 +50,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
         mode: LaunchMode.externalApplication);
   }
 
+  void _onAutoUpdateChanged(bool v) {
+    setState(() => _prefs = _prefs.copyWith(autoUpdate: v));
+    // Сохраняем fire-and-forget — UI не ждёт записи в prefs.
+    UpdatePreferencesStore().save(_prefs);
+  }
+
+  /// Открывает внешнюю ссылку (Telegram) в браузере/приложении.
+  void _openUrl(String url) {
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Настройки')),
+      appBar: AppBar(title: Text(l.settingsTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -56,14 +73,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 8),
           const AccountSection(),
           const SizedBox(height: 24),
-          Text('Обновления', style: Theme.of(context).textTheme.titleSmall),
+          Text(l.updatesSection,
+              style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           UpdateSection(
             result: _update,
             autoUpdate: _prefs.autoUpdate,
-            onAutoUpdateChanged: (v) =>
-                setState(() => _prefs = _prefs.copyWith(autoUpdate: v)),
+            onAutoUpdateChanged: _onAutoUpdateChanged,
             onUpdateNow: _downloadUpdate,
+          ),
+          const SizedBox(height: 24),
+          // --- Сообщество: обратная связь и чат (внешние ссылки Telegram) ---
+          Text(l.communitySection,
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const BreathinIcon(BreathinIcons.send),
+            title: Text(l.feedbackAction),
+            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            onTap: () => _openUrl('https://t.me/U314159'),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const BreathinIcon(BreathinIcons.send),
+            title: Text(l.communityChatAction),
+            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            // Ссылка на конкретное сообщение в телеграм-канале (так задумано).
+            onTap: () => _openUrl('https://t.me/Hant_Live/257'),
           ),
           if (_version != null) ...[
             const SizedBox(height: 24),

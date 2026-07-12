@@ -200,5 +200,22 @@
     "placeholders": {
       "version": { "type": "String" }
     }
-  }
+  },
+
+  "settingsTitle": "Настройки",
+  "updatesSection": "Обновления",
+  "autoUpdateLabel": "Автообновление",
+  "autoUpdateSubtitle": "Проверять при запуске",
+  "updateAvailableTitle": "Доступно обновление {version}",
+  "@updateAvailableTitle": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "updateNowAction": "Обновить",
+  "updateCheckFailedNote": "Не удалось проверить обновления",
+  "upToDateNote": "Установлена последняя версия",
+  "communitySection": "Сообщество",
+  "feedbackAction": "Обратная связь",
+  "communityChatAction": "Чат нашего сообщества"
 }

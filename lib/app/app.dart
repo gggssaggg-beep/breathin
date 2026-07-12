@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../features/home/home_screen.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../services/permissions/notification_permission.dart';
+import '../services/update/update_preferences.dart';
 import '../services/update/update_runtime.dart';
 import '../services/update/update_service.dart';
 import 'theme.dart';
@@ -38,6 +39,13 @@ class _BreathinAppState extends State<BreathinApp> {
   /// есть релиз новее — SnackBar с кнопкой скачивания APK. Ошибки сети
   /// молча игнорируются.
   Future<void> _checkUpdatesOnStart() async {
+    // Уважаем галочку «Автообновление»: если выключена — не проверяем.
+    // В тестах prefs-плагина нет — тогда считаем включённым (дефолт).
+    bool auto = true;
+    try {
+      auto = (await UpdatePreferencesStore().load()).autoUpdate;
+    } catch (_) {}
+    if (!auto) return;
     final result = await checkForUpdate();
     final info = result.info;
     if (result.availability != UpdateAvailability.available || info == null) {

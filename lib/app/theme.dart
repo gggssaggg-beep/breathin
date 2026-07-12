@@ -8,6 +8,13 @@ class AppTheme {
   static ThemeData light() => _base(Brightness.light);
   static ThemeData dark() => _base(Brightness.dark);
 
+  /// Амбер-пара «внимание» для medium-предупреждений безопасности
+  /// (ТЗ §2.4; красный errorContainer остаётся только для high).
+  static Color warningContainer(Brightness b) =>
+      b == Brightness.light ? const Color(0xFFF8E1A0) : const Color(0xFF4E3B00);
+  static Color onWarningContainer(Brightness b) =>
+      b == Brightness.light ? const Color(0xFF4E3B00) : const Color(0xFFF8E1A0);
+
   static ThemeData _base(Brightness brightness) {
     final scheme = ColorScheme.fromSeed(
       seedColor: _seed,

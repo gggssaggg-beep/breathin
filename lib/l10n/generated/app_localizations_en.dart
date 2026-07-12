@@ -449,4 +449,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String appVersionLabel(String version) {
     return 'Version $version';
   }
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get updatesSection => 'Updates';
+
+  @override
+  String get autoUpdateLabel => 'Auto-update';
+
+  @override
+  String get autoUpdateSubtitle => 'Check on launch';
+
+  @override
+  String updateAvailableTitle(String version) {
+    return 'Update $version available';
+  }
+
+  @override
+  String get updateNowAction => 'Update';
+
+  @override
+  String get updateCheckFailedNote => 'Couldn\'t check for updates';
+
+  @override
+  String get upToDateNote => 'You\'re on the latest version';
+
+  @override
+  String get communitySection => 'Community';
+
+  @override
+  String get feedbackAction => 'Feedback';
+
+  @override
+  String get communityChatAction => 'Our community chat';
 }
