@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Аудио-ядро (ПЛАН §3.3): foreground service mediaPlayback держит
          сессию живой при выключенном экране; вибрация — канал ТЗ §3.3. -->
+    <!-- КРИТИЧНО: Flutter-шаблон объявляет INTERNET только в debug-манифесте;
+         без явного разрешения release-сборка живёт БЕЗ сети — падали OTA-
+         проверка, обмен кода Google-входа и весь Supabase (живой баг v0.3.x:
+         «не удалось проверить обновления», «проверьте соединение»). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
