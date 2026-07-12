@@ -177,18 +177,62 @@ class ChallengesRepository {
   Future<void> syncProgress() async {
     final views = await myChallenges();
     if (views.isEmpty) return;
-    final List<SessionRecord> records = await log.all();
+    final records = await log.all();
     for (final v in views) {
-      final progress =
-          challengeProgress(records, v.metric, v.startsOn, v.endsOn);
-      await _client
-          .from('challenge_participants')
-          .update({
-            'progress': progress,
-            'updated_at': DateTime.now().toUtc().toIso8601String(),
-          })
-          .eq('challenge_id', v.id)
-          .eq('user_id', _uid);
+      await _syncOne(v, records);
     }
+  }
+
+  /// Загружает мои челленджи И синхронизирует мой прогресс одним проходом:
+  /// один fetch вместо двух (открытие экрана было 2× цепочкой запросов).
+  /// Возвращает представления с уже обновлённым моим прогрессом.
+  Future<List<ChallengeView>> loadAndSyncProgress() async {
+    final views = await myChallenges();
+    if (views.isEmpty) return views;
+    final records = await log.all();
+    final result = <ChallengeView>[];
+    for (final v in views) {
+      final progress = await _syncOne(v, records);
+      // Пересобираем участников: мой (isMe) прогресс — свежепосчитанный.
+      // Сортировку по progress desc сохраняем (участники const-конструируемые).
+      final parts = [
+        for (final p in v.participants)
+          p.isMe
+              ? ChallengeParticipant(
+                  userId: p.userId,
+                  displayName: p.displayName,
+                  progress: progress,
+                  isMe: true,
+                )
+              : p,
+      ]..sort((a, b) => b.progress.compareTo(a.progress));
+      result.add(ChallengeView(
+        id: v.id,
+        code: v.code,
+        title: v.title,
+        metric: v.metric,
+        target: v.target,
+        startsOn: v.startsOn,
+        endsOn: v.endsOn,
+        participants: parts,
+      ));
+    }
+    return result;
+  }
+
+  /// Считает мой прогресс по одному челленджу из [records] и пишет в облако.
+  /// Возвращает свежепосчитанное значение (общий хелпер для sync/load).
+  Future<int> _syncOne(ChallengeView v, List<SessionRecord> records) async {
+    final progress =
+        challengeProgress(records, v.metric, v.startsOn, v.endsOn);
+    await _client
+        .from('challenge_participants')
+        .update({
+          'progress': progress,
+          'updated_at': DateTime.now().toUtc().toIso8601String(),
+        })
+        .eq('challenge_id', v.id)
+        .eq('user_id', _uid);
+    return progress;
   }
 }

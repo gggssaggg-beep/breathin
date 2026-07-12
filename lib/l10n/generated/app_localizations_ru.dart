@@ -458,4 +458,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String appVersionLabel(String version) {
     return 'Версия $version';
   }
+
+  @override
+  String get challengesLoadFailed =>
+      'Не получилось загрузить челленджи. Проверьте интернет.';
+
+  @override
+  String get commonRetry => 'Повторить';
 }

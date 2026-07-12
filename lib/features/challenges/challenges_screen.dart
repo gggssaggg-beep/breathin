@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -30,8 +32,26 @@ class ChallengesScreen extends StatefulWidget {
 
 class _ChallengesScreenState extends State<ChallengesScreen> {
   ChallengesRepository? _repo;
-  // Используем ключ для принудительного пересоздания FutureBuilder.
-  int _loadKey = 0;
+  // Future хранится в стейте (а не создаётся в build), чтобы не плодить лишние
+  // сетевые цепочки и не мигать спиннером на каждый rebuild (ревью С5).
+  Future<List<ChallengeView>>? _future;
+  StreamSubscription<AppUser?>? _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    // Вход завершается ВНЕ экрана (возврат deep link'ом из браузера) — гейт
+    // должен исчезнуть сам, поэтому подписываемся на изменения сессии (ревью С6).
+    _sub = widget.auth.onAuthStateChange.listen((u) {
+      if (mounted && u != null) _reload();
+    });
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
 
   ChallengesRepository _getRepo() {
     _repo ??= widget.repo ?? ChallengesRepository();
@@ -39,13 +59,11 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   }
 
   void _reload() {
-    setState(() => _loadKey++);
+    setState(() => _future = _load());
   }
 
-  Future<List<ChallengeView>> _load() async {
-    final repo = _getRepo();
-    await repo.syncProgress();
-    return repo.myChallenges();
+  Future<List<ChallengeView>> _load() {
+    return _getRepo().loadAndSyncProgress();
   }
 
   @override
@@ -63,15 +81,20 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       return _SignInGate(auth: widget.auth, onSignedIn: _reload);
     }
 
+    // Ленивая инициализация future при первом обращении (не в build).
+    _future ??= _load();
+
     return Column(
       children: [
         Expanded(
           child: FutureBuilder<List<ChallengeView>>(
-            key: ValueKey(_loadKey),
-            future: _load(),
+            future: _future,
             builder: (context, snap) {
               if (snap.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
+              }
+              if (snap.hasError) {
+                return _ErrorState(onRetry: _reload);
               }
               final challenges = snap.data ?? const [];
               if (challenges.isEmpty) {
@@ -125,8 +148,16 @@ class _SignInGate extends StatelessWidget {
                 icon: const BreathinIcon(BreathinIcons.user, size: 20),
                 label: Text(l.createGuestProfile),
                 onPressed: () async {
-                  await auth.signInAnonymously();
-                  onSignedIn();
+                  try {
+                    await auth.signInAnonymously();
+                    onSignedIn();
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.authActionFailed)),
+                      );
+                    }
+                  }
                 },
               ),
             ),
@@ -136,7 +167,17 @@ class _SignInGate extends StatelessWidget {
               child: OutlinedButton.icon(
                 icon: const BreathinIcon(BreathinIcons.login, size: 20),
                 label: Text(l.signInGoogle),
-                onPressed: () => auth.signInWithGoogle(),
+                onPressed: () async {
+                  try {
+                    await auth.signInWithGoogle();
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l.authActionFailed)),
+                      );
+                    }
+                  }
+                },
               ),
             ),
           ],
@@ -173,6 +214,47 @@ class _EmptyState extends StatelessWidget {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Ошибка загрузки (нет сети) ──────────────────────────────────────────────
+
+class _ErrorState extends StatelessWidget {
+  final VoidCallback onRetry;
+  const _ErrorState({required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            BreathinIcon(
+              BreathinIcons.trophy,
+              size: 56,
+              color: theme.colorScheme.outline,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l.challengesLoadFailed,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            FilledButton.tonal(
+              onPressed: onRetry,
+              child: Text(l.commonRetry),
             ),
           ],
         ),
@@ -439,27 +521,38 @@ class _BottomActions extends StatelessWidget {
       ),
     );
 
-    if (result != true || !context.mounted) return;
-
+    // Значения читаем ДО dispose контроллеров.
     final title = titleCtrl.text.trim().isEmpty
         ? l.challengeTitleDefault
         : titleCtrl.text.trim();
     final target = int.tryParse(targetCtrl.text) ?? 10;
     final days = int.tryParse(daysCtrl.text) ?? 7;
+    titleCtrl.dispose();
+    targetCtrl.dispose();
+    daysCtrl.dispose();
 
-    final code = await repo().create(
-      title: title,
-      metric: metric,
-      target: target,
-      days: days,
-    );
+    if (result != true || !context.mounted) return;
 
-    if (context.mounted) {
+    try {
+      final code = await repo().create(
+        title: title,
+        metric: metric,
+        target: target,
+        days: days,
+      );
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l.challengeCodeShare(code))),
       );
+      onReload();
+    } catch (_) {
+      // Офлайн/сетевая ошибка — не роняем экран (ревью С5).
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l.authActionFailed)),
+        );
+      }
     }
-    onReload();
   }
 
   Future<void> _showJoinDialog(BuildContext context, AppLocalizations l) async {
@@ -494,21 +587,32 @@ class _BottomActions extends StatelessWidget {
       ),
     );
 
+    // Значение читаем ДО dispose контроллера.
+    final code = codeCtrl.text;
+    codeCtrl.dispose();
+
     if (result != true || !context.mounted) return;
 
-    final title = await repo().joinByCode(codeCtrl.text);
-
-    if (!context.mounted) return;
-
-    if (title == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.codeNotFound)),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.joinedChallenge(title))),
-      );
-      onReload();
+    try {
+      final title = await repo().joinByCode(code);
+      if (!context.mounted) return;
+      if (title == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l.codeNotFound)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l.joinedChallenge(title))),
+        );
+        onReload();
+      }
+    } catch (_) {
+      // Офлайн/сетевая ошибка — не роняем экран (ревью С5).
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l.authActionFailed)),
+        );
+      }
     }
   }
 }

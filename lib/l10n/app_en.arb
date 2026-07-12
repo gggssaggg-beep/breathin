@@ -200,5 +200,8 @@
     "placeholders": {
       "version": { "type": "String" }
     }
-  }
+  },
+
+  "challengesLoadFailed": "Couldn't load challenges. Check your connection.",
+  "commonRetry": "Retry"
 }
