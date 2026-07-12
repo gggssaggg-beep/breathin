@@ -47,6 +47,9 @@ class SessionRunner extends StatefulWidget {
   /// Название в медиа-уведомлении/локскрине — имя техники (ревью М8).
   final String? mediaTitle;
 
+  /// Паттерн фаз сессии («4-8-8») для записи истории (влад. §15).
+  final String? variant;
+
   const SessionRunner({
     super.key,
     required this.plan,
@@ -54,6 +57,7 @@ class SessionRunner extends StatefulWidget {
     this.feedback = const FeedbackChannels(),
     this.log,
     this.mediaTitle,
+    this.variant,
   });
 
   @override
@@ -280,6 +284,7 @@ class _SessionRunnerState extends State<SessionRunner>
           : _lastMs ~/ 1000,
       cyclesCompleted: cycles,
       completed: completed,
+      variant: widget.variant,
     );
     // fire-and-forget: экран не ждёт ни диска, ни сети. Синк подхватывает
     // свежую запись сразу (ревью С8); без входа/сети он тихий no-op.

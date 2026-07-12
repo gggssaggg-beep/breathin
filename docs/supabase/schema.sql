@@ -64,6 +64,11 @@ create table if not exists public.sessions (
 );
 alter table public.sessions enable row level security;
 
+-- Фактический паттерн фаз сессии («4-8-8»): упрощённый vs полный режим и
+-- прогресс новичок→полный (влад. §15). Клиент переживает отсутствие колонки
+-- (fallback в SessionSyncService) — применить при доступном PAT.
+alter table public.sessions add column if not exists variant text;
+
 drop policy if exists "sessions own all" on public.sessions;
 create policy "sessions own all" on public.sessions
   for all to authenticated

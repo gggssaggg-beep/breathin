@@ -2,7 +2,12 @@ import 'package:breathin/domain/models/session_record.dart';
 import 'package:breathin/domain/stats/practice_stats.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SessionRecord rec(DateTime at, {int durationSec = 180, String tech = 'box'}) =>
+SessionRecord rec(
+  DateTime at, {
+  int durationSec = 180,
+  String tech = 'box',
+  String? variant,
+}) =>
     SessionRecord(
       id: '${at.millisecondsSinceEpoch}',
       techniqueId: tech,
@@ -10,6 +15,7 @@ SessionRecord rec(DateTime at, {int durationSec = 180, String tech = 'box'}) =>
       durationSec: durationSec,
       cyclesCompleted: 10,
       completed: true,
+      variant: variant,
     );
 
 void main() {
@@ -103,6 +109,33 @@ void main() {
         expect(PracticeStats.streakDays(const [], today: DateTime(2026, 7, 11)),
             0);
       });
+    });
+
+    group('variantsFor (влад. §15)', () {
+      test('частоты по убыванию, только своя техника и месяц, null — мимо', () {
+        final records = [
+          rec(DateTime(2026, 7, 1), variant: '4-8-8'),
+          rec(DateTime(2026, 7, 2), variant: '4-8-8'),
+          rec(DateTime(2026, 7, 3), variant: '4-16-8'),
+          rec(DateTime(2026, 7, 4)), // старая запись без варианта
+          rec(DateTime(2026, 7, 5), tech: 'coherent', variant: '5.5-5.5'),
+          rec(DateTime(2026, 6, 30), variant: '4-8-8'), // другой месяц
+        ];
+        expect(
+          PracticeStats.variantsFor(records, 2026, 7, 'box'),
+          [('4-8-8', 2), ('4-16-8', 1)],
+        );
+        expect(
+          PracticeStats.variantsFor(records, 2026, 7, 'coherent'),
+          [('5.5-5.5', 1)],
+        );
+      });
+    });
+
+    test('variantOf: целые без .0, дробные с одним знаком', () {
+      expect(variantOf([4, 8, 8]), '4-8-8');
+      expect(variantOf([5.5, 5.5]), '5.5-5.5');
+      expect(variantOf([2.0, 10.0]), '2-10');
     });
   });
 }

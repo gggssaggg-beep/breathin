@@ -30,16 +30,39 @@ class SessionSyncService {
     SessionLogRepository? log,
   }) : log = log ?? SessionLogRepository();
 
+  /// Колонка sessions.variant может отсутствовать в облаке (миграция из
+  /// schema.sql применяется владельцем при появлении PAT): при ошибке
+  /// «нет колонки» откатываемся на старую форму до конца жизни процесса,
+  /// со следующего запуска пробуем снова.
+  static bool _cloudHasVariant = true;
+
+  static bool _isMissingVariantColumn(PostgrestException e) =>
+      e.code == 'PGRST204' || // upsert: колонка не найдена в схеме
+      e.code == '42703'; // select: undefined_column
+
   Future<void> syncNow() async {
     final user = auth.currentUser;
     if (user == null) return;
     try {
       final client = Supabase.instance.client;
       final local = await log.all();
-      final rows = await client
-          .from('sessions')
-          .select('id, technique_id, started_at, duration_sec, cycles, '
-              'completed');
+
+      const baseColumns =
+          'id, technique_id, started_at, duration_sec, cycles, completed';
+      List<Map<String, dynamic>> rows;
+      if (_cloudHasVariant) {
+        try {
+          rows = await client
+              .from('sessions')
+              .select('$baseColumns, variant');
+        } on PostgrestException catch (e) {
+          if (!_isMissingVariantColumn(e)) rethrow;
+          _cloudHasVariant = false;
+          rows = await client.from('sessions').select(baseColumns);
+        }
+      } else {
+        rows = await client.from('sessions').select(baseColumns);
+      }
 
       final remote = [
         for (final row in rows)
@@ -51,24 +74,41 @@ class SessionSyncService {
             durationSec: (row['duration_sec'] as num).toInt(),
             cyclesCompleted: (row['cycles'] as num).toInt(),
             completed: row['completed'] as bool? ?? true,
+            variant: row['variant'] as String?,
           ),
       ];
       final remoteIds = remote.map((r) => r.id).toSet();
 
       final upload = computeUpload(local, remoteIds);
       if (upload.isNotEmpty) {
-        await client.from('sessions').upsert([
-          for (final r in upload)
-            {
-              'user_id': user.id,
-              'id': r.id,
-              'technique_id': r.techniqueId,
-              'started_at': r.startedAt.toUtc().toIso8601String(),
-              'duration_sec': r.durationSec,
-              'cycles': r.cyclesCompleted,
-              'completed': r.completed,
-            },
-        ]);
+        List<Map<String, dynamic>> payload({required bool withVariant}) => [
+              for (final r in upload)
+                {
+                  'user_id': user.id,
+                  'id': r.id,
+                  'technique_id': r.techniqueId,
+                  'started_at': r.startedAt.toUtc().toIso8601String(),
+                  'duration_sec': r.durationSec,
+                  'cycles': r.cyclesCompleted,
+                  'completed': r.completed,
+                  if (withVariant && r.variant != null) 'variant': r.variant,
+                },
+            ];
+        if (_cloudHasVariant) {
+          try {
+            await client
+                .from('sessions')
+                .upsert(payload(withVariant: true));
+          } on PostgrestException catch (e) {
+            if (!_isMissingVariantColumn(e)) rethrow;
+            _cloudHasVariant = false;
+            await client
+                .from('sessions')
+                .upsert(payload(withVariant: false));
+          }
+        } else {
+          await client.from('sessions').upsert(payload(withVariant: false));
+        }
       }
 
       await log.mergeAll(remote);
