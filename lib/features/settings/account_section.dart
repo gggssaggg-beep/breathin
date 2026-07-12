@@ -62,11 +62,15 @@ class _AccountSectionState extends State<AccountSection> {
   }
 
   /// Обёртка auth-действий: сетевые сбои → снекбар вместо тихого «ничего».
-  Future<void> _guard(Future<void> Function() action) async {
+  /// Возвращает успех — вызывающие обновляют локальный стейт только по нему
+  /// (пост-мерж ревью П1: ник не должен рисоваться новым при офлайн-ошибке).
+  Future<bool> _guard(Future<void> Function() action) async {
     try {
       await action();
+      return true;
     } catch (_) {
       _showError();
+      return false;
     }
   }
 
@@ -106,8 +110,8 @@ class _AccountSectionState extends State<AccountSection> {
       ),
     );
     if (name == null || name.isEmpty) return;
-    await _guard(() => widget.auth.updateDisplayName(name));
-    if (mounted) setState(() => _displayName = name);
+    final ok = await _guard(() => widget.auth.updateDisplayName(name));
+    if (ok && mounted) setState(() => _displayName = name);
   }
 
   Future<void> _signOut(AppUser user) async {
@@ -131,8 +135,8 @@ class _AccountSectionState extends State<AccountSection> {
       );
       if (confirmed != true) return;
     }
-    await _guard(widget.auth.signOut);
-    if (mounted) setState(() => _displayName = null);
+    final ok = await _guard(widget.auth.signOut);
+    if (ok && mounted) setState(() => _displayName = null);
   }
 
   @override

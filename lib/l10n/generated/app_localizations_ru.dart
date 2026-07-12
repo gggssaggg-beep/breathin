@@ -500,4 +500,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get communityChatAction => 'Чат нашего сообщества';
+
+  @override
+  String get pauseAction => 'Пауза';
+
+  @override
+  String get resumeAction => 'Продолжить';
+
+  @override
+  String get stopAction => 'Стоп';
+
+  @override
+  String get prepGetReady => 'Приготовьтесь';
+
+  @override
+  String get cycleLabel => 'Цикл';
+
+  @override
+  String get sessionDone => 'Готово';
+
+  @override
+  String get sessionDoneTapHint => 'Коснитесь круга, чтобы закрыть';
 }

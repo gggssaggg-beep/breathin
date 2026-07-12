@@ -220,5 +220,13 @@
   "upToDateNote": "You're on the latest version",
   "communitySection": "Community",
   "feedbackAction": "Feedback",
-  "communityChatAction": "Our community chat"
+  "communityChatAction": "Our community chat",
+
+  "pauseAction": "Pause",
+  "resumeAction": "Resume",
+  "stopAction": "Stop",
+  "prepGetReady": "Get ready",
+  "cycleLabel": "Cycle",
+  "sessionDone": "Done",
+  "sessionDoneTapHint": "Tap the circle to close"
 }

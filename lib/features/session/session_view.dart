@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/models/technique.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import 'breathing_painter.dart';
@@ -13,21 +14,31 @@ import 'phase_labels.dart';
 ///
 /// Дыхательная фигура — CustomPainter [BreathingPainter] (партия П9):
 /// круг, квадрат или треугольник по [shape].
+///
+/// Управление (ТЗ §6.5, корректировки владельца №9 и №14): во время сессии —
+/// отдельные «Пауза/Продолжить» и «Стоп»; на финише кнопки исчезают, круг
+/// заливается приятным цветом, тап по нему закрывает экран.
 class SessionView extends StatelessWidget {
   final SessionState state;
   final VisualShape shape;
-  final VoidCallback? onPauseStop;
+  final bool paused;
+  final VoidCallback? onPauseResume;
+  final VoidCallback? onStop;
 
   const SessionView({
     super.key,
     required this.state,
     required this.shape,
-    this.onPauseStop,
+    this.paused = false,
+    this.onPauseResume,
+    this.onStop,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = AppLocalizations.of(context);
+    final finished = state.isFinished;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -38,17 +49,57 @@ class SessionView extends StatelessWidget {
                 cycleIndex: state.cycleIndex,
                 totalCycles: state.totalCycles,
               ),
-              Expanded(child: Center(child: _breathingFigure(theme))),
+              Expanded(
+                child: Center(
+                  child: finished
+                      ? _finishedFigure(theme, l)
+                      : _breathingFigure(theme, l),
+                ),
+              ),
               _SessionProgress(
                 elapsedMs: state.sessionElapsedMs,
                 durationMs: state.sessionDurationMs,
               ),
               const SizedBox(height: 16),
-              FilledButton.tonalIcon(
-                onPressed: onPauseStop,
-                icon: const BreathinIcon(BreathinIcons.playerStop, size: 20),
-                label: const Text('Пауза / стоп'),
-              ),
+              if (finished)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  child: Text(
+                    l.sessionDoneTapHint,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                )
+              else
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton.tonalIcon(
+                        onPressed: onPauseResume,
+                        icon: BreathinIcon(
+                          paused
+                              ? BreathinIcons.playerPlay
+                              : BreathinIcons.playerPause,
+                          size: 20,
+                        ),
+                        label:
+                            Text(paused ? l.resumeAction : l.pauseAction),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton.tonalIcon(
+                        onPressed: onStop,
+                        icon: const BreathinIcon(
+                          BreathinIcons.playerStop,
+                          size: 20,
+                        ),
+                        label: Text(l.stopAction),
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
@@ -56,8 +107,45 @@ class SessionView extends StatelessWidget {
     );
   }
 
-  Widget _breathingFigure(ThemeData theme) {
-    final (title, number) = _titleAndNumber();
+  /// Финиш (влад. §14): круг приятного цвета с галочкой; тап — закрыть.
+  /// Дофаминовая точка: сессия завершена, никаких кнопок.
+  Widget _finishedFigure(ThemeData theme, AppLocalizations l) {
+    return Semantics(
+      button: true,
+      label: l.sessionDoneTapHint,
+      child: GestureDetector(
+        onTap: onStop,
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 240,
+              height: 240,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: theme.colorScheme.primaryContainer,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                // Текстовый глиф, не эмодзи: эмодзи ОС-зависимы (RESOURCES_ICONS).
+                '✓',
+                style: theme.textTheme.displayLarge?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+            const SizedBox(height: 28),
+            Text(l.sessionDone, style: theme.textTheme.headlineSmall),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _breathingFigure(ThemeData theme, AppLocalizations l) {
+    final (title, number) = _titleAndNumber(l);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -99,17 +187,19 @@ class SessionView extends StatelessWidget {
     );
   }
 
-  /// Заголовок и крупное число для текущей стадии.
-  (String, String) _titleAndNumber() {
+  /// Заголовок и крупное число для текущей стадии (финиш — отдельный виджет).
+  (String, String) _titleAndNumber(AppLocalizations l) {
     switch (state.stage) {
       case SessionStage.prep:
         final sec = (state.prepRemainingMs / 1000).ceil();
-        return ('Приготовьтесь', '$sec');
+        return (l.prepGetReady, '$sec');
       case SessionStage.finished:
-        // Текстовый глиф, не эмодзи: эмодзи ОС-зависимы (RESOURCES_ICONS).
-        return ('Готово', '✓');
+        return (l.sessionDone, '✓'); // недостижимо: финиш рисуется отдельно
       case SessionStage.breathing:
-        return (phaseLabelRu(state.phase!), '${state.phaseRemainingSec}');
+        return (
+          phaseLabel(l, state.phase!),
+          '${state.phaseRemainingSec}',
+        );
     }
   }
 }
@@ -121,13 +211,14 @@ class _CycleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     // cycleIndex 0-based; показываем 1-based, во время подготовки — тире.
     final label =
         cycleIndex < 0 ? '—' : '${cycleIndex + 1} / $totalCycles';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Цикл ', style: Theme.of(context).textTheme.titleMedium),
+        Text('${l.cycleLabel} ', style: Theme.of(context).textTheme.titleMedium),
         Text(label, style: Theme.of(context).textTheme.titleMedium),
       ],
     );

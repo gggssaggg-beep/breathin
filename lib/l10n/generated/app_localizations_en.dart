@@ -491,4 +491,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get communityChatAction => 'Our community chat';
+
+  @override
+  String get pauseAction => 'Pause';
+
+  @override
+  String get resumeAction => 'Resume';
+
+  @override
+  String get stopAction => 'Stop';
+
+  @override
+  String get prepGetReady => 'Get ready';
+
+  @override
+  String get cycleLabel => 'Cycle';
+
+  @override
+  String get sessionDone => 'Done';
+
+  @override
+  String get sessionDoneTapHint => 'Tap the circle to close';
 }

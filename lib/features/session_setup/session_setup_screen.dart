@@ -8,6 +8,7 @@ import '../../domain/models/session_config.dart';
 import '../../domain/models/technique.dart';
 import '../../domain/models/technique_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../session/phase_labels.dart';
 import '../session/session_runner.dart';
 
 /// Экран настройки сессии (ТЗ §6.4). Только для counted-техник.
@@ -51,26 +52,13 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
 
   Technique get _t => widget.technique;
 
-  /// Возвращает локализованное название фазы по [PhaseKind].
-  String _phaseLabel(AppLocalizations l, PhaseKind kind) {
-    switch (kind) {
-      case PhaseKind.inhale:
-        return l.phaseInhale;
-      case PhaseKind.holdIn:
-        return l.phaseHoldIn;
-      case PhaseKind.exhale:
-        return l.phaseExhale;
-      case PhaseKind.holdOut:
-        return l.phaseHoldOut;
-    }
-  }
-
   /// Запускает сессию: сохраняет настройки, компилирует план (метроном
   /// вшивается в таймлайн на этапе компиляции), открывает раннер.
   Future<void> _startSession() async {
     final s = _settings!;
     await _repo.save(s);
     if (!mounted) return;
+    final l = AppLocalizations.of(context);
     final plan = const SessionPlanCompiler().compile(
       _t,
       s.toSessionConfig(_t),
@@ -82,6 +70,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           plan: plan,
           technique: _t,
           feedback: s.feedback,
+          mediaTitle: _techniqueName(l, _t),
         ),
       ),
     );
@@ -344,7 +333,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     for (var i = 0; i < specs.length; i++) {
       final spec = specs[i];
       final value = i < secs.length ? secs[i] : spec.defaultSec;
-      final label = _phaseLabel(l, spec.kind);
+      final label = phaseLabel(l, spec.kind);
 
       if (ratioMode && i > 0) {
         // Производные фазы в ratio-режиме — только текст

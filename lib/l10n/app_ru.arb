@@ -220,5 +220,13 @@
   "upToDateNote": "Установлена последняя версия",
   "communitySection": "Сообщество",
   "feedbackAction": "Обратная связь",
-  "communityChatAction": "Чат нашего сообщества"
+  "communityChatAction": "Чат нашего сообщества",
+
+  "pauseAction": "Пауза",
+  "resumeAction": "Продолжить",
+  "stopAction": "Стоп",
+  "prepGetReady": "Приготовьтесь",
+  "cycleLabel": "Цикл",
+  "sessionDone": "Готово",
+  "sessionDoneTapHint": "Коснитесь круга, чтобы закрыть"
 }
