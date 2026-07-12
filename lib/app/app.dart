@@ -64,7 +64,7 @@ class _BreathinAppState extends State<BreathinApp> {
       SnackBar(
         content: Text(
           '${l.updateAvailableSnack(info.version.toString())}'
-          ' · ${info.humanSize}',
+          ' · ${info.humanSizeWith(l.sizeUnitsCsv)}',
         ),
         duration: const Duration(seconds: 8),
         action: SnackBarAction(

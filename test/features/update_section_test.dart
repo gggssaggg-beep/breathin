@@ -44,7 +44,8 @@ void main() {
     await tester
         .pumpWidget(wrap(result: available, onUpdateNow: () => tapped = true));
     expect(find.text('Update 1.3.0 available'), findsOneWidget);
-    expect(find.text('≈ 24.2 МБ'), findsOneWidget);
+    // Единицы размера — по локали виджета (en).
+    expect(find.text('≈ 24.2 MB'), findsOneWidget);
     await tester.tap(find.text('Update'));
     expect(tapped, isTrue);
   });

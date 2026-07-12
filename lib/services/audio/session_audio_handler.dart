@@ -1,6 +1,8 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
+import '../../l10n/system_l10n.dart';
+
 /// Медиа-обработчик сессии: обёртка just_audio-плеера под audio_service.
 ///
 /// Именно он делает звук «живым» при выключенном экране: Android поднимает
@@ -43,7 +45,8 @@ class SessionAudioHandler extends BaseAudioHandler {
     mediaItem.add(MediaItem(
       id: path,
       title: title,
-      album: 'Дыши',
+      // Альбом на локскрине — имя приложения по системной локали.
+      album: systemL10n().appTitle,
       duration: duration,
     ));
     await player.setFilePath(path);
