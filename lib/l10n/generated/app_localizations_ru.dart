@@ -460,6 +460,13 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get challengesLoadFailed =>
+      'Не получилось загрузить челленджи. Проверьте интернет.';
+
+  @override
+  String get commonRetry => 'Повторить';
+
+  @override
   String get settingsTitle => 'Настройки';
 
   @override

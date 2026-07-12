@@ -202,6 +202,9 @@
     }
   },
 
+  "challengesLoadFailed": "Не получилось загрузить челленджи. Проверьте интернет.",
+  "commonRetry": "Повторить",
+
   "settingsTitle": "Настройки",
   "updatesSection": "Обновления",
   "autoUpdateLabel": "Автообновление",

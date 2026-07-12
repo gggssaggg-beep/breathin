@@ -451,6 +451,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get challengesLoadFailed =>
+      'Couldn\'t load challenges. Check your connection.';
+
+  @override
+  String get commonRetry => 'Retry';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

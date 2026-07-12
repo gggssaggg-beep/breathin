@@ -818,6 +818,18 @@ abstract class AppLocalizations {
   /// **'Версия {version}'**
   String appVersionLabel(String version);
 
+  /// No description provided for @challengesLoadFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не получилось загрузить челленджи. Проверьте интернет.'**
+  String get challengesLoadFailed;
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторить'**
+  String get commonRetry;
+
   /// No description provided for @settingsTitle.
   ///
   /// In ru, this message translates to:

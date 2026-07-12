@@ -202,6 +202,9 @@
     }
   },
 
+  "challengesLoadFailed": "Couldn't load challenges. Check your connection.",
+  "commonRetry": "Retry",
+
   "settingsTitle": "Settings",
   "updatesSection": "Updates",
   "autoUpdateLabel": "Auto-update",
