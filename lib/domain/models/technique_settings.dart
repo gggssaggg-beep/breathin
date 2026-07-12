@@ -55,6 +55,7 @@ class TechniqueSettings {
       timerMinutes: t.defaultTimerMin ?? 5,
       phaseSeconds:
           (t.defaultPhases ?? const []).map((p) => p.defaultSec).toList(),
+      keepRatio: t.keepRatioDefault,
     );
   }
 

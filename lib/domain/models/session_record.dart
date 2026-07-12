@@ -16,6 +16,11 @@ class SessionRecord {
   /// true — доведена до гонга; false — прервана пользователем.
   final bool completed;
 
+  /// Фактический паттерн фаз сессии, например «4-8-8» (влад. §15: отличать
+  /// упрощённый режим от полного и видеть прогресс). null — записи старых
+  /// версий приложения.
+  final String? variant;
+
   const SessionRecord({
     required this.id,
     required this.techniqueId,
@@ -23,6 +28,7 @@ class SessionRecord {
     required this.durationSec,
     required this.cyclesCompleted,
     required this.completed,
+    this.variant,
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +38,7 @@ class SessionRecord {
         'durationSec': durationSec,
         'cyclesCompleted': cyclesCompleted,
         'completed': completed,
+        if (variant != null) 'variant': variant,
       };
 
   factory SessionRecord.fromJson(Map<String, dynamic> json) => SessionRecord(
@@ -43,5 +50,13 @@ class SessionRecord {
         durationSec: (json['durationSec'] as num).toInt(),
         cyclesCompleted: (json['cyclesCompleted'] as num).toInt(),
         completed: json['completed'] as bool? ?? true,
+        variant: json['variant'] as String?,
       );
 }
+
+/// Паттерн-строка из длительностей фаз: «4-8-8»; целые — без «.0»,
+/// дробные — с одним знаком (формат как в подписи техники).
+String variantOf(Iterable<double> phaseSeconds) => phaseSeconds
+    .map((s) =>
+        s == s.roundToDouble() ? s.toInt().toString() : s.toStringAsFixed(1))
+    .join('-');

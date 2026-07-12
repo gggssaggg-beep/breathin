@@ -49,6 +49,26 @@ void main() {
       expect(restored.feedback, classic.feedback);
     });
 
+    test('classic: keepRatio из keepRatioDefault техники (влад. §6)', () {
+      // box/triangle/4-2-4 — тумблер появился, но выключен (привычное
+      // независимое поведение); 2-8/2-10 — включён (пропорция — суть).
+      expect(TechniqueSettings.classic(boxBreathing).keepRatio, isFalse);
+      expect(TechniqueSettings.classic(triangleBreathing).keepRatio, isFalse);
+      expect(TechniqueSettings.classic(fourTwoFour).keepRatio, isFalse);
+      expect(TechniqueSettings.classic(twoEight).keepRatio, isTrue);
+      expect(TechniqueSettings.classic(twoTen).keepRatio, isTrue);
+    });
+
+    test('box с keepRatio: пропорция 1:1:1:1 держится точно', () {
+      final s = TechniqueSettings.classic(boxBreathing)
+          .copyWith(keepRatio: true);
+      final scaled = applyPhaseChange(boxBreathing, s, 0, 6.0);
+      expect(scaled, [6, 6, 6, 6]);
+      // При выключенном тумблере — прежнее независимое поведение.
+      final independent = applyPhaseChange(boxBreathing, s.copyWith(keepRatio: false), 0, 6.0);
+      expect(independent, [6, 4, 4, 4]);
+    });
+
     test('toSessionConfig: 4-7-8 с темпом ×0.75 масштабирует дефолты', () {
       final s = TechniqueSettings.classic(fourSevenEight)
           .copyWith(tempoMultiplier: 0.75);

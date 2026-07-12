@@ -364,6 +364,11 @@ class _ByTechnique extends StatelessWidget {
     } on ArgumentError {
       t = null;
     }
+    // Варианты паттерна («4-8-8 ×3 · 4-16-8 ×1») — виден режим практики
+    // и прогресс упрощённый → полный (влад. §15).
+    final variants = PracticeStats.variantsFor(records, year, month, id);
+    final variantsLine =
+        variants.map((v) => '${v.$1} ×${v.$2}').join(' · ');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -378,10 +383,23 @@ class _ByTechnique extends StatelessWidget {
             const SizedBox(width: 22),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              t != null ? l.techniqueName(t) : id,
-              style: theme.textTheme.bodyLarge,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  t != null ? l.techniqueName(t) : id,
+                  style: theme.textTheme.bodyLarge,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (variants.isNotEmpty)
+                  Text(
+                    variantsLine,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+              ],
             ),
           ),
           Text(

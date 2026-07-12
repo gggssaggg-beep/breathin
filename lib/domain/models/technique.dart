@@ -121,6 +121,12 @@ class Technique {
   final List<PhaseSpec>? phases;
   final ScalingMode? scaling;
 
+  /// Для [ScalingMode.ratioOptional]: начальное положение тумблера
+  /// «держать пропорцию». У 2-8/2-10 пропорция — суть техники (true);
+  /// у box/triangle/4-2-4 тумблер добавлен по просьбе владельца (§6),
+  /// но по умолчанию выключен — привычные независимые слайдеры.
+  final bool keepRatioDefault;
+
   /// 4-7-8: варианты множителя темпа.
   final List<double>? tempoOptions;
 
@@ -157,6 +163,7 @@ class Technique {
     this.visual = VisualShape.circle,
     this.phases,
     this.scaling,
+    this.keepRatioDefault = true,
     this.tempoOptions,
     this.simplifiedPhases,
     this.defaultCycles = 10,

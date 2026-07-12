@@ -79,6 +79,31 @@ abstract final class PracticeStats {
     return entries;
   }
 
+  /// Частоты вариантов паттерна техники за месяц: «4-8-8» → сколько сессий.
+  /// Записи без варианта (старые версии) не учитываются. Порядок — по
+  /// убыванию частоты (влад. §15: виден прогресс упрощённый → полный).
+  static List<(String, int)> variantsFor(
+    Iterable<SessionRecord> records,
+    int year,
+    int month,
+    String techniqueId,
+  ) {
+    final acc = <String, int>{};
+    for (final r in records) {
+      if (r.techniqueId != techniqueId ||
+          r.startedAt.year != year ||
+          r.startedAt.month != month) {
+        continue;
+      }
+      final v = r.variant;
+      if (v == null) continue;
+      acc.update(v, (n) => n + 1, ifAbsent: () => 1);
+    }
+    final entries = [for (final e in acc.entries) (e.key, e.value)]
+      ..sort((a, b) => b.$2.compareTo(a.$2));
+    return entries;
+  }
+
   /// Streak — число дней подряд с практикой, заканчивая сегодня.
   ///
   /// Правило: если сегодня практики ещё не было, серия НЕ рвётся до конца

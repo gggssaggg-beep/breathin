@@ -5,6 +5,7 @@ import '../../domain/engine/phase_scaling.dart';
 import '../../domain/engine/session_plan_compiler.dart';
 import '../../domain/models/feedback_channels.dart';
 import '../../domain/models/session_config.dart';
+import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
 import '../../domain/models/technique_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -59,9 +60,10 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     await _repo.save(s);
     if (!mounted) return;
     final l = AppLocalizations.of(context);
+    final config = s.toSessionConfig(_t);
     final plan = const SessionPlanCompiler().compile(
       _t,
-      s.toSessionConfig(_t),
+      config,
       metronome: s.feedback.metronome,
     );
     await Navigator.of(context).push(
@@ -71,6 +73,9 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           technique: _t,
           feedback: s.feedback,
           mediaTitle: _techniqueName(l, _t),
+          // Фактический паттерн (упрощённый/полный/пользовательский) —
+          // в историю практик (влад. §15).
+          variant: variantOf(config.phaseSeconds),
         ),
       ),
     );

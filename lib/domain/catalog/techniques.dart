@@ -12,7 +12,10 @@ const boxBreathing = Technique(
   safetyKey: 'safety_holds_generic',
   icon: TechniqueIcon.square,
   visual: VisualShape.square,
-  scaling: ScalingMode.perPhase,
+  // Тумблер «держать пропорцию» по просьбе владельца (§6); дефолт выкл —
+  // привычные независимые слайдеры.
+  scaling: ScalingMode.ratioOptional,
+  keepRatioDefault: false,
   defaultCycles: 10,
   phases: [
     PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4),
@@ -30,7 +33,8 @@ const triangleBreathing = Technique(
   safetyKey: 'safety_holds_generic',
   icon: TechniqueIcon.triangle,
   visual: VisualShape.triangle,
-  scaling: ScalingMode.perPhase,
+  scaling: ScalingMode.ratioOptional,
+  keepRatioDefault: false,
   defaultCycles: 10,
   phases: [
     PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4),
@@ -65,7 +69,8 @@ const fourTwoFour = Technique(
   safetyLevel: SafetyLevel.medium,
   safetyKey: 'safety_holds_generic',
   icon: TechniqueIcon.balance,
-  scaling: ScalingMode.perPhase,
+  scaling: ScalingMode.ratioOptional,
+  keepRatioDefault: false,
   defaultCycles: 10,
   phases: [
     PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4),
