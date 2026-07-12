@@ -60,16 +60,9 @@ class TimelineRenderer {
     }
   }
 
-  /// Отрендерить план в PCM 16-бит моно. Микс идёт в 32-битный аккумулятор,
-  /// затем клампится в int16 (сумма перекрывающихся клипов может превысить пик).
-  Int16List render(SessionPlan plan, SoundBank bank) {
-    if (bank.sampleRate != sampleRate) {
-      throw ArgumentError(
-        'sample rate набора (${bank.sampleRate}) != рендерера ($sampleRate)',
-      );
-    }
-
-    // Заранее считаем длину буфера: максимум по (offset + длина клипа).
+  /// Полная длина сессии в сэмплах: конец плана либо хвост последнего клипа
+  /// (гонг в t=конец звучит дольше плана — его хвост входит в буфер).
+  int totalSamplesFor(SessionPlan plan, SoundBank bank) {
     var totalSamples = sampleOffsetForMs(plan.totalDurationMs);
     for (final e in plan.events) {
       final id = clipForEvent(e);
@@ -79,24 +72,51 @@ class TimelineRenderer {
       final end = sampleOffsetForMs(e.tMs) + clip.length;
       if (end > totalSamples) totalSamples = end;
     }
+    return totalSamples;
+  }
 
-    final acc = Int32List(totalSamples);
+  /// Микширует в [out] фрагмент таймлайна с сэмпла [startSample] (16-бит моно;
+  /// 32-битный аккумулятор, клампится — сумма перекрывающихся клипов может
+  /// превысить пик). Память O(len(out)): длинная сессия рендерится чанками и
+  /// целиком в RAM не живёт (ревью К2: час таймлайна в RAM ронял процесс).
+  void renderRange(
+    SessionPlan plan,
+    SoundBank bank,
+    Int16List out,
+    int startSample,
+  ) {
+    if (bank.sampleRate != sampleRate) {
+      throw ArgumentError(
+        'sample rate набора (${bank.sampleRate}) != рендерера ($sampleRate)',
+      );
+    }
+    final end = startSample + out.length;
+    final acc = Int32List(out.length);
     for (final e in plan.events) {
       final id = clipForEvent(e);
       if (id == null) continue;
       final clip = bank.clips[id];
       if (clip == null) continue;
-      final start = sampleOffsetForMs(e.tMs);
-      for (var i = 0; i < clip.length; i++) {
-        acc[start + i] += clip[i];
+      final clipStart = sampleOffsetForMs(e.tMs);
+      if (clipStart >= end || clipStart + clip.length <= startSample) continue;
+      final from = clipStart < startSample ? startSample - clipStart : 0;
+      final toEnd = end - clipStart;
+      final to = toEnd < clip.length ? toEnd : clip.length;
+      for (var i = from; i < to; i++) {
+        acc[clipStart + i - startSample] += clip[i];
       }
     }
-
-    final out = Int16List(totalSamples);
-    for (var i = 0; i < totalSamples; i++) {
+    for (var i = 0; i < out.length; i++) {
       final v = acc[i];
       out[i] = v > 32767 ? 32767 : (v < -32768 ? -32768 : v);
     }
+  }
+
+  /// Отрендерить план целиком (короткие планы и тесты; длинные сессии идут
+  /// чанками через [renderRange] — см. writeSessionWavFile).
+  Int16List render(SessionPlan plan, SoundBank bank) {
+    final out = Int16List(totalSamplesFor(plan, bank));
+    renderRange(plan, bank, out, 0);
     return out;
   }
 }

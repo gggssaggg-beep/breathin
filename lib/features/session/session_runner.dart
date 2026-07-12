@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:vibration/vibration.dart';
 
 import '../../data/session_log_repository.dart';
+import '../../services/sync/session_sync_service.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/engine/session_plan.dart';
 import '../../domain/models/feedback_channels.dart';
@@ -56,7 +58,14 @@ class _SessionRunnerState extends State<SessionRunner>
   late final Ticker _ticker;
   final Stopwatch _clock = Stopwatch();
   final DateTime _startedAt = DateTime.now();
-  int _lastMs = 0;
+
+  /// Нижняя граница окна вибро-событий; -1, чтобы событие t=0 (первый бип
+  /// подготовки) попало в первое окно (ревью М1).
+  int _lastMs = -1;
+
+  /// WAV текущей сессии: фиксированное имя + удаление в dispose —
+  /// кэш не растёт с каждой сессией (ревью К3).
+  File? _sessionWav;
   late SessionState _state;
   Object? _signature;
   bool _recorded = false;
@@ -88,12 +97,16 @@ class _SessionRunnerState extends State<SessionRunner>
         (widget.feedback.sound || widget.feedback.metronome)) {
       try {
         final bank = await loadMinimalSoundBank();
-        final wav = buildSessionWav(widget.plan, bank, widget.feedback);
-        if (wav != null) {
-          final dir = await getTemporaryDirectory();
-          final file = File(
-              '${dir.path}/session_${_startedAt.millisecondsSinceEpoch}.wav');
-          await file.writeAsBytes(wav, flush: true);
+        final dir = await getTemporaryDirectory();
+        final file = File('${dir.path}/session_current.wav');
+        final written = await writeSessionWavFile(
+          widget.plan,
+          bank,
+          widget.feedback,
+          file,
+        );
+        if (written) {
+          _sessionWav = file;
           await handler.loadSessionFile(
             file.path,
             title: 'Дыхательная сессия',
@@ -121,8 +134,10 @@ class _SessionRunnerState extends State<SessionRunner>
   void _onTick(Duration _) {
     final pos = _positionMs();
 
-    // Вибро-канал: события, чей t попал в окно с прошлого тика.
-    if (_canVibrate && pos > _lastMs) {
+    // Вибро-канал: события, чей t попал в окно с прошлого тика. Окно шире
+    // 2 с — тикер молчал (возврат из фона в визуальном режиме): пропускаем,
+    // чтобы не выстрелить залпом все накопившиеся паттерны (ревью М2).
+    if (_canVibrate && pos > _lastMs && pos - _lastMs <= 2000) {
       for (final e in _engine.eventsInWindow(_lastMs, pos)) {
         final pattern = switch (e.type) {
           EngineEventType.phaseStart => VibrationPattern.forPhase(e.phase!),
@@ -175,8 +190,10 @@ class _SessionRunnerState extends State<SessionRunner>
       cyclesCompleted: cycles,
       completed: completed,
     );
-    // fire-and-forget: экран не ждёт диска.
-    (widget.log ?? SessionLogRepository()).add(record);
+    // fire-and-forget: экран не ждёт ни диска, ни сети. Синк подхватывает
+    // свежую запись сразу (ревью С8); без входа/сети он тихий no-op.
+    final repo = widget.log ?? SessionLogRepository();
+    unawaited(repo.add(record).then((_) => SessionSyncService().syncNow()));
   }
 
   void _pauseStop() {
@@ -192,6 +209,9 @@ class _SessionRunnerState extends State<SessionRunner>
   @override
   void dispose() {
     if (_audioMode) sessionAudioHandler?.stop().ignore();
+    // Файл сессии больше не нужен (плеер остановлен строкой выше).
+    _sessionWav?.delete().then((_) {}, onError: (_) {});
+    _sessionWav = null;
     _ticker.dispose();
     super.dispose();
   }
