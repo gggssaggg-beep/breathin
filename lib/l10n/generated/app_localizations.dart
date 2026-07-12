@@ -895,6 +895,48 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Чат нашего сообщества'**
   String get communityChatAction;
+
+  /// No description provided for @pauseAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пауза'**
+  String get pauseAction;
+
+  /// No description provided for @resumeAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить'**
+  String get resumeAction;
+
+  /// No description provided for @stopAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Стоп'**
+  String get stopAction;
+
+  /// No description provided for @prepGetReady.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приготовьтесь'**
+  String get prepGetReady;
+
+  /// No description provided for @cycleLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цикл'**
+  String get cycleLabel;
+
+  /// No description provided for @sessionDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get sessionDone;
+
+  /// No description provided for @sessionDoneTapHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Коснитесь круга, чтобы закрыть'**
+  String get sessionDoneTapHint;
 }
 
 class _AppLocalizationsDelegate

@@ -1,15 +1,17 @@
 import '../../domain/models/technique.dart';
+import '../../l10n/generated/app_localizations.dart';
 
-/// Русские подписи фаз для экрана сессии. Вынесено отдельно, чтобы в партии
-/// локализации (RU/EN) заменить на ARB без правки виджета.
-String phaseLabelRu(PhaseKind phase) {
+/// Локализованная подпись фазы для экранов сессии и настройки
+/// (в RU обе задержки — «Задержка»: контекст ясен по порядку фаз).
+String phaseLabel(AppLocalizations l, PhaseKind phase) {
   switch (phase) {
     case PhaseKind.inhale:
-      return 'Вдох';
+      return l.phaseInhale;
     case PhaseKind.holdIn:
+      return l.phaseHoldIn;
     case PhaseKind.holdOut:
-      return 'Задержка';
+      return l.phaseHoldOut;
     case PhaseKind.exhale:
-      return 'Выдох';
+      return l.phaseExhale;
   }
 }

@@ -5,6 +5,7 @@ import 'package:breathin/domain/engine/phase_engine.dart';
 import 'package:breathin/domain/models/technique.dart';
 import 'package:breathin/features/session/breathing_painter.dart';
 import 'package:breathin/features/session/session_view.dart';
+import 'package:breathin/l10n/generated/app_localizations.dart';
 
 /// Вспомогательная фабрика SessionState для тестов.
 SessionState _makeState({
@@ -187,6 +188,8 @@ void main() {
       );
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: SessionView(
             state: state,
             shape: VisualShape.square,
@@ -194,7 +197,8 @@ void main() {
         ),
       );
       expect(tester.takeException(), isNull);
-      expect(find.text('Вдох'), findsOneWidget);
+      // Локаль тестов — en (SessionView теперь берёт подписи из l10n).
+      expect(find.text('Inhale'), findsOneWidget);
     });
 
     testWidgets('triangle рендерится без ошибок', (tester) async {
@@ -205,6 +209,8 @@ void main() {
       );
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: SessionView(
             state: state,
             shape: VisualShape.triangle,

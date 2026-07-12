@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:breathin/domain/engine/phase_engine.dart';
 import 'package:breathin/domain/models/technique.dart';
 import 'package:breathin/features/session/session_view.dart';
+import 'package:breathin/l10n/generated/app_localizations.dart';
 
 SessionState breathing({
   PhaseKind phase = PhaseKind.inhale,
@@ -26,13 +27,37 @@ SessionState breathing({
       phaseIndexInCycle: phaseIndexInCycle,
     );
 
+const finished = SessionState(
+  stage: SessionStage.finished,
+  phase: null,
+  cycleIndex: -1,
+  totalCycles: 10,
+  phaseElapsedMs: 0,
+  phaseDurationMs: 0,
+  prepRemainingMs: 0,
+  sessionElapsedMs: 163000,
+  sessionDurationMs: 163000,
+  phaseIndexInCycle: -1,
+);
+
+// Локаль тестов — en (дефолт flutter_test): ожидания на EN-строках ARB.
 Widget wrap(
   SessionState s, {
-  VoidCallback? onPauseStop,
+  bool paused = false,
+  VoidCallback? onPauseResume,
+  VoidCallback? onStop,
   VisualShape shape = VisualShape.circle,
 }) =>
     MaterialApp(
-      home: SessionView(state: s, shape: shape, onPauseStop: onPauseStop),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: SessionView(
+        state: s,
+        shape: shape,
+        paused: paused,
+        onPauseResume: onPauseResume,
+        onStop: onStop,
+      ),
     );
 
 void main() {
@@ -44,17 +69,17 @@ void main() {
       phaseElapsedMs: 0,
       phaseDurationMs: 4000,
     )));
-    expect(find.text('Вдох'), findsOneWidget);
+    expect(find.text('Inhale'), findsOneWidget);
     expect(find.text('4'), findsOneWidget); // отсчёт секунд фазы
     expect(find.text('1 / 10'), findsOneWidget); // 0-based → 1-based
   });
 
-  testWidgets('задержки обеих фаз подписаны «Задержка»', (tester) async {
+  testWidgets('задержки обеих фаз подписаны «Hold»', (tester) async {
     await tester.pumpWidget(wrap(breathing(phase: PhaseKind.holdOut)));
-    expect(find.text('Задержка'), findsOneWidget);
+    expect(find.text('Hold'), findsOneWidget);
   });
 
-  testWidgets('подготовка: «Приготовьтесь» и обратный отсчёт', (tester) async {
+  testWidgets('подготовка: «Get ready» и обратный отсчёт', (tester) async {
     await tester.pumpWidget(wrap(const SessionState(
       stage: SessionStage.prep,
       phase: null,
@@ -67,35 +92,44 @@ void main() {
       sessionDurationMs: 163000,
       phaseIndexInCycle: -1,
     )));
-    expect(find.text('Приготовьтесь'), findsOneWidget);
+    expect(find.text('Get ready'), findsOneWidget);
     expect(find.text('3'), findsOneWidget); // ceil(2500/1000)
     expect(find.text('—'), findsOneWidget); // цикл не начался
   });
 
-  testWidgets('завершение показывает «Готово»', (tester) async {
-    await tester.pumpWidget(wrap(const SessionState(
-      stage: SessionStage.finished,
-      phase: null,
-      cycleIndex: -1,
-      totalCycles: 10,
-      phaseElapsedMs: 0,
-      phaseDurationMs: 0,
-      prepRemainingMs: 0,
-      sessionElapsedMs: 163000,
-      sessionDurationMs: 163000,
-      phaseIndexInCycle: -1,
-    )));
-    expect(find.text('Готово'), findsOneWidget);
+  testWidgets('во время сессии — отдельные кнопки паузы и стопа',
+      (tester) async {
+    var paused = false;
+    var stopped = false;
+    await tester.pumpWidget(wrap(
+      breathing(),
+      onPauseResume: () => paused = true,
+      onStop: () => stopped = true,
+    ));
+    await tester.tap(find.text('Pause'));
+    expect(paused, isTrue);
+    expect(stopped, isFalse);
+    await tester.tap(find.text('Stop'));
+    expect(stopped, isTrue);
   });
 
-  testWidgets('кнопка паузы/стоп вызывает колбэк', (tester) async {
-    var tapped = false;
-    await tester.pumpWidget(wrap(breathing(), onPauseStop: () => tapped = true));
-    await tester.tap(find.byType(FilledButton));
-    expect(tapped, isTrue);
+  testWidgets('на паузе кнопка меняется на «Resume»', (tester) async {
+    await tester.pumpWidget(wrap(breathing(), paused: true));
+    expect(find.text('Resume'), findsOneWidget);
+    expect(find.text('Pause'), findsNothing);
   });
 
-  testWidgets('SessionView с shape=square рендерится без ошибок', (tester) async {
+  testWidgets('финиш: кнопок нет, тап по кругу закрывает', (tester) async {
+    var stopped = false;
+    await tester.pumpWidget(wrap(finished, onStop: () => stopped = true));
+    expect(find.text('Done'), findsOneWidget);
+    expect(find.byType(FilledButton), findsNothing); // кнопки исчезли
+    await tester.tap(find.text('✓'));
+    expect(stopped, isTrue);
+  });
+
+  testWidgets('SessionView с shape=square рендерится без ошибок',
+      (tester) async {
     await tester.pumpWidget(wrap(
       breathing(
         phase: PhaseKind.inhale,
@@ -106,7 +140,7 @@ void main() {
       shape: VisualShape.square,
     ));
     // Должен отрендериться без исключений; проверяем наличие ключевых виджетов
-    expect(find.text('Вдох'), findsOneWidget);
+    expect(find.text('Inhale'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
