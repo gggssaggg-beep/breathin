@@ -69,6 +69,13 @@ alter table public.sessions enable row level security;
 -- (fallback в SessionSyncService) — применить при доступном PAT.
 alter table public.sessions add column if not exists variant text;
 
+-- Дата последней практики — для уведомлений «друг сегодня подышал»
+-- (запрос владельца 2026-07-12): профили читаемы всем вошедшим, sessions
+-- закрыты RLS-ом на владельца, поэтому факт «дышал сегодня» публикуем
+-- отдельным полем. Клиент обновляет своё после каждой сессии (update-
+-- политика self уже есть). Применить при доступном PAT / из Dashboard.
+alter table public.profiles add column if not exists last_practiced_on date;
+
 drop policy if exists "sessions own all" on public.sessions;
 create policy "sessions own all" on public.sessions
   for all to authenticated
