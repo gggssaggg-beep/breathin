@@ -8,7 +8,7 @@ import 'package:path_drawing/path_drawing.dart';
 
 void main() {
   test('все иконки набора: пути непусты и парсятся без исключений', () {
-    expect(BreathinIcons.all, hasLength(29));
+    expect(BreathinIcons.all, hasLength(30));
     for (final icon in BreathinIcons.all) {
       expect(icon.paths, isNotEmpty);
       for (final d in icon.paths) {

@@ -31,8 +31,8 @@ void main() {
     // Кнопка настроек — BreathinIcon (свой набор), ищем по tooltip.
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
-    // На SettingsScreen должен быть текст «Автообновление» (русский hardcode)
-    expect(find.text('Настройки'), findsWidgets);
-    expect(find.text('Автообновление'), findsOneWidget);
+    // На SettingsScreen — локализованные строки (тесты идут в en-локали)
+    expect(find.text('Settings'), findsWidgets);
+    expect(find.text('Auto-update'), findsOneWidget);
   });
 }

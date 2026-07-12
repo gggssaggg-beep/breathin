@@ -465,4 +465,39 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get commonRetry => 'Повторить';
+
+  @override
+  String get settingsTitle => 'Настройки';
+
+  @override
+  String get updatesSection => 'Обновления';
+
+  @override
+  String get autoUpdateLabel => 'Автообновление';
+
+  @override
+  String get autoUpdateSubtitle => 'Проверять при запуске';
+
+  @override
+  String updateAvailableTitle(String version) {
+    return 'Доступно обновление $version';
+  }
+
+  @override
+  String get updateNowAction => 'Обновить';
+
+  @override
+  String get updateCheckFailedNote => 'Не удалось проверить обновления';
+
+  @override
+  String get upToDateNote => 'Установлена последняя версия';
+
+  @override
+  String get communitySection => 'Сообщество';
+
+  @override
+  String get feedbackAction => 'Обратная связь';
+
+  @override
+  String get communityChatAction => 'Чат нашего сообщества';
 }

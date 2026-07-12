@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
@@ -171,7 +172,9 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Секция безопасности: для уровня high — выделяется Card с errorContainer.
+/// Секция безопасности: high — Card с красным errorContainer, medium — Card
+/// с мягким амбером (красный слишком ярок; корректировка владельца), low —
+/// обычный текст.
 class _SafetySection extends StatelessWidget {
   final Technique technique;
   const _SafetySection({required this.technique});
@@ -191,6 +194,22 @@ class _SafetySection extends StatelessWidget {
             text,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onErrorContainer,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (technique.safetyLevel == SafetyLevel.medium) {
+      final b = theme.brightness;
+      return Card(
+        color: AppTheme.warningContainer(b),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Text(
+            text,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AppTheme.onWarningContainer(b),
             ),
           ),
         ),

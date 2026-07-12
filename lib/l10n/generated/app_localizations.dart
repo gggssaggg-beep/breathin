@@ -829,6 +829,72 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Повторить'**
   String get commonRetry;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настройки'**
+  String get settingsTitle;
+
+  /// No description provided for @updatesSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновления'**
+  String get updatesSection;
+
+  /// No description provided for @autoUpdateLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Автообновление'**
+  String get autoUpdateLabel;
+
+  /// No description provided for @autoUpdateSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверять при запуске'**
+  String get autoUpdateSubtitle;
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступно обновление {version}'**
+  String updateAvailableTitle(String version);
+
+  /// No description provided for @updateNowAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновить'**
+  String get updateNowAction;
+
+  /// No description provided for @updateCheckFailedNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось проверить обновления'**
+  String get updateCheckFailedNote;
+
+  /// No description provided for @upToDateNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Установлена последняя версия'**
+  String get upToDateNote;
+
+  /// No description provided for @communitySection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщество'**
+  String get communitySection;
+
+  /// No description provided for @feedbackAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обратная связь'**
+  String get feedbackAction;
+
+  /// No description provided for @communityChatAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чат нашего сообщества'**
+  String get communityChatAction;
 }
 
 class _AppLocalizationsDelegate

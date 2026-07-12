@@ -36,6 +36,14 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     _load();
   }
 
+  @override
+  void dispose() {
+    // Настройки не должны теряться при выходе без запуска (корректировка
+    // владельца №7). await в dispose нельзя — сохраняем fire-and-forget.
+    if (_settings != null) _repo.save(_settings!);
+    super.dispose();
+  }
+
   Future<void> _load() async {
     final s = await _repo.load(widget.technique);
     if (mounted) setState(() => _settings = s);
@@ -421,17 +429,27 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
   // ---------- Подготовка ----------
 
   Widget _buildPrepSection(AppLocalizations l, TechniqueSettings s) {
-    return Slider(
-      value: s.prepSeconds.toDouble(),
-      min: 3,
-      max: 5,
-      divisions: 2,
-      label: l.secondsShort('${s.prepSeconds}'),
-      onChanged: (v) {
-        setState(() {
-          _settings = s.copyWith(prepSeconds: clampPrepSeconds(v.round()));
-        });
-      },
+    // Значение видно справа от слайдера — иначе непонятно, что стоит 3 с.
+    return Row(
+      children: [
+        Expanded(
+          child: Slider(
+            value: s.prepSeconds.toDouble(),
+            min: 3,
+            max: 5,
+            divisions: 2,
+            label: l.secondsShort('${s.prepSeconds}'),
+            onChanged: (v) {
+              setState(() {
+                _settings =
+                    s.copyWith(prepSeconds: clampPrepSeconds(v.round()));
+              });
+            },
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(l.secondsShort('${s.prepSeconds}')),
+      ],
     );
   }
 
@@ -447,11 +465,14 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
 
     return Column(
       children: [
+        // Голосовой канал не реализован до партии П8 — тумблер disabled,
+        // жёстко выключен, с подписью «скоро». Включим в П8.
         SwitchListTile(
           title: Text(l.channelVoice),
-          value: fb.voice,
+          value: false,
           contentPadding: EdgeInsets.zero,
-          onChanged: (v) => toggle(fb.copyWith(voice: v)),
+          subtitle: Text(l.comingSoonBadge),
+          onChanged: null,
         ),
         SwitchListTile(
           title: Text(l.channelSound),

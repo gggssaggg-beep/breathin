@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:breathin/l10n/generated/app_localizations.dart';
 import 'package:breathin/services/update/app_version.dart';
 import 'package:breathin/services/update/update_manifest.dart';
 import 'package:breathin/services/update/update_service.dart';
@@ -13,6 +14,10 @@ Widget wrap({
   VoidCallback? onUpdateNow,
 }) =>
     MaterialApp(
+      // UpdateSection теперь локализован — подаём делегаты (en по умолчанию).
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: UpdateSection(
           result: result,
@@ -38,23 +43,23 @@ void main() {
     var tapped = false;
     await tester
         .pumpWidget(wrap(result: available, onUpdateNow: () => tapped = true));
-    expect(find.text('Доступно обновление 1.3.0'), findsOneWidget);
+    expect(find.text('Update 1.3.0 available'), findsOneWidget);
     expect(find.text('≈ 24.2 МБ'), findsOneWidget);
-    await tester.tap(find.text('Обновить'));
+    await tester.tap(find.text('Update'));
     expect(tapped, isTrue);
   });
 
   testWidgets('актуальная версия: карточки обновления нет', (tester) async {
     await tester.pumpWidget(wrap(result: UpdateCheckResult.upToDate));
-    expect(find.text('Установлена последняя версия'), findsOneWidget);
-    expect(find.text('Обновить'), findsNothing);
+    expect(find.text("You're on the latest version"), findsOneWidget);
+    expect(find.text('Update'), findsNothing);
   });
 
   testWidgets('сбой проверки показывает сообщение', (tester) async {
     await tester.pumpWidget(wrap(
       result: const UpdateCheckResult(UpdateAvailability.checkFailed),
     ));
-    expect(find.text('Не удалось проверить обновления'), findsOneWidget);
+    expect(find.text("Couldn't check for updates"), findsOneWidget);
   });
 
   testWidgets('галочка автообновления вкл и переключается', (tester) async {
