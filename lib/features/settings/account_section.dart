@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/generated/app_localizations.dart';
@@ -26,17 +28,55 @@ class AccountSection extends StatefulWidget {
 class _AccountSectionState extends State<AccountSection> {
   AppUser? _user;
   String? _displayName;
+  StreamSubscription<AppUser?>? _sub;
 
   @override
   void initState() {
     super.initState();
     _user = widget.auth.currentUser;
+    // Вход завершается ВНЕ экрана (возврат из браузера deep link'ом) —
+    // подписка держит карточку актуальной; onError ловит сбой обмена PKCE,
+    // который иначе тонет молча (ревью К1).
+    _sub = widget.auth.onAuthStateChange.listen(
+      (user) {
+        if (!mounted) return;
+        setState(() => _user = user);
+        if (user != null) _loadName();
+      },
+      onError: (_) => _showError(),
+    );
     _loadName();
   }
 
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  void _showError() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context).authActionFailed)),
+    );
+  }
+
+  /// Обёртка auth-действий: сетевые сбои → снекбар вместо тихого «ничего».
+  Future<void> _guard(Future<void> Function() action) async {
+    try {
+      await action();
+    } catch (_) {
+      _showError();
+    }
+  }
+
   Future<void> _loadName() async {
-    final name = await widget.auth.fetchDisplayName();
-    if (mounted) setState(() => _displayName = name);
+    try {
+      final name = await widget.auth.fetchDisplayName();
+      if (mounted) setState(() => _displayName = name);
+    } catch (_) {
+      // Офлайн: остаёмся на имени из метаданных пользователя.
+    }
   }
 
   Future<void> _editNickname() async {
@@ -66,7 +106,7 @@ class _AccountSectionState extends State<AccountSection> {
       ),
     );
     if (name == null || name.isEmpty) return;
-    await widget.auth.updateDisplayName(name);
+    await _guard(() => widget.auth.updateDisplayName(name));
     if (mounted) setState(() => _displayName = name);
   }
 
@@ -91,7 +131,7 @@ class _AccountSectionState extends State<AccountSection> {
       );
       if (confirmed != true) return;
     }
-    await widget.auth.signOut();
+    await _guard(widget.auth.signOut);
     if (mounted) setState(() => _displayName = null);
   }
 
@@ -110,15 +150,9 @@ class _AccountSectionState extends State<AccountSection> {
       );
     }
 
-    return StreamBuilder<AppUser?>(
-      stream: widget.auth.onAuthStateChange,
-      initialData: _user,
-      builder: (context, snapshot) {
-        final user = snapshot.data;
-        if (user == null) return _signedOutCard(l);
-        return _signedInCard(l, user);
-      },
-    );
+    final user = _user;
+    if (user == null) return _signedOutCard(l);
+    return _signedInCard(l, user);
   }
 
   Widget _signedOutCard(AppLocalizations l) {
@@ -136,10 +170,7 @@ class _AccountSectionState extends State<AccountSection> {
               child: FilledButton.tonalIcon(
                 icon: const BreathinIcon(BreathinIcons.user, size: 20),
                 label: Text(l.createGuestProfile),
-                onPressed: () async {
-                  await widget.auth.signInAnonymously();
-                  _loadName();
-                },
+                onPressed: () => _guard(widget.auth.signInAnonymously),
               ),
             ),
             if (googleAuthEnabled) ...[
@@ -149,7 +180,7 @@ class _AccountSectionState extends State<AccountSection> {
                 child: OutlinedButton.icon(
                   icon: const BreathinIcon(BreathinIcons.login, size: 20),
                   label: Text(l.signInGoogle),
-                  onPressed: () => widget.auth.signInWithGoogle(),
+                  onPressed: () => _guard(widget.auth.signInWithGoogle),
                 ),
               ),
             ],
@@ -190,7 +221,7 @@ class _AccountSectionState extends State<AccountSection> {
                 child: OutlinedButton.icon(
                   icon: const BreathinIcon(BreathinIcons.login, size: 20),
                   label: Text(l.linkGoogleAction),
-                  onPressed: () => widget.auth.linkGoogleIdentity(),
+                  onPressed: () => _guard(widget.auth.linkGoogleIdentity),
                 ),
               ),
             ),

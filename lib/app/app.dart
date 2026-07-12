@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../features/home/home_screen.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../services/permissions/notification_permission.dart';
 import '../services/update/update_runtime.dart';
 import '../services/update/update_service.dart';
 import 'theme.dart';
@@ -26,6 +27,11 @@ class _BreathinAppState extends State<BreathinApp> {
   void initState() {
     super.initState();
     if (widget.checkUpdates) _checkUpdatesOnStart();
+    // Разрешение на уведомления (Android 13+, медиа-уведомление сессии) —
+    // после первого кадра, чтобы системный диалог лёг поверх готового UI.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => NotificationPermission.ensureRequestedOnce(),
+    );
   }
 
   /// Тихая OTA-проверка при запуске (запрос пользователя): если на GitHub

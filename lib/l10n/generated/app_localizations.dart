@@ -572,6 +572,12 @@ abstract class AppLocalizations {
   /// **'Вход через Google станет доступен в одном из ближайших обновлений.'**
   String get authNotConfiguredNote;
 
+  /// No description provided for @authActionFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не получилось. Проверьте интернет и попробуйте ещё раз.'**
+  String get authActionFailed;
+
   /// No description provided for @statsTitle.
   ///
   /// In ru, this message translates to:

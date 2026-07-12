@@ -301,6 +301,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вход через Google станет доступен в одном из ближайших обновлений.';
 
   @override
+  String get authActionFailed =>
+      'Не получилось. Проверьте интернет и попробуйте ещё раз.';
+
+  @override
   String get statsTitle => 'Практика';
 
   @override
