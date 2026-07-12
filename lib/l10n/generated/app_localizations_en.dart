@@ -297,6 +297,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Google sign-in will become available in an upcoming update.';
 
   @override
+  String get authActionFailed =>
+      'Something went wrong. Check your connection and try again.';
+
+  @override
   String get statsTitle => 'Practice';
 
   @override

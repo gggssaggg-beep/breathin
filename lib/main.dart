@@ -12,7 +12,18 @@ Future<void> main() async {
   await AuthService.init();
   // Аудио-подсистема сессий (foreground service, локскрин-контролы).
   await initSessionAudio();
-  // Фоновый синк истории практик (no-op без входа/сети) — не задерживает UI.
-  unawaited(SessionSyncService().syncNow());
+  // Синк истории практик: срабатывает и на восстановленную при старте сессию
+  // (initialSession), и на каждый новый вход — в т.ч. возврат из
+  // Google-браузера deep link'ом. Дедуп по uid: токен-рефреши не гоняют сеть.
+  String? syncedUid;
+  const AuthService().onAuthStateChange.listen((user) {
+    if (user == null) {
+      syncedUid = null;
+      return;
+    }
+    if (user.id == syncedUid) return;
+    syncedUid = user.id;
+    unawaited(SessionSyncService().syncNow());
+  });
   runApp(const BreathinApp());
 }
