@@ -1,0 +1,60 @@
+{
+  "sample_rate": 44100,
+  "format": "wav_pcm_s16_mono",
+  "assets": {
+    "inhale": {
+      "file": "sets/minimal/inhale.wav",
+      "duration_ms": 700.0,
+      "level_dbfs": -6.0,
+      "purpose": "фаза вдоха — восходящий свип 300→600 Гц"
+    },
+    "hold_in": {
+      "file": "sets/minimal/hold_in.wav",
+      "duration_ms": 500.0,
+      "level_dbfs": -6.0,
+      "purpose": "задержка на вдохе — ровный тон 450 Гц"
+    },
+    "exhale": {
+      "file": "sets/minimal/exhale.wav",
+      "duration_ms": 700.0,
+      "level_dbfs": -6.0,
+      "purpose": "фаза выдоха — нисходящий свип 600→300 Гц"
+    },
+    "hold_out": {
+      "file": "sets/minimal/hold_out.wav",
+      "duration_ms": 500.0,
+      "level_dbfs": -6.0,
+      "purpose": "задержка на выдохе — ровный тон 400 Гц (различим от hold_in)"
+    },
+    "tick": {
+      "file": "sets/minimal/tick.wav",
+      "duration_ms": 30.0,
+      "level_dbfs": -14.0,
+      "purpose": "тик метронома"
+    },
+    "tick_accent": {
+      "file": "sets/minimal/tick_accent.wav",
+      "duration_ms": 40.0,
+      "level_dbfs": -10.0,
+      "purpose": "акцентный тик на смене фазы"
+    },
+    "prep_beep": {
+      "file": "common/prep_beep.wav",
+      "duration_ms": 120.0,
+      "level_dbfs": -8.0,
+      "purpose": "бип обратного отсчёта «3…2…1»"
+    },
+    "gong": {
+      "file": "common/gong.wav",
+      "duration_ms": 6000.0,
+      "level_dbfs": -3.0,
+      "purpose": "гонг в конце сессии"
+    },
+    "wim_hof_pace": {
+      "file": "common/wim_hof_pace.wav",
+      "duration_ms": 420.0,
+      "level_dbfs": -8.0,
+      "purpose": "ритм дыханий Вима Хофа (этап 2)"
+    }
+  }
+}
