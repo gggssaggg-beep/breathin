@@ -184,6 +184,51 @@ final stretchBreath = Technique(
   cycleScript: _stretchScript(),
 );
 
+/// Дыхание по элементам — очистительная практика Суфийского движения
+/// (учение Хазрата Инайят Хана): пять элементов по пять дыханий,
+/// у каждого свой маршрут (нос/рот); вдох 4, выдох 6, 60 BPM.
+List<List<PhaseSpec>> _elementalScript() => [
+      for (var i = 0; i < 25; i++)
+        [
+          const PhaseSpec(
+              kind: PhaseKind.inhale, defaultSec: 4, editable: false),
+          const PhaseSpec(
+              kind: PhaseKind.exhale, defaultSec: 6, editable: false),
+        ],
+    ];
+
+final elementalBreath = Technique(
+  id: 'elemental',
+  type: TechniqueType.scripted,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.elements,
+  cycleScript: _elementalScript(),
+  segments: const [
+    BreathSegment(
+        id: 'earth',
+        cycles: 5,
+        inhale: BreathRoute.nose,
+        exhale: BreathRoute.nose),
+    BreathSegment(
+        id: 'water',
+        cycles: 5,
+        inhale: BreathRoute.nose,
+        exhale: BreathRoute.mouth),
+    BreathSegment(
+        id: 'fire',
+        cycles: 5,
+        inhale: BreathRoute.mouth,
+        exhale: BreathRoute.nose),
+    BreathSegment(
+        id: 'air',
+        cycles: 5,
+        inhale: BreathRoute.mouth,
+        exhale: BreathRoute.mouth),
+    BreathSegment(id: 'ether', cycles: 5), // тихое, едва заметное дыхание
+  ],
+);
+
 /// Метод Вима Хофа — особая логика движка (ПЛАН §3.4); этап 2 (П18).
 const wimHof = Technique(
   id: 'wim_hof',
@@ -250,6 +295,7 @@ final List<Technique> catalog = [
   fourSixteenEight,
   coherent,
   stretchBreath,
+  elementalBreath,
   diaphragmatic,
   nadiShodhana,
   soundBreath,

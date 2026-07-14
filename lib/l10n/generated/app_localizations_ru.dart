@@ -155,6 +155,17 @@ class AppLocalizationsRu extends AppLocalizations {
       'Увеличивает жизненную ёмкость лёгких, тренирует длинный ровный выдох и контроль над дыханием, помогает успокоиться и собрать внимание.';
 
   @override
+  String get tech_elemental_name => 'Дыхание по элементам';
+
+  @override
+  String get tech_elemental_desc =>
+      'Очистительная практика из Суфийского движения (учение Хазрата Инайят Хана). Пять последовательных сегментов — Земля, Вода, Огонь, Воздух и Эфир — по пять дыханий в каждом. У каждого элемента свой маршрут: Земля — вдох и выдох носом; Вода — вдох носом, выдох ртом; Огонь — вдох ртом, выдох носом; Воздух — вдох и выдох ртом; Эфир — тихое, едва заметное дыхание. Вдох на 4 счёта, выдох на 6. Экран подсказывает текущий элемент, его цвет и маршрут. Традиционно выполняется стоя, лучше на свежем воздухе.';
+
+  @override
+  String get tech_elemental_benefit =>
+      'Очищает и настраивает дыхание, помогает последовательно пройти пять качеств — устойчивость, текучесть, энергию, лёгкость и тишину — и собрать внимание перед началом дня.';
+
+  @override
   String get safety_low =>
       'Дышите в комфортном темпе. Если почувствуете головокружение или дискомфорт — прервите упражнение и дышите нормально.';
 
@@ -279,6 +290,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вдох 4 через нос, выдох через рот с плавным удлинением: 4 → 6 → … → 28 → … → 6 → 4. Всего 25 дыханий. Держите выдох ровным от начала до конца.';
 
   @override
+  String get elementalPatternDesc =>
+      'Пять элементов по пять дыханий: Земля (нос→нос), Вода (нос→рот), Огонь (рот→нос), Воздух (рот→рот), Эфир — тихое дыхание. Вдох 4, выдох 6. Экран подскажет текущий элемент.';
+
+  @override
   String get prepLabel => 'Подготовка, с';
 
   @override
@@ -292,6 +307,36 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get phaseHoldOut => 'Задержка';
+
+  @override
+  String get segEarth => 'Земля';
+
+  @override
+  String get segWater => 'Вода';
+
+  @override
+  String get segFire => 'Огонь';
+
+  @override
+  String get segAir => 'Воздух';
+
+  @override
+  String get segEther => 'Эфир';
+
+  @override
+  String get segInhaleNose => 'Вдох носом';
+
+  @override
+  String get segInhaleMouth => 'Вдох ртом';
+
+  @override
+  String get segExhaleNose => 'Выдох носом';
+
+  @override
+  String get segExhaleMouth => 'Выдох ртом';
+
+  @override
+  String get segSilentBreath => 'Тихое, тонкое дыхание';
 
   @override
   String secondsShort(String n) {

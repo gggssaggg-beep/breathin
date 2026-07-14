@@ -47,6 +47,27 @@ enum TechniqueIcon {
   nostrils,
   hum,
   stretch,
+  elements,
+}
+
+/// Маршрут дыхания: через нос или через рот.
+enum BreathRoute { nose, mouth }
+
+/// Сегмент скриптовой техники с маршрутом дыхания (элемент стихии):
+/// объединяет несколько циклов под общей семантической меткой.
+/// [inhale]/[exhale] == null означает тихое дыхание без указания маршрута (эфир).
+class BreathSegment {
+  final String id;
+  final int cycles;
+  final BreathRoute? inhale;
+  final BreathRoute? exhale;
+
+  const BreathSegment({
+    required this.id,
+    required this.cycles,
+    this.inhale,
+    this.exhale,
+  });
 }
 
 /// Спецификация одной фазы техники: дефолт и допустимый диапазон настройки
@@ -153,6 +174,10 @@ class Technique {
   /// Задан только для [TechniqueType.scripted] (вытягивающее дыхание).
   final List<List<PhaseSpec>>? cycleScript;
 
+  /// Сегменты скриптовой техники с общей меткой (элементы): UI подсвечивает
+  /// метку, цвет и маршрут (например, «Дыхание по элементам»).
+  final List<BreathSegment>? segments;
+
   // --- wimHof ---
   final WimHofDefaults? wimHof;
 
@@ -183,6 +208,7 @@ class Technique {
     this.periodicCue,
     this.backgroundSoundOption = false,
     this.cycleScript,
+    this.segments,
     this.wimHof,
     this.stage2 = false,
     this.energizing = false,
@@ -196,4 +222,19 @@ class Technique {
   String get nameKey => 'tech_${id}_name';
   String get descriptionKey => 'tech_${id}_desc';
   String get benefitKey => 'tech_${id}_benefit';
+
+  /// Сегмент, соответствующий циклу [cycleIndex] (0-based).
+  /// Использует префиксные суммы [segments.cycles]. Возвращает null при
+  /// отрицательном индексе, отсутствии сегментов или выходе за их сумму.
+  BreathSegment? segmentForCycle(int cycleIndex) {
+    if (cycleIndex < 0) return null;
+    final segs = segments;
+    if (segs == null) return null;
+    var offset = 0;
+    for (final seg in segs) {
+      offset += seg.cycles;
+      if (cycleIndex < offset) return seg;
+    }
+    return null;
+  }
 }

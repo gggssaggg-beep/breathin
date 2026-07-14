@@ -353,5 +353,6 @@ class _SessionRunnerState extends State<SessionRunner>
         paused: _paused,
         onPauseResume: _togglePause,
         onStop: _stop,
+        segment: widget.technique.segmentForCycle(_state.cycleIndex),
       );
 }

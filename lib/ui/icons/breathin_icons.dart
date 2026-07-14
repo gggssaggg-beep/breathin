@@ -234,12 +234,19 @@ abstract final class BreathinIcons {
     'M4 20l6 -6',
   ]);
 
+  /// Три круга — дыхание по элементам (Tabler circles).
+  static const circles = BreathinIconData([
+    'M12 6.5m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0',
+    'M6.5 17.5m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0',
+    'M17.5 17.5m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0',
+  ]);
+
   /// Все иконки набора (для тестов парсинга).
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
     arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
-    trophy, copy, send, sun, stretch,
+    trophy, copy, send, sun, stretch, circles,
   ];
 }

@@ -47,6 +47,7 @@ Widget wrap(
   VoidCallback? onPauseResume,
   VoidCallback? onStop,
   VisualShape shape = VisualShape.circle,
+  BreathSegment? segment,
 }) =>
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -57,6 +58,7 @@ Widget wrap(
         paused: paused,
         onPauseResume: onPauseResume,
         onStop: onStop,
+        segment: segment,
       ),
     );
 
@@ -142,5 +144,23 @@ void main() {
     // Должен отрендериться без исключений; проверяем наличие ключевых виджетов
     expect(find.text('Inhale'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('сегмент элементов: метка и маршрут', (tester) async {
+    const seg = BreathSegment(
+      id: 'earth',
+      cycles: 5,
+      inhale: BreathRoute.nose,
+      exhale: BreathRoute.nose,
+    );
+    await tester.pumpWidget(wrap(
+      breathing(phase: PhaseKind.inhale),
+      segment: seg,
+    ));
+    // Метка элемента и маршрут вдоха видны
+    expect(find.text('Earth'), findsOneWidget);
+    expect(find.text('Inhale through the nose'), findsOneWidget);
+    // Стандартный «Inhale» без уточнения — не должен присутствовать
+    expect(find.text('Inhale'), findsNothing);
   });
 }

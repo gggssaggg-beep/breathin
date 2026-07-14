@@ -33,6 +33,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_sound_breath_name;
       case 'stretch':
         return tech_stretch_name;
+      case 'elemental':
+        return tech_elemental_name;
       case 'wim_hof':
         return tech_wim_hof_name;
       default:
@@ -67,6 +69,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_sound_breath_desc;
       case 'stretch':
         return tech_stretch_desc;
+      case 'elemental':
+        return tech_elemental_desc;
       case 'wim_hof':
         return tech_wim_hof_desc;
       default:
@@ -101,6 +105,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_sound_breath_benefit;
       case 'stretch':
         return tech_stretch_benefit;
+      case 'elemental':
+        return tech_elemental_benefit;
       case 'wim_hof':
         return tech_wim_hof_benefit;
       default:

@@ -7,6 +7,7 @@ import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import 'breathing_painter.dart';
 import 'phase_labels.dart';
+import 'segment_labels.dart';
 
 /// Презентационный экран сессии: чистая функция от [SessionState]. Не знает про
 /// аудио, плеер и таймеры — состояние подаёт контроллер. Поэтому тестируется
@@ -25,6 +26,9 @@ class SessionView extends StatelessWidget {
   final VoidCallback? onPauseResume;
   final VoidCallback? onStop;
 
+  /// Текущий сегмент элементной техники; null — обычная техника без сегментов.
+  final BreathSegment? segment;
+
   const SessionView({
     super.key,
     required this.state,
@@ -32,6 +36,7 @@ class SessionView extends StatelessWidget {
     this.paused = false,
     this.onPauseResume,
     this.onStop,
+    this.segment,
   });
 
   @override
@@ -49,6 +54,17 @@ class SessionView extends StatelessWidget {
                 cycleIndex: state.cycleIndex,
                 totalCycles: state.totalCycles,
               ),
+              // Метка текущего элемента (только для элементных техник с сегментами).
+              if (segment != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  segmentLabel(l, segment!.id),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: elementColor(segment!.id),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
               Expanded(
                 // На невысоких экранах (iPhone) фигура вместе с подписью под
                 // ней раньше вылезала за пределы области и накрывалась
@@ -163,13 +179,15 @@ class SessionView extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Дыхательная фигура (CustomPainter)
+              // Дыхательная фигура (CustomPainter); цвет — элемент или тема.
               CustomPaint(
                 size: const Size(260, 260),
                 painter: BreathingPainter(
                   shape: shape,
                   state: state,
-                  primary: theme.colorScheme.primary,
+                  primary: segment != null
+                      ? elementColor(segment!.id)
+                      : theme.colorScheme.primary,
                   outline: theme.colorScheme.outline,
                 ),
               ),
@@ -204,10 +222,11 @@ class SessionView extends StatelessWidget {
       case SessionStage.finished:
         return (l.sessionDone, '✓'); // недостижимо: финиш рисуется отдельно
       case SessionStage.breathing:
-        return (
-          phaseLabel(l, state.phase!),
-          '${state.phaseRemainingSec}',
-        );
+        // С сегментом — подпись маршрута; без — стандартная подпись фазы.
+        final label = segment != null
+            ? routedPhaseLabel(l, segment!, state.phase!)
+            : phaseLabel(l, state.phase!);
+        return (label, '${state.phaseRemainingSec}');
     }
   }
 }

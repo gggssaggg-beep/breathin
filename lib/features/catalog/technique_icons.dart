@@ -33,5 +33,7 @@ BreathinIconData iconDataFor(TechniqueIcon icon) {
       return BreathinIcons.volume2;
     case TechniqueIcon.stretch:
       return BreathinIcons.stretch;
+    case TechniqueIcon.elements:
+      return BreathinIcons.circles;
   }
 }

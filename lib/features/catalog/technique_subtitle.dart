@@ -24,9 +24,23 @@ String techniqueSubtitle(AppLocalizations l, Technique t) {
       return l.roundsShort(rounds);
 
     case TechniqueType.scripted:
-      // Вытягивающее: вдох фиксирован, выдох растёт и убывает — «4 · 4→28→4».
       final script = t.cycleScript;
       if (script == null || script.isEmpty) return '';
+      // Если все циклы имеют одинаковый паттерн длительностей (как у elemental:
+      // 4-6 везде) — показываем «паттерн · N cycles»; иначе стрелочная форма stretch.
+      final firstPattern = script.first.map((p) => p.defaultSec).toList();
+      final uniform = script.every((cycle) {
+        if (cycle.length != firstPattern.length) return false;
+        for (var i = 0; i < cycle.length; i++) {
+          if (cycle[i].defaultSec != firstPattern[i]) return false;
+        }
+        return true;
+      });
+      if (uniform) {
+        final pattern = firstPattern.map(_formatSec).join('-');
+        return '$pattern · ${l.cyclesShort(script.length)}';
+      }
+      // Вытягивающее: вдох фиксирован, выдох растёт и убывает — «4 · 4→28→4».
       final inhale = script.first
           .firstWhere((p) => p.kind == PhaseKind.inhale,
               orElse: () => script.first.first)
