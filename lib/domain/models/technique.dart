@@ -2,8 +2,10 @@
 /// (см. ПЛАН_и_архитектура.md §3.1, §5). Тестируется как обычный Dart.
 library;
 
-/// Тип техники: со счётом фаз, по таймеру (свободный ритм) или метод Вима Хофа.
-enum TechniqueType { counted, timer, wimHof }
+/// Тип техники: со счётом фаз, по таймеру (свободный ритм), метод Вима Хофа
+/// или скриптовая (фиксированная последовательность циклов с заранее заданными
+/// длительностями — вытягивающее дыхание, где выдох растёт от цикла к циклу).
+enum TechniqueType { counted, timer, wimHof, scripted }
 
 /// Фаза дыхательного цикла.
 enum PhaseKind { inhale, holdIn, exhale, holdOut }
@@ -44,6 +46,7 @@ enum TechniqueIcon {
   belly,
   nostrils,
   hum,
+  stretch,
 }
 
 /// Спецификация одной фазы техники: дефолт и допустимый диапазон настройки
@@ -144,6 +147,12 @@ class Technique {
   final PeriodicCue? periodicCue;
   final bool backgroundSoundOption;
 
+  // --- scripted ---
+  /// Фиксированная последовательность циклов: каждый элемент — фазы одного
+  /// цикла с заранее заданными длительностями (не масштабируются слайдерами).
+  /// Задан только для [TechniqueType.scripted] (вытягивающее дыхание).
+  final List<List<PhaseSpec>>? cycleScript;
+
   // --- wimHof ---
   final WimHofDefaults? wimHof;
 
@@ -173,6 +182,7 @@ class Technique {
     this.maxTimerMin,
     this.periodicCue,
     this.backgroundSoundOption = false,
+    this.cycleScript,
     this.wimHof,
     this.stage2 = false,
     this.energizing = false,

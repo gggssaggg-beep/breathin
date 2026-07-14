@@ -31,8 +31,9 @@ class TechniqueCardScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final t = technique;
 
-    final bool canStart =
-        t.type == TechniqueType.counted && !t.stage2 && t.phases != null;
+    final bool canStart = !t.stage2 &&
+        ((t.type == TechniqueType.counted && t.phases != null) ||
+            (t.type == TechniqueType.scripted && t.cycleScript != null));
 
     return Scaffold(
       appBar: AppBar(

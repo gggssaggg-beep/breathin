@@ -115,4 +115,74 @@ class SessionPlanCompiler {
       totalDurationMs: t,
     );
   }
+
+  /// Компилирует скриптовую технику (вытягивающее дыхание): [cycles] — готовая
+  /// последовательность циклов, где длительность каждой фазы задана заранее и
+  /// НЕ масштабируется (выдох растёт от цикла к циклу). Фазовый движок уже
+  /// поддерживает переменные длительности — здесь просто раскладываем их на ось.
+  SessionPlan compileScript(
+    List<List<PhaseSpec>> cycles, {
+    int prepSeconds = 3,
+    bool metronome = false,
+  }) {
+    if (cycles.isEmpty) {
+      throw ArgumentError('Скрипт техники пуст');
+    }
+
+    final events = <EngineEvent>[];
+
+    for (var i = prepSeconds; i >= 1; i--) {
+      events.add(EngineEvent(
+        tMs: (prepSeconds - i) * 1000,
+        type: EngineEventType.prepCountdown,
+        countdownValue: i,
+      ));
+    }
+
+    var t = prepSeconds * 1000;
+    for (var c = 0; c < cycles.length; c++) {
+      for (final spec in cycles[c]) {
+        events.add(EngineEvent(
+          tMs: t,
+          type: EngineEventType.phaseStart,
+          phase: spec.kind,
+          cycleIndex: c,
+        ));
+        t += (spec.defaultSec * 1000).round();
+      }
+    }
+    if (t <= prepSeconds * 1000) {
+      throw ArgumentError('Суммарная длительность скрипта должна быть > 0');
+    }
+
+    if (metronome) {
+      final phaseStartTimes = {
+        for (final e in events)
+          if (e.type == EngineEventType.phaseStart) e.tMs,
+      };
+      for (var tick = prepSeconds * 1000; tick < t; tick += 1000) {
+        events.add(EngineEvent(
+          tMs: tick,
+          type: EngineEventType.metronomeTick,
+          accent: phaseStartTimes.contains(tick),
+        ));
+      }
+    }
+
+    events.add(EngineEvent(tMs: t, type: EngineEventType.gong));
+    events.add(EngineEvent(tMs: t, type: EngineEventType.sessionEnd));
+
+    final indexed = events.asMap().entries.toList()
+      ..sort((a, b) {
+        final byTime = a.value.tMs.compareTo(b.value.tMs);
+        return byTime != 0 ? byTime : a.key.compareTo(b.key);
+      });
+    final ordered = [for (final e in indexed) e.value];
+
+    return SessionPlan(
+      events: ordered,
+      totalCycles: cycles.length,
+      totalDurationMs: t,
+    );
+  }
 }
