@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_box_desc =>
-      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting.';
+      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.';
 
   @override
   String get tech_box_benefit =>
@@ -27,7 +27,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_triangle_desc =>
-      'A three-phase technique: inhale, hold, exhale — no second pause. The pattern forms a triangle: smooth yet structured with a brief retention. Each phase duration is adjustable from 2 to 10 seconds.';
+      'A three-phase technique: inhale, hold, exhale — no second pause. The pattern forms a triangle: smooth yet structured with a brief retention. Each phase duration is adjustable from 2 to 10 seconds. Breathe through the nose on both the inhale and the exhale.';
 
   @override
   String get tech_triangle_benefit =>
@@ -38,7 +38,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_four_seven_eight_desc =>
-      'Andrew Weil\'s technique: inhale for 4 counts, hold for 7, slow exhale for 8. The phase ratio is fixed; a tempo multiplier (×0.5 / ×0.75 / ×1 / ×1.25) lets you slow down or speed up the cycle. Beginners are advised to start with 4 cycles.';
+      'Andrew Weil\'s technique: inhale for 4 counts, hold for 7, slow exhale for 8. The phase ratio is fixed; a tempo multiplier (×0.5 / ×0.75 / ×1 / ×1.25) lets you slow down or speed up the cycle. Inhale quietly through the nose; exhale audibly through the mouth with lips slightly pursed. Beginners are advised to start with 4 cycles.';
 
   @override
   String get tech_four_seven_eight_benefit =>
@@ -49,7 +49,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_four_two_four_desc =>
-      'A gentle balancing technique: inhale for 4 counts, short hold for 2, exhale for 4. All phases are adjustable from 2 to 10 seconds. The emphasis can shift toward relaxation or mild invigoration depending on pace.';
+      'A gentle balancing technique: inhale for 4 counts, short hold for 2, exhale for 4. All phases are adjustable from 2 to 10 seconds. The emphasis can shift toward relaxation or mild invigoration depending on pace. Breathe through the nose on both the inhale and the exhale.';
 
   @override
   String get tech_four_two_four_benefit =>
@@ -60,7 +60,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_two_eight_desc =>
-      'Extended-exhale technique with a 1:4 ratio — a short 2-second inhale and a long 8-second exhale. The phase ratio can be maintained or adjusted independently. No breath holds required, making it easy to learn.';
+      'Extended-exhale technique with a 1:4 ratio — a short 2-second inhale and a long 8-second exhale. The phase ratio can be maintained or adjusted independently. Inhale through the nose; exhale smoothly through the mouth with lips slightly pursed. No breath holds required, making it easy to learn.';
 
   @override
   String get tech_two_eight_benefit =>
@@ -71,7 +71,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_two_ten_desc =>
-      'A deeper version of 2-8 with a 1:5 ratio — inhale for 2 seconds, exhale for 10. The even longer exhale intensifies the relaxation response. Phase ratio is adjustable.';
+      'A deeper version of 2-8 with a 1:5 ratio — inhale for 2 seconds, exhale for 10. The even longer exhale intensifies the relaxation response. Inhale through the nose; exhale smoothly through the mouth with lips slightly pursed. Phase ratio is adjustable.';
 
   @override
   String get tech_two_ten_benefit =>
@@ -82,7 +82,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_four_sixteen_eight_desc =>
-      'Pranayama ratio 1:4:2 — inhale 4, hold 16, exhale 8. A simplified 4-8-8 mode is offered by default; experienced practitioners can switch to the full pattern. The base scales proportionally — e.g. 3-12-6 or 5-20-10. Recommended for those who have already mastered foundational techniques. Beginners: no more than 4 cycles.';
+      'Pranayama ratio 1:4:2 — inhale 4, hold 16, exhale 8. A simplified 4-8-8 mode is offered by default; experienced practitioners can switch to the full pattern. The base scales proportionally — e.g. 3-12-6 or 5-20-10. Breathe through the nose only (pranayama). Recommended for those who have already mastered foundational techniques. Beginners: no more than 4 cycles.';
 
   @override
   String get tech_four_sixteen_eight_benefit =>
@@ -93,7 +93,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_coherent_desc =>
-      'Slow breathing at about 5–6 breaths per minute: equal-length inhale and exhale (5.5 seconds each by default), no holds. Phase duration is adjustable from 4 to 7 seconds. The technique is gentle and suitable for extended sessions.';
+      'Slow breathing at about 5–6 breaths per minute: equal-length inhale and exhale (5.5 seconds each by default), no holds. Phase duration is adjustable from 4 to 7 seconds. The technique is gentle and suitable for extended sessions. Breathe through the nose — calmly and silently.';
 
   @override
   String get tech_coherent_benefit =>
@@ -104,7 +104,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_diaphragmatic_desc =>
-      'Free abdominal breathing by timer: breathe deeply, letting the belly rise on the inhale and fall on the exhale — no counting or holds. A voice instruction plays at the start of the session. An optional ambient background sound is available.';
+      'Free abdominal breathing by timer: breathe deeply, letting the belly rise on the inhale and fall on the exhale — no counting or holds. A voice instruction plays at the start of the session. Inhale through the nose and exhale through the mouth with lips slightly pursed. An optional ambient background sound is available.';
 
   @override
   String get tech_diaphragmatic_benefit =>
@@ -115,7 +115,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_nadi_shodhana_desc =>
-      'Alternate-nostril breathing from the yoga tradition: alternately closing the right and left nostril, you synchronise the two brain hemispheres. Practised by timer; optional audio cues for nostril alternation are available with a configurable interval, or a completely free mode.';
+      'Alternate-nostril breathing from the yoga tradition: alternately closing the right and left nostril, you synchronise the two brain hemispheres. Practised by timer; optional audio cues for nostril alternation are available with a configurable interval, or a completely free mode. Breathe through the nose only — alternating nostrils.';
 
   @override
   String get tech_nadi_shodhana_benefit =>
@@ -126,7 +126,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_sound_breath_desc =>
-      'Mindful breathing with vocalisation (Ujjayi) or humming (Bhramari \'bee breath\'). Practised by timer; a voice instruction plays at the start. For Bhramari, optional cues — \'inhale / hum on exhale\' — are available.';
+      'Mindful breathing with vocalisation (Ujjayi) or humming (Bhramari \'bee breath\'). Practised by timer; a voice instruction plays at the start. For Bhramari, optional cues — \'inhale / hum on exhale\' — are available. Breathe through the nose.';
 
   @override
   String get tech_sound_breath_benefit =>

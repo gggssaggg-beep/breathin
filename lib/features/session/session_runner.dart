@@ -318,7 +318,16 @@ class _SessionRunnerState extends State<SessionRunner>
       // cycleIndex — текущий (0-based) ⇒ полных завершённых циклов ровно он.
       _record(completed: false, cycles: _state.cycleIndex.clamp(0, 1 << 30));
     }
-    Navigator.of(context).maybePop();
+    // По завершении тап по галочке возвращает СРАЗУ на главный экран-каталог
+    // (отзыв №2: раньше падал на промежуточный экран настройки, приходилось
+    // жать «назад» ещё раз). Прерывание до финиша (Стоп/локскрин) — на шаг
+    // назад, к настройке той же техники.
+    final nav = Navigator.of(context);
+    if (wasFinished) {
+      nav.popUntil((r) => r.isFirst);
+    } else {
+      nav.maybePop();
+    }
   }
 
   @override

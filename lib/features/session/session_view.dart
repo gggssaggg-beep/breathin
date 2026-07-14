@@ -66,10 +66,18 @@ class SessionView extends StatelessWidget {
                 ),
               ],
               Expanded(
+                // На невысоких экранах (iPhone) фигура вместе с подписью под
+                // ней раньше вылезала за пределы области и накрывалась
+                // прогрессом и кнопками (отзыв №4). FittedBox сжимает всю
+                // связку под доступную высоту, не увеличивая сверх натурального
+                // размера, — подпись «Вдох/Выдох» больше не перекрывается.
                 child: Center(
-                  child: finished
-                      ? _finishedFigure(theme, l)
-                      : _breathingFigure(theme, l),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: finished
+                        ? _finishedFigure(theme, l)
+                        : _breathingFigure(theme, l),
+                  ),
                 ),
               ),
               _SessionProgress(
