@@ -320,6 +320,24 @@ abstract class AppLocalizations {
   /// **'Повышает устойчивость к стрессу, увеличивает энергетический тонус, улучшает холодовую адаптацию и развивает осознанный контроль над дыхательной системой.'**
   String get tech_wim_hof_benefit;
 
+  /// No description provided for @tech_stretch_name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вытягивающее дыхание'**
+  String get tech_stretch_name;
+
+  /// No description provided for @tech_stretch_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Практика из Суфийского движения (учение Хазрата Инайят Хана). Вдох всегда одинаковой длины — 4 счёта через нос, а выдох через рот с каждым дыханием плавно удлиняется: 4, 6, 8 … до 28 счётов, затем так же плавно возвращается к 4. Всего около 25 дыханий.\n\nВ основе — философия отдачи. На вдохе мы всегда берём одинаково, а с каждым выдохом отдаём немного больше, чем взяли. Выдох — это движение расширения и отпускания: раз за разом отдавая больше, чем берёшь, воспитываешь в себе щедрость и лёгкость, а заодно тренируешь ёмкость и ровность дыхания. Держите выдох равномерным от начала до конца и не доводите себя до дискомфорта.'**
+  String get tech_stretch_desc;
+
+  /// No description provided for @tech_stretch_benefit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Увеличивает жизненную ёмкость лёгких, тренирует длинный ровный выдох и контроль над дыханием, помогает успокоиться и собрать внимание.'**
+  String get tech_stretch_benefit;
+
   /// No description provided for @safety_low.
   ///
   /// In ru, this message translates to:
@@ -499,6 +517,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Визуальный режим'**
   String get channelVisual;
+
+  /// No description provided for @stretchPatternTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рисунок дыхания'**
+  String get stretchPatternTitle;
+
+  /// No description provided for @stretchPatternDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох 4 через нос, выдох через рот с плавным удлинением: 4 → 6 → … → 28 → … → 6 → 4. Всего 25 дыханий. Держите выдох ровным от начала до конца.'**
+  String get stretchPatternDesc;
 
   /// No description provided for @prepLabel.
   ///

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/technique_settings_repository.dart';
 import '../../domain/engine/phase_scaling.dart';
+import '../../domain/engine/session_plan.dart';
 import '../../domain/engine/session_plan_compiler.dart';
 import '../../domain/models/feedback_channels.dart';
 import '../../domain/models/session_config.dart';
@@ -60,12 +61,29 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     await _repo.save(s);
     if (!mounted) return;
     final l = AppLocalizations.of(context);
-    final config = s.toSessionConfig(_t);
-    final plan = const SessionPlanCompiler().compile(
-      _t,
-      config,
-      metronome: s.feedback.metronome,
-    );
+
+    final SessionPlan plan;
+    final String? variant;
+    if (_t.type == TechniqueType.scripted) {
+      // Вытягивающее: фиксированный скрипт, без пользовательских длительностей.
+      plan = const SessionPlanCompiler().compileScript(
+        _t.cycleScript!,
+        prepSeconds: s.prepSeconds,
+        metronome: s.feedback.metronome,
+      );
+      variant = null;
+    } else {
+      final config = s.toSessionConfig(_t);
+      plan = const SessionPlanCompiler().compile(
+        _t,
+        config,
+        metronome: s.feedback.metronome,
+      );
+      // Фактический паттерн (упрощённый/полный/пользовательский) —
+      // в историю практик (влад. §15).
+      variant = variantOf(config.phaseSeconds);
+    }
+
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SessionRunner(
@@ -73,9 +91,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           technique: _t,
           feedback: s.feedback,
           mediaTitle: _techniqueName(l, _t),
-          // Фактический паттерн (упрощённый/полный/пользовательский) —
-          // в историю практик (влад. §15).
-          variant: variantOf(config.phaseSeconds),
+          variant: variant,
         ),
       ),
     );
@@ -86,6 +102,9 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final s = _settings;
+    // Скриптовая техника (вытягивающее): паттерн фиксирован — без слайдеров
+    // фаз/циклов и без «Сбросить к классике». Только подготовка и сопровождение.
+    final isScripted = _t.type == TechniqueType.scripted;
 
     if (s == null) {
       return Scaffold(
@@ -109,40 +128,49 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _settings = TechniqueSettings.classic(_t);
-              });
-            },
-            child: Text(l.resetToClassic),
-          ),
+          if (!isScripted)
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _settings = TechniqueSettings.classic(_t);
+                });
+              },
+              child: Text(l.resetToClassic),
+            ),
         ],
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
-          // --- Режим окончания ---
-          _SectionHeader(title: _endModeLabel(l, s)),
-          const SizedBox(height: 8),
-          _buildEndModeSegment(l, s, theme),
-          const SizedBox(height: 16),
+          // --- Скриптовая техника: фиксированный рисунок дыхания ---
+          if (isScripted) ...[
+            _SectionHeader(title: l.stretchPatternTitle),
+            const SizedBox(height: 8),
+            Text(l.stretchPatternDesc, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 16),
+          ] else ...[
+            // --- Режим окончания ---
+            _SectionHeader(title: _endModeLabel(l, s)),
+            const SizedBox(height: 8),
+            _buildEndModeSegment(l, s, theme),
+            const SizedBox(height: 16),
 
-          // --- Длительности фаз (не для tempoMultiplier) ---
-          if (_t.scaling != ScalingMode.tempoMultiplier) ...[
-            _SectionHeader(title: l.phasesSection),
-            const SizedBox(height: 4),
-            _buildPhasesSection(l, s, theme),
-            const SizedBox(height: 8),
-          ],
+            // --- Длительности фаз (не для tempoMultiplier) ---
+            if (_t.scaling != ScalingMode.tempoMultiplier) ...[
+              _SectionHeader(title: l.phasesSection),
+              const SizedBox(height: 4),
+              _buildPhasesSection(l, s, theme),
+              const SizedBox(height: 8),
+            ],
 
-          // --- Темп (только tempoMultiplier) ---
-          if (_t.scaling == ScalingMode.tempoMultiplier &&
-              _t.tempoOptions != null) ...[
-            _SectionHeader(title: l.tempoLabel),
-            const SizedBox(height: 8),
-            _buildTempoSection(l, s, theme),
-            const SizedBox(height: 8),
+            // --- Темп (только tempoMultiplier) ---
+            if (_t.scaling == ScalingMode.tempoMultiplier &&
+                _t.tempoOptions != null) ...[
+              _SectionHeader(title: l.tempoLabel),
+              const SizedBox(height: 8),
+              _buildTempoSection(l, s, theme),
+              const SizedBox(height: 8),
+            ],
           ],
 
           // --- Подготовка ---
@@ -522,6 +550,8 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
         return l.tech_four_sixteen_eight_name;
       case 'coherent':
         return l.tech_coherent_name;
+      case 'stretch':
+        return l.tech_stretch_name;
       default:
         return t.id;
     }

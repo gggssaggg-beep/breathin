@@ -7,11 +7,38 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Каталог техник (ПЛАН §5.2)', () {
-    test('12 записей: 8 counted + 3 timer + Вим Хоф', () {
-      expect(catalog, hasLength(12));
+    test('13 записей: 8 counted + 3 timer + Вим Хоф + вытягивающее', () {
+      expect(catalog, hasLength(13));
       expect(catalog.where((t) => t.type == TechniqueType.counted), hasLength(8));
       expect(catalog.where((t) => t.type == TechniqueType.timer), hasLength(3));
       expect(catalog.where((t) => t.type == TechniqueType.wimHof), hasLength(1));
+      expect(
+          catalog.where((t) => t.type == TechniqueType.scripted), hasLength(1));
+    });
+
+    test('вытягивающее: 25 дыханий, вдох 4/выдох 4→28→4 (+2), компилируется', () {
+      final script = stretchBreath.cycleScript!;
+      expect(script, hasLength(25));
+      for (final cycle in script) {
+        expect(cycle, hasLength(2), reason: 'вдох + выдох');
+        expect(cycle[0].kind, PhaseKind.inhale);
+        expect(cycle[0].defaultSec, 4, reason: 'вдох всегда 4');
+        expect(cycle[1].kind, PhaseKind.exhale);
+      }
+      final exhales = [for (final c in script) c[1].defaultSec];
+      expect(exhales.first, 4);
+      expect(exhales.reduce((a, b) => a > b ? a : b), 28, reason: 'пик выдоха');
+      expect(exhales.last, 4);
+
+      final plan = const SessionPlanCompiler().compileScript(script);
+      expect(plan.totalCycles, 25);
+      expect(
+        plan.events.where((e) => e.type == EngineEventType.phaseStart),
+        hasLength(50),
+      );
+      // prep(3с) + вдохи(25×4) + сумма выдохов, в мс.
+      final exhaleSum = exhales.fold<double>(0, (a, b) => a + b);
+      expect(plan.totalDurationMs, ((3 + 100 + exhaleSum) * 1000).round());
     });
 
     test('id уникальны и разрешаются через techniqueById', () {

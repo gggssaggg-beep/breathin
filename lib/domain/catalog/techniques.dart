@@ -151,6 +151,39 @@ const coherent = Technique(
   ],
 );
 
+/// Вытягивающее дыхание (Stretch) — практика Суфийского движения (учение
+/// Хазрата Инайят Хана). Вдох всегда 4 через нос, выдох через рот плавно
+/// удлиняется 4→6→…→28, затем возвращается 26→…→4 (шаг +2, всего 25 дыханий).
+/// Скриптовая техника: длительности выдоха фиксированы и растут по циклам,
+/// поэтому не масштабируются слайдерами (движок поддерживает переменные фазы).
+List<List<PhaseSpec>> _stretchScript() {
+  // Выдохи: вверх 4..28 (13 значений), затем вниз 26..4 (12) — 25 дыханий.
+  final exhales = <int>[
+    for (var s = 4; s <= 28; s += 2) s,
+    for (var s = 26; s >= 4; s -= 2) s,
+  ];
+  return [
+    for (final ex in exhales)
+      [
+        const PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4, editable: false),
+        PhaseSpec(
+          kind: PhaseKind.exhale,
+          defaultSec: ex.toDouble(),
+          editable: false,
+        ),
+      ],
+  ];
+}
+
+final stretchBreath = Technique(
+  id: 'stretch',
+  type: TechniqueType.scripted,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.stretch,
+  cycleScript: _stretchScript(),
+);
+
 /// Метод Вима Хофа — особая логика движка (ПЛАН §3.4); этап 2 (П18).
 const wimHof = Technique(
   id: 'wim_hof',
@@ -206,7 +239,8 @@ const soundBreath = Technique(
 );
 
 /// Каталог в порядке отображения на главном экране (ТЗ §6.2).
-const List<Technique> catalog = [
+/// `final`, а не `const`: у вытягивающего скрипт строится генератором.
+final List<Technique> catalog = [
   boxBreathing,
   triangleBreathing,
   fourSevenEight,
@@ -215,6 +249,7 @@ const List<Technique> catalog = [
   twoTen,
   fourSixteenEight,
   coherent,
+  stretchBreath,
   diaphragmatic,
   nadiShodhana,
   soundBreath,

@@ -144,6 +144,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Builds stress resilience, boosts energy levels, improves cold adaptation, and develops conscious control of the respiratory system.';
 
   @override
+  String get tech_stretch_name => 'Stretch Breath';
+
+  @override
+  String get tech_stretch_desc =>
+      'A practice from the Sufi Movement (teachings of Hazrat Inayat Khan). The inhale stays the same length — 4 counts through the nose — while each exhale through the mouth gradually lengthens: 4, 6, 8 … up to 28 counts, then smoothly returns to 4. About 25 breaths in all.\n\nAt its heart is a philosophy of giving. The inhale is always the same, yet with each exhale we give back a little more than we took. The exhale is a movement of expansion and letting go: by giving more than you take, breath after breath, you cultivate generosity and ease — while also training the capacity and evenness of your breath. Keep the exhale steady from start to finish and never push into discomfort.';
+
+  @override
+  String get tech_stretch_benefit =>
+      'Increases vital lung capacity, trains a long even exhale and breath control, and helps you calm down and gather your attention.';
+
+  @override
   String get safety_low =>
       'Breathe at a comfortable pace. If you feel dizzy or uncomfortable, stop the exercise and breathe normally.';
 
@@ -255,6 +266,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get channelVisual => 'Visual mode';
+
+  @override
+  String get stretchPatternTitle => 'Breathing pattern';
+
+  @override
+  String get stretchPatternDesc =>
+      'Inhale 4 through the nose, exhale through the mouth lengthening smoothly: 4 → 6 → … → 28 → … → 6 → 4. About 25 breaths. Keep the exhale even from start to finish.';
 
   @override
   String get prepLabel => 'Preparation, s';
