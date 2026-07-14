@@ -155,6 +155,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Increases vital lung capacity, trains a long even exhale and breath control, and helps you calm down and gather your attention.';
 
   @override
+  String get tech_elemental_name => 'Elemental Breath';
+
+  @override
+  String get tech_elemental_desc =>
+      'A purifying practice from the Sufi Movement (teachings of Hazrat Inayat Khan). Five consecutive segments — Earth, Water, Fire, Air and Ether — five breaths each. Each element has its own route: Earth — in and out through the nose; Water — in through the nose, out through the mouth; Fire — in through the mouth, out through the nose; Air — in and out through the mouth; Ether — a silent, barely perceptible breath. Inhale for 4 counts, exhale for 6. The screen shows the current element, its colour and route. Traditionally practised standing, ideally in fresh air.';
+
+  @override
+  String get tech_elemental_benefit =>
+      'Cleanses and attunes the breath, guiding you through five qualities — stability, flow, energy, lightness and stillness — and gathers attention for the day ahead.';
+
+  @override
   String get safety_low =>
       'Breathe at a comfortable pace. If you feel dizzy or uncomfortable, stop the exercise and breathe normally.';
 
@@ -275,6 +286,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Inhale 4 through the nose, exhale through the mouth lengthening smoothly: 4 → 6 → … → 28 → … → 6 → 4. About 25 breaths. Keep the exhale even from start to finish.';
 
   @override
+  String get elementalPatternDesc =>
+      'Five elements, five breaths each: Earth (nose→nose), Water (nose→mouth), Fire (mouth→nose), Air (mouth→mouth), Ether — a silent breath. Inhale 4, exhale 6. The screen shows the current element.';
+
+  @override
   String get prepLabel => 'Preparation, s';
 
   @override
@@ -288,6 +303,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get phaseHoldOut => 'Hold';
+
+  @override
+  String get segEarth => 'Earth';
+
+  @override
+  String get segWater => 'Water';
+
+  @override
+  String get segFire => 'Fire';
+
+  @override
+  String get segAir => 'Air';
+
+  @override
+  String get segEther => 'Ether';
+
+  @override
+  String get segInhaleNose => 'Inhale through the nose';
+
+  @override
+  String get segInhaleMouth => 'Inhale through the mouth';
+
+  @override
+  String get segExhaleNose => 'Exhale through the nose';
+
+  @override
+  String get segExhaleMouth => 'Exhale through the mouth';
+
+  @override
+  String get segSilentBreath => 'Silent, subtle breath';
 
   @override
   String secondsShort(String n) {

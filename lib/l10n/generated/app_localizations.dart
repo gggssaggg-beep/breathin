@@ -338,6 +338,24 @@ abstract class AppLocalizations {
   /// **'Увеличивает жизненную ёмкость лёгких, тренирует длинный ровный выдох и контроль над дыханием, помогает успокоиться и собрать внимание.'**
   String get tech_stretch_benefit;
 
+  /// No description provided for @tech_elemental_name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхание по элементам'**
+  String get tech_elemental_name;
+
+  /// No description provided for @tech_elemental_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очистительная практика из Суфийского движения (учение Хазрата Инайят Хана). Пять последовательных сегментов — Земля, Вода, Огонь, Воздух и Эфир — по пять дыханий в каждом. У каждого элемента свой маршрут: Земля — вдох и выдох носом; Вода — вдох носом, выдох ртом; Огонь — вдох ртом, выдох носом; Воздух — вдох и выдох ртом; Эфир — тихое, едва заметное дыхание. Вдох на 4 счёта, выдох на 6. Экран подсказывает текущий элемент, его цвет и маршрут. Традиционно выполняется стоя, лучше на свежем воздухе.'**
+  String get tech_elemental_desc;
+
+  /// No description provided for @tech_elemental_benefit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очищает и настраивает дыхание, помогает последовательно пройти пять качеств — устойчивость, текучесть, энергию, лёгкость и тишину — и собрать внимание перед началом дня.'**
+  String get tech_elemental_benefit;
+
   /// No description provided for @safety_low.
   ///
   /// In ru, this message translates to:
@@ -530,6 +548,12 @@ abstract class AppLocalizations {
   /// **'Вдох 4 через нос, выдох через рот с плавным удлинением: 4 → 6 → … → 28 → … → 6 → 4. Всего 25 дыханий. Держите выдох ровным от начала до конца.'**
   String get stretchPatternDesc;
 
+  /// No description provided for @elementalPatternDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пять элементов по пять дыханий: Земля (нос→нос), Вода (нос→рот), Огонь (рот→нос), Воздух (рот→рот), Эфир — тихое дыхание. Вдох 4, выдох 6. Экран подскажет текущий элемент.'**
+  String get elementalPatternDesc;
+
   /// No description provided for @prepLabel.
   ///
   /// In ru, this message translates to:
@@ -559,6 +583,66 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Задержка'**
   String get phaseHoldOut;
+
+  /// No description provided for @segEarth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Земля'**
+  String get segEarth;
+
+  /// No description provided for @segWater.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вода'**
+  String get segWater;
+
+  /// No description provided for @segFire.
+  ///
+  /// In ru, this message translates to:
+  /// **'Огонь'**
+  String get segFire;
+
+  /// No description provided for @segAir.
+  ///
+  /// In ru, this message translates to:
+  /// **'Воздух'**
+  String get segAir;
+
+  /// No description provided for @segEther.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эфир'**
+  String get segEther;
+
+  /// No description provided for @segInhaleNose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох носом'**
+  String get segInhaleNose;
+
+  /// No description provided for @segInhaleMouth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох ртом'**
+  String get segInhaleMouth;
+
+  /// No description provided for @segExhaleNose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдох носом'**
+  String get segExhaleNose;
+
+  /// No description provided for @segExhaleMouth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдох ртом'**
+  String get segExhaleMouth;
+
+  /// No description provided for @segSilentBreath.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тихое, тонкое дыхание'**
+  String get segSilentBreath;
 
   /// No description provided for @secondsShort.
   ///

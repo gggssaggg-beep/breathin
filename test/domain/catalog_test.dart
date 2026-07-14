@@ -7,13 +7,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Каталог техник (ПЛАН §5.2)', () {
-    test('13 записей: 8 counted + 3 timer + Вим Хоф + вытягивающее', () {
-      expect(catalog, hasLength(13));
+    test('14 записей: 8 counted + 3 timer + Вим Хоф + вытягивающее + элементы',
+        () {
+      expect(catalog, hasLength(14));
       expect(catalog.where((t) => t.type == TechniqueType.counted), hasLength(8));
       expect(catalog.where((t) => t.type == TechniqueType.timer), hasLength(3));
       expect(catalog.where((t) => t.type == TechniqueType.wimHof), hasLength(1));
       expect(
-          catalog.where((t) => t.type == TechniqueType.scripted), hasLength(1));
+          catalog.where((t) => t.type == TechniqueType.scripted), hasLength(2));
     });
 
     test('вытягивающее: 25 дыханий, вдох 4/выдох 4→28→4 (+2), компилируется', () {
@@ -39,6 +40,51 @@ void main() {
       // prep(3с) + вдохи(25×4) + сумма выдохов, в мс.
       final exhaleSum = exhales.fold<double>(0, (a, b) => a + b);
       expect(plan.totalDurationMs, ((3 + 100 + exhaleSum) * 1000).round());
+    });
+
+    test(
+        'дыхание по элементам: 25 циклов, каждый [inhale 4, exhale 6]; '
+        '5 сегментов, сумма cycles == 25; segmentForCycle; компиляция', () {
+      final script = elementalBreath.cycleScript!;
+      expect(script, hasLength(25));
+      for (final cycle in script) {
+        expect(cycle, hasLength(2), reason: 'вдох + выдох');
+        expect(cycle[0].kind, PhaseKind.inhale);
+        expect(cycle[0].defaultSec, 4, reason: 'вдох 4');
+        expect(cycle[0].editable, isFalse);
+        expect(cycle[1].kind, PhaseKind.exhale);
+        expect(cycle[1].defaultSec, 6, reason: 'выдох 6');
+        expect(cycle[1].editable, isFalse);
+      }
+
+      final segs = elementalBreath.segments!;
+      expect(segs, hasLength(5));
+      expect(segs.map((s) => s.id).toList(),
+          ['earth', 'water', 'fire', 'air', 'ether']);
+      expect(segs.fold<int>(0, (sum, s) => sum + s.cycles), 25);
+
+      // segmentForCycle
+      expect(elementalBreath.segmentForCycle(0)?.id, 'earth');
+      expect(elementalBreath.segmentForCycle(4)?.id, 'earth');
+      expect(elementalBreath.segmentForCycle(5)?.id, 'water');
+      expect(elementalBreath.segmentForCycle(24)?.id, 'ether');
+      expect(elementalBreath.segmentForCycle(25), isNull);
+      expect(elementalBreath.segmentForCycle(-1), isNull);
+
+      // эфир: маршруты null
+      final ether = segs.firstWhere((s) => s.id == 'ether');
+      expect(ether.inhale, isNull);
+      expect(ether.exhale, isNull);
+
+      // компиляция: 25 циклов, 50 событий phaseStart
+      final plan = const SessionPlanCompiler().compileScript(script);
+      expect(plan.totalCycles, 25);
+      expect(
+        plan.events.where((e) => e.type == EngineEventType.phaseStart),
+        hasLength(50),
+      );
+      // prep(3с) + 25*(4+6) = 3 + 250 = 253 с
+      expect(plan.totalDurationMs, (3 + 25 * 10) * 1000);
     });
 
     test('id уникальны и разрешаются через techniqueById', () {

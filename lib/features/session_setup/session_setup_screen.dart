@@ -146,7 +146,10 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           if (isScripted) ...[
             _SectionHeader(title: l.stretchPatternTitle),
             const SizedBox(height: 8),
-            Text(l.stretchPatternDesc, style: theme.textTheme.bodyMedium),
+            Text(
+              _t.id == 'elemental' ? l.elementalPatternDesc : l.stretchPatternDesc,
+              style: theme.textTheme.bodyMedium,
+            ),
             const SizedBox(height: 16),
           ] else ...[
             // --- Режим окончания ---
@@ -552,6 +555,8 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
         return l.tech_coherent_name;
       case 'stretch':
         return l.tech_stretch_name;
+      case 'elemental':
+        return l.tech_elemental_name;
       default:
         return t.id;
     }
