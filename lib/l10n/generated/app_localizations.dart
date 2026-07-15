@@ -1255,6 +1255,180 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Б,КБ,МБ,ГБ'**
   String get sizeUnitsCsv;
+
+  /// No description provided for @boltTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхательный тест'**
+  String get boltTitle;
+
+  /// No description provided for @boltEntrySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оцените, как дыхание переносит паузу'**
+  String get boltEntrySubtitle;
+
+  /// No description provided for @boltIntroHeading.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как это работает'**
+  String get boltIntroHeading;
+
+  /// No description provided for @boltIntro.
+  ///
+  /// In ru, this message translates to:
+  /// **'BOLT — показатель того, насколько комфортно вы переносите накопление CO₂ после спокойного выдоха. Он отражает текущую чувствительность дыхания и обычно растёт при регулярной практике.\n\nИзмеряйте в покое, лучше утром и в одинаковых условиях — так число сравнимо со вчерашним.'**
+  String get boltIntro;
+
+  /// No description provided for @boltMethodHeading.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как измерять'**
+  String get boltMethodHeading;
+
+  /// No description provided for @boltMethod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сядьте спокойно и сделайте несколько обычных вдохов-выдохов. Затем сделайте спокойный, НЕ максимальный выдох через нос, зажмите нос и засеките время.\n\nОстановитесь при первом непроизвольном позыве — подёргивание диафрагмы, желание сглотнуть, первое напряжение. Это не соревнование на терпение: первый вдох после теста должен быть спокойным.'**
+  String get boltMethod;
+
+  /// No description provided for @boltDisclaimer.
+  ///
+  /// In ru, this message translates to:
+  /// **'BOLT не является клиническим диагностическим тестом. Результат отражает текущую чувствительность дыхания, а не медицинское состояние. При проблемах с дыханием обратитесь к врачу.'**
+  String get boltDisclaimer;
+
+  /// No description provided for @boltStartAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать тест'**
+  String get boltStartAction;
+
+  /// No description provided for @boltPrepHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дышите спокойно и приготовьтесь'**
+  String get boltPrepHint;
+
+  /// No description provided for @boltHoldInstruction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задержите дыхание после спокойного выдоха'**
+  String get boltHoldInstruction;
+
+  /// No description provided for @boltFirstUrgeHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Коснитесь экрана при первом позыве вдохнуть'**
+  String get boltFirstUrgeHint;
+
+  /// No description provided for @boltStopAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Первый позыв — стоп'**
+  String get boltStopAction;
+
+  /// No description provided for @boltResultHeading.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш результат'**
+  String get boltResultHeading;
+
+  /// No description provided for @boltSecondsValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'{seconds} с'**
+  String boltSecondsValue(int seconds);
+
+  /// No description provided for @boltRangeLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Диапазон {range} с'**
+  String boltRangeLabel(String range);
+
+  /// No description provided for @boltLevelLow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Низкая толерантность к CO₂'**
+  String get boltLevelLow;
+
+  /// No description provided for @boltLevelLowDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхание сейчас чувствительно к CO₂ — это часто у тех, кто дышит часто и поверхностно. Хорошая новость: показатель тренируется. Помогут спокойные практики с удлинённым выдохом.'**
+  String get boltLevelLowDesc;
+
+  /// No description provided for @boltLevelMedium.
+  ///
+  /// In ru, this message translates to:
+  /// **'Средняя толерантность'**
+  String get boltLevelMedium;
+
+  /// No description provided for @boltLevelMediumDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обычная реактивность дыхания в покое. Регулярная спокойная практика мягко сдвигает результат вверх.'**
+  String get boltLevelMediumDesc;
+
+  /// No description provided for @boltLevelHigh.
+  ///
+  /// In ru, this message translates to:
+  /// **'Высокая толерантность'**
+  String get boltLevelHigh;
+
+  /// No description provided for @boltLevelHighDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхание спокойно переносит накопление CO₂. Так держать — поддерживайте ровный носовой ритм.'**
+  String get boltLevelHighDesc;
+
+  /// No description provided for @boltLevelVeryHigh.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очень высокая толерантность'**
+  String get boltLevelVeryHigh;
+
+  /// No description provided for @boltLevelVeryHighDesc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Такой результат обычно у тренированных. Не гонитесь за рекордом: важнее ровное комфортное дыхание в жизни.'**
+  String get boltLevelVeryHighDesc;
+
+  /// No description provided for @boltSaveAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить результат'**
+  String get boltSaveAction;
+
+  /// No description provided for @boltRetryAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё раз'**
+  String get boltRetryAction;
+
+  /// No description provided for @boltHistoryTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Динамика'**
+  String get boltHistoryTitle;
+
+  /// No description provided for @boltLatestLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последний результат'**
+  String get boltLatestLabel;
+
+  /// No description provided for @boltHistoryEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет результатов — пройдите тест, чтобы отслеживать динамику.'**
+  String get boltHistoryEmpty;
+
+  /// No description provided for @boltProgressHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд.'**
+  String get boltProgressHint;
 }
 
 class _AppLocalizationsDelegate

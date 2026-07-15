@@ -10,6 +10,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../bolt/bolt_test_screen.dart';
 import '../catalog/technique_icons.dart';
 
 /// Экран «Практика» (ТЗ §5, П11): календарь месяца с отметками дней,
@@ -63,10 +64,19 @@ class _StatsScreenState extends State<StatsScreen> {
       body: records == null
           ? const Center(child: CircularProgressIndicator())
           : records.isEmpty
-              ? _Empty(text: l.statsEmpty)
+              ? ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    const _BoltEntryCard(),
+                    const SizedBox(height: 24),
+                    _Empty(text: l.statsEmpty),
+                  ],
+                )
               : ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
+                    const _BoltEntryCard(),
+                    const SizedBox(height: 16),
                     _SummaryRow(records: records, today: _today),
                     const SizedBox(height: 24),
                     _MonthHeader(
@@ -89,6 +99,63 @@ class _StatsScreenState extends State<StatsScreen> {
                     _ByTechnique(records: records, year: _year, month: _month),
                   ],
                 ),
+    );
+  }
+}
+
+/// Карточка-вход в дыхательный тест BOLT (эпик персонализации §3).
+class _BoltEntryCard extends StatelessWidget {
+  const _BoltEntryCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Card(
+      color: theme.colorScheme.secondaryContainer,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const BoltTestScreen()),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              BreathinIcon(
+                BreathinIcons.chartBar,
+                size: 28,
+                color: theme.colorScheme.onSecondaryContainer,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.boltTitle,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.onSecondaryContainer,
+                      ),
+                    ),
+                    Text(
+                      l.boltEntrySubtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSecondaryContainer,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              BreathinIcon(
+                BreathinIcons.chevronRight,
+                size: 20,
+                color: theme.colorScheme.onSecondaryContainer,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

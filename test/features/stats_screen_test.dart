@@ -45,14 +45,16 @@ void main() {
     expect(find.textContaining('day streak'), findsOneWidget);
     expect(find.text('July 2026'), findsOneWidget);
 
-    // Итоги месяца — ниже сгиба ленивого ListView; докручиваем.
+    // Итоги месяца — ниже сгиба ленивого ListView; докручиваем до
+    // разбивки по технике (уникальный якорь: 'sessions' встречается и в
+    // итогах месяца, и в разбивке, а scrollUntilVisible требует ровно один).
     await tester.scrollUntilVisible(
-      find.textContaining('sessions'),
+      find.text('Box Breathing'),
       200,
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('9'), findsWidgets); // 5+4 минут за месяц
-    expect(find.textContaining('sessions'), findsOneWidget);
+    expect(find.textContaining('sessions'), findsWidgets);
   });
 
   testWidgets('разбивка по техникам: название и «сессии · минуты»',
