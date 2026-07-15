@@ -220,6 +220,71 @@ def wave_pair(dur_ms: float = 260.0, gap_ms: float = 120.0) -> np.ndarray:
 
 
 # --------------------------------------------------------------------------- #
+# Набор «Чаши» (2026-07-15: владелице нужен третий вариант — НЕ дыхание/шум
+# и НЕ синтетический писк). Поющие чаши и колокольчики: тёплые негармонические
+# парциалы, знакомый медитативный тембр.
+# --------------------------------------------------------------------------- #
+# Соотношения парциалов тибетской чаши (измерения реальных чаш ~1:2.8:5.2:8.4);
+# амплитуды ~1/k, высокие затухают быстрее — как в gong(), но тембр «чище».
+_BOWL_PARTIALS = (1.0, 2.78, 5.18, 8.36)
+
+
+def bowl_strike(f0: float, dur_ms: float, tau0_ms: float = 1400.0) -> np.ndarray:
+    """Удар чаши: мгновенная атака, долгое тёплое затухание (выдох)."""
+    t = _t(dur_ms)
+    rng = np.random.default_rng(_RNG_SEED + int(f0))
+    sig = np.zeros(t.size, dtype=np.float64)
+    for k, mult in enumerate(_BOWL_PARTIALS, start=1):
+        detune = 1.0 + rng.uniform(-0.002, 0.002)
+        tau = (tau0_ms / mult) / 1000.0
+        sig += (1.0 / k) * np.sin(2.0 * np.pi * f0 * mult * detune * t) \
+            * np.exp(-t / tau)
+    a = max(1, int(round(SR * 4.0 / 1000.0)))  # атака 4 мс без щелчка
+    sig[:a] *= 0.5 * (1.0 - np.cos(np.pi * np.arange(a) / a))
+    return sig
+
+
+def bowl_swell(f0: float, dur_ms: float) -> np.ndarray:
+    """«Смычок» по чаше: звук нарастает к концу (вдох). Лёгкое вибрато
+    оживляет длинную ноту; спад в самом конце — фаза передаёт эстафету."""
+    t = _t(dur_ms)
+    rng = np.random.default_rng(_RNG_SEED + int(f0) + 7)
+    sig = np.zeros(t.size, dtype=np.float64)
+    vibrato = 1.0 + 0.004 * np.sin(2.0 * np.pi * 4.5 * t)
+    for k, mult in enumerate(_BOWL_PARTIALS[:3], start=1):
+        detune = 1.0 + rng.uniform(-0.002, 0.002)
+        sig += (1.0 / k) * np.sin(2.0 * np.pi * f0 * mult * detune * t * vibrato)
+    n = t.size
+    x = np.arange(n) / max(1, n - 1)
+    swell = x ** 1.5  # медленный подъём, максимум к концу вдоха
+    sig *= swell * raised_cosine_env(n, attack_ms=30.0, release_ms=150.0)
+    return sig
+
+
+def chime(f0: float, dur_ms: float = 500.0, tau_ms: float = 220.0) -> np.ndarray:
+    """Колокольчик: два лёгких парциала, быстрое серебристое затухание
+    (задержки дыхания — события, не длящиеся фазы)."""
+    t = _t(dur_ms)
+    sig = np.sin(2.0 * np.pi * f0 * t) \
+        + 0.4 * np.sin(2.0 * np.pi * f0 * 2.51 * t)
+    a = max(1, int(round(SR * 3.0 / 1000.0)))
+    atk = np.ones(t.size)
+    atk[:a] = 0.5 * (1.0 - np.cos(np.pi * np.arange(a) / a))
+    return sig * np.exp(-t / (tau_ms / 1000.0)) * atk
+
+
+def wood_tap(dur_ms: float = 45.0, freq: float = 220.0) -> np.ndarray:
+    """Глухой деревянный тап (тик метронома): низкий короткий стук без
+    пронзительности — «деревянная рыба» из практик, не системный клик."""
+    t = _t(dur_ms)
+    rng = np.random.default_rng(_RNG_SEED + 99)
+    tone = np.sin(2.0 * np.pi * freq * t) * np.exp(-t / 0.012)
+    knock = _fft_lowpass(rng.standard_normal(t.size), 900.0) \
+        * np.exp(-t / 0.006)
+    return tone + 0.5 * knock
+
+
+# --------------------------------------------------------------------------- #
 # Спецификация наборов (см. ПЛАН §10.2; «Природа» — отзыв №5 2026-07-14)
 # --------------------------------------------------------------------------- #
 def build_specs() -> list[dict]:
@@ -262,6 +327,25 @@ def build_specs() -> list[dict]:
         dict(id="tick_accent", path="sets/nature/tick_accent.wav", dbfs=-12.0,
              gen=lambda: droplet(700.0, 1200.0, 90.0, decay_tau_ms=25.0),
              purpose="акцентный тик — капля ярче"),
+        # --- Набор «Чаши» (новый дефолт 2026-07-15) ---
+        dict(id="inhale", path="sets/bowls/inhale.wav", dbfs=-7.0,
+             gen=lambda: bowl_swell(392.0, 1200.0),  # соль первой октавы
+             purpose="фаза вдоха — «смычок» по чаше, звук нарастает"),
+        dict(id="hold_in", path="sets/bowls/hold_in.wav", dbfs=-10.0,
+             gen=lambda: chime(1318.5),  # ми третьей октавы
+             purpose="задержка на вдохе — колокольчик повыше"),
+        dict(id="exhale", path="sets/bowls/exhale.wav", dbfs=-6.0,
+             gen=lambda: bowl_strike(261.6, 1500.0),  # до первой октавы
+             purpose="фаза выдоха — удар чаши, тёплое затухание"),
+        dict(id="hold_out", path="sets/bowls/hold_out.wav", dbfs=-10.0,
+             gen=lambda: chime(987.8),  # си второй октавы
+             purpose="задержка на выдохе — колокольчик пониже"),
+        dict(id="tick", path="sets/bowls/tick.wav", dbfs=-16.0,
+             gen=lambda: wood_tap(),
+             purpose="тик метронома — глухой деревянный тап"),
+        dict(id="tick_accent", path="sets/bowls/tick_accent.wav", dbfs=-12.0,
+             gen=lambda: wood_tap(freq=330.0),
+             purpose="акцентный тик — тап повыше"),
         # --- Общие (для всех наборов) ---
         dict(id="prep_beep", path="common/prep_beep.wav", dbfs=-8.0,
              gen=lambda: droplet(450.0, 850.0, 160.0, decay_tau_ms=50.0),

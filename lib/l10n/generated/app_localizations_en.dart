@@ -629,6 +629,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soundSetLabel => 'Sound set';
 
   @override
+  String get soundSetBowls => 'Bowls';
+
+  @override
+  String get soundSetBowlsNote => 'Singing bowls and chimes';
+
+  @override
   String get soundSetNature => 'Nature';
 
   @override

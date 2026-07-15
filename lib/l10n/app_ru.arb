@@ -271,6 +271,8 @@
   "upToDateNote": "Установлена последняя версия",
   "soundSection": "Звук",
   "soundSetLabel": "Звуковой набор",
+  "soundSetBowls": "Чаши",
+  "soundSetBowlsNote": "Поющие чаши и колокольчики",
   "soundSetNature": "Природа",
   "soundSetNatureNote": "Волны и капли",
   "soundSetMinimal": "Минимал",

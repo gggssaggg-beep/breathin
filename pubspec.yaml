@@ -86,6 +86,7 @@ flutter:
   # перечисляем каждую подпапку отдельно.
   assets:
     - assets/audio/            # manifest.json
+    - assets/audio/sets/bowls/
     - assets/audio/sets/minimal/
     - assets/audio/sets/nature/
     - assets/audio/common/

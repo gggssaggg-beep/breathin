@@ -30,7 +30,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   UpdatePreferences _prefs = const UpdatePreferences();
   UpdateCheckResult _update = UpdateCheckResult.upToDate;
-  SoundSet _soundSet = SoundSet.nature;
+  SoundSet _soundSet = SoundSet.bowls;
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
   bool _hasBoltResult = false;
   String? _version;
@@ -145,14 +145,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(l.soundSetLabel),
-            subtitle: Text(
-              _soundSet == SoundSet.nature
-                  ? l.soundSetNatureNote
-                  : l.soundSetMinimalNote,
-            ),
+            subtitle: Text(switch (_soundSet) {
+              SoundSet.bowls => l.soundSetBowlsNote,
+              SoundSet.nature => l.soundSetNatureNote,
+              SoundSet.minimal => l.soundSetMinimalNote,
+            }),
           ),
           SegmentedButton<SoundSet>(
             segments: [
+              ButtonSegment(
+                value: SoundSet.bowls,
+                label: Text(l.soundSetBowls),
+              ),
               ButtonSegment(
                 value: SoundSet.nature,
                 label: Text(l.soundSetNature),
