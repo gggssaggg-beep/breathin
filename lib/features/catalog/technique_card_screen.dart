@@ -8,6 +8,7 @@ import '../../l10n/technique_texts.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../session_setup/session_setup_screen.dart';
+import '../wim_hof/wim_hof_setup_screen.dart';
 import 'technique_icons.dart';
 import 'technique_subtitle.dart';
 
@@ -34,7 +35,8 @@ class TechniqueCardScreen extends StatelessWidget {
 
     final bool canStart = !t.stage2 &&
         ((t.type == TechniqueType.counted && t.phases != null) ||
-            (t.type == TechniqueType.scripted && t.cycleScript != null));
+            (t.type == TechniqueType.scripted && t.cycleScript != null) ||
+            (t.type == TechniqueType.wimHof && t.wimHof != null));
 
     return Scaffold(
       appBar: AppBar(
@@ -180,10 +182,13 @@ class TechniqueCardScreen extends StatelessWidget {
   }
 
   void _startSession(BuildContext context) {
+    // Вим Хоф — свой setup (машина раундов + safety-гейт, ПЛАН §3.4);
+    // counted/scripted — общий экран настройки сессии.
+    final Widget setup = technique.type == TechniqueType.wimHof
+        ? WimHofSetupScreen(technique: technique)
+        : SessionSetupScreen(technique: technique);
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => SessionSetupScreen(technique: technique),
-      ),
+      MaterialPageRoute(builder: (_) => setup),
     );
   }
 }

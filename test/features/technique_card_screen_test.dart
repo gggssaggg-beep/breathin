@@ -6,6 +6,7 @@ import 'package:breathin/domain/catalog/techniques.dart';
 import 'package:breathin/features/catalog/technique_card_screen.dart';
 import 'package:breathin/features/catalog/technique_subtitle.dart';
 import 'package:breathin/features/session_setup/session_setup_screen.dart';
+import 'package:breathin/features/wim_hof/wim_hof_setup_screen.dart';
 import 'package:breathin/l10n/generated/app_localizations.dart';
 import 'package:breathin/l10n/generated/app_localizations_en.dart';
 
@@ -74,28 +75,24 @@ void main() {
   });
 
   // --- (б) wimHof (stage2): кнопка disabled, текст comingSoonStage2 ---
-  group('TechniqueCardScreen — wim_hof (stage2)', () {
-    testWidgets('кнопка Start disabled и отображается comingSoonStage2', (
-      tester,
-    ) async {
+  group('TechniqueCardScreen — wim_hof (этап 2 реализован)', () {
+    testWidgets('кнопка Start активна, «скоро» нет, тап открывает свой setup',
+        (tester) async {
       await tester.pumpWidget(
         _wrap(TechniqueCardScreen(technique: wimHof)),
       );
       await tester.pump();
 
-      // Кнопка отключена: InkWell.onTap == null
       expect(startButton, findsOneWidget);
       final ink = tester.widget<InkWell>(startButton);
-      expect(ink.onTap, isNull);
+      expect(ink.onTap, isNotNull);
+      expect(find.text('Coming in a future update'), findsNothing);
 
-      // Тап ничего не открывает
       await tester.tap(startButton);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
+      // Открывается свой setup ВХ (не общий SessionSetupScreen).
       expect(find.byType(SessionSetupScreen), findsNothing);
-
-      // Текст comingSoonStage2 (en)
-      expect(find.text('Coming in a future update'), findsWidgets);
+      expect(find.byType(WimHofSetupScreen), findsOneWidget);
     });
   });
 

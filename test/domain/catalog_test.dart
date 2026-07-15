@@ -145,9 +145,10 @@ void main() {
       expect(fourSevenEight.recommendedMaxCyclesNovice, 4);
     });
 
-    test('Вим Хоф: дефолты ТЗ §2.1/§2.3, помечен stage2', () {
+    test('Вим Хоф: дефолты ТЗ §2.1/§2.3, запускается (stage2 снят)', () {
       final w = wimHof.wimHof!;
-      expect(wimHof.stage2, isTrue);
+      expect(wimHof.stage2, isFalse,
+          reason: 'этап 2 реализован — техника доступна');
       expect((w.breaths, w.paceSec, w.rounds, w.recoveryHoldSec),
           (30, 2.0, 3, 15));
       expect((w.minBreaths, w.maxBreaths), (20, 50));
