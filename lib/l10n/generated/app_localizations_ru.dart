@@ -692,6 +692,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get upToDateNote => 'Установлена последняя версия';
 
   @override
+  String get languageSection => 'Язык';
+
+  @override
+  String get languageSystem => 'Как в системе';
+
+  @override
   String get difficultySection => 'Сложность';
 
   @override

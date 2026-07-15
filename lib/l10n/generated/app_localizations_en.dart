@@ -683,6 +683,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upToDateNote => 'You\'re on the latest version';
 
   @override
+  String get languageSection => 'Language';
+
+  @override
+  String get languageSystem => 'System default';
+
+  @override
   String get difficultySection => 'Difficulty';
 
   @override

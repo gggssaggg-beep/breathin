@@ -5,6 +5,7 @@ import '../features/home/home_screen.dart';
 import '../features/onboarding/coach_controller.dart';
 import '../features/onboarding/welcome_screen.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../services/locale/locale_store.dart';
 import '../services/onboarding/coach_store.dart';
 import '../services/permissions/notification_permission.dart';
 import '../services/update/update_preferences.dart';
@@ -124,25 +125,29 @@ class _BreathinAppState extends State<BreathinApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      debugShowCheckedModeBanner: false,
-      navigatorKey: _navKey,
-      scaffoldMessengerKey: _messengerKey,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.system,
-      // CoachScope вставляется через builder ВНУТРЬ MaterialApp (после
-      // локализаций и темы), но ВЫШЕ Navigator — так он доступен всем
-      // экранам через CoachScope.of(context) и не вызывает бесконечный
-      // rebuild самого MaterialApp.
-      builder: (context, child) => CoachScope(
-        controller: _coachController,
-        child: child!,
+    return ValueListenableBuilder<Locale?>(
+      valueListenable: localeNotifier,
+      builder: (context, locale, _) => MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+        debugShowCheckedModeBanner: false,
+        navigatorKey: _navKey,
+        scaffoldMessengerKey: _messengerKey,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: locale,
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        themeMode: ThemeMode.system,
+        // CoachScope вставляется через builder ВНУТРЬ MaterialApp (после
+        // локализаций и темы), но ВЫШЕ Navigator — так он доступен всем
+        // экранам через CoachScope.of(context) и не вызывает бесконечный
+        // rebuild самого MaterialApp.
+        builder: (context, child) => CoachScope(
+          controller: _coachController,
+          child: child!,
+        ),
+        home: HomeScreen(),
       ),
-      home: HomeScreen(),
     );
   }
 }

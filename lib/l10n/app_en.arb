@@ -291,6 +291,8 @@
   "updateNowAction": "Update",
   "updateCheckFailedNote": "Couldn't check for updates",
   "upToDateNote": "You're on the latest version",
+  "languageSection": "Language",
+  "languageSystem": "System default",
   "difficultySection": "Difficulty",
   "difficultyNote": "The preset gently changes phase lengths for new techniques. Techniques you've already tuned by hand are left untouched.",
   "difficultyCalm": "Calm",

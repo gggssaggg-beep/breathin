@@ -291,6 +291,8 @@
   "updateNowAction": "Обновить",
   "updateCheckFailedNote": "Не удалось проверить обновления",
   "upToDateNote": "Установлена последняя версия",
+  "languageSection": "Язык",
+  "languageSystem": "Как в системе",
   "difficultySection": "Сложность",
   "difficultyNote": "Пресет мягко меняет длительность фаз для новых техник. Уже настроенные вручную техники не трогаются.",
   "difficultyCalm": "Штиль",

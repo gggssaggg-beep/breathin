@@ -6,6 +6,7 @@ import '../../data/difficulty_store.dart';
 import '../../domain/difficulty/difficulty.dart';
 import '../../features/onboarding/coach_controller.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../services/locale/locale_store.dart';
 import '../../services/update/update_preferences.dart';
 import 'difficulty_section.dart';
 import '../../services/update/update_runtime.dart';
@@ -30,6 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   UpdatePreferences _prefs = const UpdatePreferences();
   UpdateCheckResult _update = UpdateCheckResult.upToDate;
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
+  AppLanguage _language = AppLanguage.system;
   bool _hasBoltResult = false;
   String? _version;
 
@@ -42,6 +44,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     DifficultyStore().load().then((p) {
       if (mounted) setState(() => _difficulty = p);
+    });
+    LocaleStore().load().then((lang) {
+      if (mounted) setState(() => _language = lang);
     });
     BoltRepository().all().then((r) {
       if (mounted) setState(() => _hasBoltResult = r.isNotEmpty);
@@ -72,6 +77,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _onDifficultyChanged(DifficultyPreset p) {
     setState(() => _difficulty = p);
     DifficultyStore().save(p);
+  }
+
+  void _onLanguageChanged(AppLanguage lang) {
+    setState(() => _language = lang);
+    LocaleStore().save(lang);
+    localeNotifier.value = localeFor(lang);
   }
 
   /// Открывает внешнюю ссылку (Telegram) в браузере/приложении.
@@ -116,6 +127,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
             autoUpdate: _prefs.autoUpdate,
             onAutoUpdateChanged: _onAutoUpdateChanged,
             onUpdateNow: _downloadUpdate,
+          ),
+          const SizedBox(height: 24),
+          // --- Язык ---
+          Text(l.languageSection,
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          SegmentedButton<AppLanguage>(
+            segments: [
+              ButtonSegment(
+                value: AppLanguage.system,
+                label: Text(l.languageSystem),
+              ),
+              const ButtonSegment(
+                value: AppLanguage.ru,
+                label: Text('Русский'),
+              ),
+              const ButtonSegment(
+                value: AppLanguage.en,
+                label: Text('English'),
+              ),
+            ],
+            selected: {_language},
+            onSelectionChanged: (v) => _onLanguageChanged(v.first),
           ),
           const SizedBox(height: 24),
           // --- Сложность: глобальный пресет длительностей (эпик §4–5) ---

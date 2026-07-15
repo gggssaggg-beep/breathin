@@ -1244,6 +1244,18 @@ abstract class AppLocalizations {
   /// **'Установлена последняя версия'**
   String get upToDateNote;
 
+  /// No description provided for @languageSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык'**
+  String get languageSection;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как в системе'**
+  String get languageSystem;
+
   /// No description provided for @difficultySection.
   ///
   /// In ru, this message translates to:
