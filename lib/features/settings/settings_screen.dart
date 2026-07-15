@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../features/onboarding/coach_controller.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/update/update_preferences.dart';
 import '../../services/update/update_runtime.dart';
@@ -61,6 +62,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
 
+  /// Сбрасывает все подсказки и приветствие через [CoachController].
+  /// Показывает SnackBar с подтверждением.
+  Future<void> _resetOnboarding(BuildContext context) async {
+    final l = AppLocalizations.of(context);
+    // Захватываем messenger до async-зазора (use_build_context_synchronously).
+    final messenger = ScaffoldMessenger.of(context);
+    // CoachScope может отсутствовать в тестах — обрабатываем аккуратно.
+    try {
+      final controller = CoachScope.of(context);
+      await controller.resetAll();
+    } catch (_) {}
+    if (!mounted) return;
+    messenger.showSnackBar(
+      SnackBar(content: Text(l.onboardingReset)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -101,6 +119,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
             // Ссылка на конкретное сообщение в телеграм-канале (так задумано).
             onTap: () => _openUrl('https://t.me/Hant_Live/257'),
+          ),
+          const SizedBox(height: 24),
+          // --- Обучение: сброс подсказок и приветствия ---
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const BreathinIcon(BreathinIcons.refresh),
+            title: Text(l.replayOnboarding),
+            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            onTap: () => _resetOnboarding(context),
           ),
           if (_version != null) ...[
             const SizedBox(height: 24),

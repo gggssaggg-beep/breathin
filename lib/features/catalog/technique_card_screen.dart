@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
 import '../../domain/models/technique.dart';
+import '../../features/onboarding/coach_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../ui/icons/breathin_icon.dart';
@@ -133,6 +134,14 @@ class TechniqueCardScreen extends StatelessWidget {
               ),
             ),
 
+            // Коучмарк над кнопкой старта: показывается один раз
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: CoachMark(
+                id: 'card.start',
+                message: AppLocalizations.of(context).coachCardStart,
+              ),
+            ),
             // Круглая кнопка старта в стиле «ряби» иконки приложения (влад. §5)
             Padding(
               padding:

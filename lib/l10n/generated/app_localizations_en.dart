@@ -556,6 +556,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get communityChatAction => 'Our community chat';
 
   @override
+  String get welcomeBody =>
+      'Simple breathing practices for every day — calm down, focus, or recharge.';
+
+  @override
+  String get welcomeStart => 'Start';
+
+  @override
+  String get coachHomePick =>
+      'Choose a technique — you can customise each one.';
+
+  @override
+  String get coachCardStart => 'Tap to set the duration, sound and begin.';
+
+  @override
+  String get coachSetupFeedback =>
+      'Turn on sound, metronome or vibration — whatever feels right.';
+
+  @override
+  String get coachDismiss => 'Got it';
+
+  @override
+  String get replayOnboarding => 'Replay tutorial';
+
+  @override
+  String get onboardingReset => 'Tips will be shown again';
+
+  @override
   String get pauseAction => 'Pause';
 
   @override
