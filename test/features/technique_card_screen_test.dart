@@ -38,8 +38,10 @@ void main() {
       );
       await tester.pump();
 
-      // Секции (Safety может быть ниже сгиба — доскроллим)
+      // Секции (Benefits/Safety могут быть ниже сгиба — описание box
+      // выросло на абзац о тактическом дыхании; доскролливаем).
       expect(find.text('About'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Benefits'), 200);
       expect(find.text('Benefits'), findsOneWidget);
       await tester.scrollUntilVisible(find.text('Safety'), 200);
       expect(find.text('Safety'), findsOneWidget);

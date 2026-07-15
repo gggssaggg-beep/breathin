@@ -130,6 +130,20 @@ extension TechniqueTexts on AppLocalizations {
         return fikr_presence_in;
       case 'light':
         return fikr_light_in;
+      case 'first_light':
+        return fikr_first_light_in;
+      case 'heart_waves':
+        return fikr_heart_waves_in;
+      case 'wave_ocean':
+        return fikr_wave_ocean_in;
+      case 'shore':
+        return fikr_shore_in;
+      case 'gift':
+        return fikr_gift_in;
+      case 'stillness':
+        return fikr_stillness_in;
+      case 'sky_mind':
+        return fikr_sky_mind_in;
       case 'ishq':
         return fikr_ishq_in;
       case 'shafee':
@@ -150,6 +164,20 @@ extension TechniqueTexts on AppLocalizations {
         return fikr_presence_ex;
       case 'light':
         return fikr_light_ex;
+      case 'first_light':
+        return fikr_first_light_ex;
+      case 'heart_waves':
+        return fikr_heart_waves_ex;
+      case 'wave_ocean':
+        return fikr_wave_ocean_ex;
+      case 'shore':
+        return fikr_shore_ex;
+      case 'gift':
+        return fikr_gift_ex;
+      case 'stillness':
+        return fikr_stillness_ex;
+      case 'sky_mind':
+        return fikr_sky_mind_ex;
       case 'ishq':
         return fikr_ishq_ex;
       case 'shafee':
