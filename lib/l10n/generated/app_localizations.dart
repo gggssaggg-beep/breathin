@@ -1430,6 +1430,102 @@ abstract class AppLocalizations {
   /// **'Коснитесь круга, чтобы закрыть'**
   String get sessionDoneTapHint;
 
+  /// No description provided for @whBreathsLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыханий в раунде'**
+  String get whBreathsLabel;
+
+  /// No description provided for @whPaceLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Темп дыхания'**
+  String get whPaceLabel;
+
+  /// No description provided for @whPaceValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'{sec} с на дыхание'**
+  String whPaceValue(String sec);
+
+  /// No description provided for @whRoundsLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Раундов'**
+  String get whRoundsLabel;
+
+  /// No description provided for @whWarningTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Перед началом'**
+  String get whWarningTitle;
+
+  /// No description provided for @whAcceptStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Понимаю риски — начать'**
+  String get whAcceptStart;
+
+  /// No description provided for @whBackAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get whBackAction;
+
+  /// No description provided for @whRoundOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Раунд {r} из {n}'**
+  String whRoundOf(int r, int n);
+
+  /// No description provided for @whBreathePrompt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дышите глубоко и мощно — в ритме круга'**
+  String get whBreathePrompt;
+
+  /// No description provided for @whExhaleHold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдохните — и не дышите'**
+  String get whExhaleHold;
+
+  /// No description provided for @whTapWhenUrge.
+  ///
+  /// In ru, this message translates to:
+  /// **'Коснитесь экрана, когда захочется вдохнуть'**
+  String get whTapWhenUrge;
+
+  /// No description provided for @whBreatheInStop.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох'**
+  String get whBreatheInStop;
+
+  /// No description provided for @whRecoveryPrompt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Глубокий вдох — и держите'**
+  String get whRecoveryPrompt;
+
+  /// No description provided for @whRetentionLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задержка'**
+  String get whRetentionLabel;
+
+  /// No description provided for @whResultsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задержки по раундам'**
+  String get whResultsTitle;
+
+  /// No description provided for @whRoundShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Раунд {r}'**
+  String whRoundShort(int r);
+
   /// No description provided for @sessionMediaTitle.
   ///
   /// In ru, this message translates to:

@@ -21,6 +21,10 @@ class SessionRecord {
   /// версий приложения.
   final String? variant;
 
+  /// Вим Хоф: задержки по раундам, секунды (ПЛАН §3.4 wimHofRetentions;
+  /// график прогресса — П19). null — не ВХ-сессия или старая запись.
+  final List<int>? retentionsSec;
+
   const SessionRecord({
     required this.id,
     required this.techniqueId,
@@ -29,6 +33,7 @@ class SessionRecord {
     required this.cyclesCompleted,
     required this.completed,
     this.variant,
+    this.retentionsSec,
   });
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +44,7 @@ class SessionRecord {
         'cyclesCompleted': cyclesCompleted,
         'completed': completed,
         if (variant != null) 'variant': variant,
+        if (retentionsSec != null) 'retentionsSec': retentionsSec,
       };
 
   factory SessionRecord.fromJson(Map<String, dynamic> json) => SessionRecord(
@@ -51,6 +57,9 @@ class SessionRecord {
         cyclesCompleted: (json['cyclesCompleted'] as num).toInt(),
         completed: json['completed'] as bool? ?? true,
         variant: json['variant'] as String?,
+        retentionsSec: (json['retentionsSec'] as List?)
+            ?.map((e) => (e as num).toInt())
+            .toList(),
       );
 }
 

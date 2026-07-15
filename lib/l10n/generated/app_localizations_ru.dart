@@ -784,6 +784,60 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sessionDoneTapHint => 'Коснитесь круга, чтобы закрыть';
 
   @override
+  String get whBreathsLabel => 'Дыханий в раунде';
+
+  @override
+  String get whPaceLabel => 'Темп дыхания';
+
+  @override
+  String whPaceValue(String sec) {
+    return '$sec с на дыхание';
+  }
+
+  @override
+  String get whRoundsLabel => 'Раундов';
+
+  @override
+  String get whWarningTitle => 'Перед началом';
+
+  @override
+  String get whAcceptStart => 'Понимаю риски — начать';
+
+  @override
+  String get whBackAction => 'Назад';
+
+  @override
+  String whRoundOf(int r, int n) {
+    return 'Раунд $r из $n';
+  }
+
+  @override
+  String get whBreathePrompt => 'Дышите глубоко и мощно — в ритме круга';
+
+  @override
+  String get whExhaleHold => 'Выдохните — и не дышите';
+
+  @override
+  String get whTapWhenUrge => 'Коснитесь экрана, когда захочется вдохнуть';
+
+  @override
+  String get whBreatheInStop => 'Вдох';
+
+  @override
+  String get whRecoveryPrompt => 'Глубокий вдох — и держите';
+
+  @override
+  String get whRetentionLabel => 'Задержка';
+
+  @override
+  String get whResultsTitle => 'Задержки по раундам';
+
+  @override
+  String whRoundShort(int r) {
+    return 'Раунд $r';
+  }
+
+  @override
   String get sessionMediaTitle => 'Дыхательная сессия';
 
   @override

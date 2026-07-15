@@ -246,7 +246,8 @@ const fikr = Technique(
   defaultCycles: 30, // ~5 минут при 4+6 с
 );
 
-/// Метод Вима Хофа — особая логика движка (ПЛАН §3.4); этап 2 (П18).
+/// Метод Вима Хофа — особая логика движка: машина раундов WimHofMachine
+/// (ПЛАН §3.4), запуск через полноэкранное предупреждение (ТЗ §2.4).
 const wimHof = Technique(
   id: 'wim_hof',
   type: TechniqueType.wimHof,
@@ -254,7 +255,6 @@ const wimHof = Technique(
   safetyKey: 'safety_intense',
   icon: TechniqueIcon.snowflake,
   wimHof: WimHofDefaults(),
-  stage2: true,
   energizing: true,
 );
 

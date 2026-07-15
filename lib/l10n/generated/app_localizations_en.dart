@@ -775,6 +775,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sessionDoneTapHint => 'Tap the circle to close';
 
   @override
+  String get whBreathsLabel => 'Breaths per round';
+
+  @override
+  String get whPaceLabel => 'Breathing pace';
+
+  @override
+  String whPaceValue(String sec) {
+    return '$sec s per breath';
+  }
+
+  @override
+  String get whRoundsLabel => 'Rounds';
+
+  @override
+  String get whWarningTitle => 'Before you start';
+
+  @override
+  String get whAcceptStart => 'I understand the risks — start';
+
+  @override
+  String get whBackAction => 'Back';
+
+  @override
+  String whRoundOf(int r, int n) {
+    return 'Round $r of $n';
+  }
+
+  @override
+  String get whBreathePrompt => 'Breathe deep and full — follow the circle';
+
+  @override
+  String get whExhaleHold => 'Exhale — and hold';
+
+  @override
+  String get whTapWhenUrge =>
+      'Tap the screen when you feel the urge to breathe';
+
+  @override
+  String get whBreatheInStop => 'Breathe in';
+
+  @override
+  String get whRecoveryPrompt => 'Deep breath in — and hold';
+
+  @override
+  String get whRetentionLabel => 'Retention';
+
+  @override
+  String get whResultsTitle => 'Retentions by round';
+
+  @override
+  String whRoundShort(int r) {
+    return 'Round $r';
+  }
+
+  @override
   String get sessionMediaTitle => 'Breathing session';
 
   @override
