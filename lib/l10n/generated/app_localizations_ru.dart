@@ -698,6 +698,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get languageSystem => 'Как в системе';
 
   @override
+  String get favoriteTooltip => 'В избранное';
+
+  @override
   String get difficultySection => 'Сложность';
 
   @override

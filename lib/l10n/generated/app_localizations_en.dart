@@ -689,6 +689,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSystem => 'System default';
 
   @override
+  String get favoriteTooltip => 'Favourite';
+
+  @override
   String get difficultySection => 'Difficulty';
 
   @override

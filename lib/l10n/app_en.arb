@@ -293,6 +293,7 @@
   "upToDateNote": "You're on the latest version",
   "languageSection": "Language",
   "languageSystem": "System default",
+  "favoriteTooltip": "Favourite",
   "difficultySection": "Difficulty",
   "difficultyNote": "The preset gently changes phase lengths for new techniques. Techniques you've already tuned by hand are left untouched.",
   "difficultyCalm": "Calm",

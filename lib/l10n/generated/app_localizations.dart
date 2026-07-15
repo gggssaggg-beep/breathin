@@ -1256,6 +1256,12 @@ abstract class AppLocalizations {
   /// **'Как в системе'**
   String get languageSystem;
 
+  /// No description provided for @favoriteTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'В избранное'**
+  String get favoriteTooltip;
+
   /// No description provided for @difficultySection.
   ///
   /// In ru, this message translates to:
