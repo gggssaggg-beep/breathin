@@ -424,6 +424,26 @@ class AppLocalizationsRu extends AppLocalizations {
       'Не получилось. Проверьте интернет и попробуйте ещё раз.';
 
   @override
+  String get emailFieldLabel => 'Почта';
+
+  @override
+  String get emailSignInAction => 'Войти по почте';
+
+  @override
+  String get linkEmailAction => 'Привязать почту';
+
+  @override
+  String get emailInvalidNote => 'Введите корректный адрес почты';
+
+  @override
+  String emailLinkSentNote(String email) {
+    return 'Мы отправили ссылку для входа на $email. Откройте письмо на этом устройстве и нажмите ссылку.';
+  }
+
+  @override
+  String get emailOrDivider => 'или';
+
+  @override
   String get statsTitle => 'Практика';
 
   @override

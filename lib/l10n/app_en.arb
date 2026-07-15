@@ -162,6 +162,17 @@
   "accountGuestNote": "Practice and settings work without an account. Sign-in will be needed for friends and the shared feed.",
   "authNotConfiguredNote": "Google sign-in will become available in an upcoming update.",
   "authActionFailed": "Something went wrong. Check your connection and try again.",
+  "emailFieldLabel": "Email",
+  "emailSignInAction": "Sign in by email",
+  "linkEmailAction": "Link email",
+  "emailInvalidNote": "Enter a valid email address",
+  "emailLinkSentNote": "We sent a sign-in link to {email}. Open the email on this device and tap the link.",
+  "@emailLinkSentNote": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "emailOrDivider": "or",
 
   "statsTitle": "Practice",
   "statsTooltip": "Practice calendar",

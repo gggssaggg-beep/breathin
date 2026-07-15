@@ -26,3 +26,11 @@ bool get authConfigured => supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 /// закрыт). Кнопки в UI: «Войти через Google» и «Привязать Google» для
 /// гостевого профиля (identity linking, uid сохраняется).
 const bool googleAuthEnabled = true;
+
+/// E-mail-вход (magic-link) через Supabase Auth. Провайдер `email` включён
+/// в проекте по умолчанию (проверено 2026-07-15 через /auth/v1/settings:
+/// "email": true, disable_signup: false), redirect `dyshi://auth` уже в
+/// whitelist — доп. настройка панели не требуется. Письмо со ссылкой шлёт
+/// встроенный SMTP Supabase (лимит несколько писем/час — для личного
+/// использования достаточно; свой SMTP — при росте, docs/SUPABASE_SETUP.md).
+const bool emailAuthEnabled = true;

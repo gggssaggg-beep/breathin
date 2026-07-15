@@ -7,6 +7,7 @@ import '../../services/auth/auth_config.dart';
 import '../../services/auth/auth_service.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import 'email_auth_form.dart';
 
 /// Секция «Аккаунт» экрана настроек (ТЗ §4).
 ///
@@ -199,6 +200,13 @@ class _AccountSectionState extends State<AccountSection> {
                 ),
               ),
             ],
+            if (emailAuthEnabled) ...[
+              const SizedBox(height: 12),
+              EmailAuthForm(
+                actionLabel: l.emailSignInAction,
+                onSubmit: (email) => _guard(() => widget.auth.signInWithEmail(email)),
+              ),
+            ],
           ],
         ),
       ),
@@ -238,6 +246,15 @@ class _AccountSectionState extends State<AccountSection> {
                   label: Text(l.linkGoogleAction),
                   onPressed: () => _guard(widget.auth.linkGoogleIdentity),
                 ),
+              ),
+            ),
+          if (user.isAnonymous && emailAuthEnabled)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: EmailAuthForm(
+                actionLabel: l.linkEmailAction,
+                onSubmit: (email) =>
+                    _guard(() => widget.auth.linkEmailIdentity(email)),
               ),
             ),
         ],

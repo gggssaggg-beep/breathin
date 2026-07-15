@@ -800,6 +800,42 @@ abstract class AppLocalizations {
   /// **'Не получилось. Проверьте интернет и попробуйте ещё раз.'**
   String get authActionFailed;
 
+  /// No description provided for @emailFieldLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Почта'**
+  String get emailFieldLabel;
+
+  /// No description provided for @emailSignInAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Войти по почте'**
+  String get emailSignInAction;
+
+  /// No description provided for @linkEmailAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привязать почту'**
+  String get linkEmailAction;
+
+  /// No description provided for @emailInvalidNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Введите корректный адрес почты'**
+  String get emailInvalidNote;
+
+  /// No description provided for @emailLinkSentNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мы отправили ссылку для входа на {email}. Откройте письмо на этом устройстве и нажмите ссылку.'**
+  String emailLinkSentNote(String email);
+
+  /// No description provided for @emailOrDivider.
+  ///
+  /// In ru, this message translates to:
+  /// **'или'**
+  String get emailOrDivider;
+
   /// No description provided for @statsTitle.
   ///
   /// In ru, this message translates to:
