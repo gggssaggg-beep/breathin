@@ -24,6 +24,18 @@ const List<FikrPhrase> fikrPhrases = [
   FikrPhrase('calm', FikrPhraseSet.affirmations),
   FikrPhrase('presence', FikrPhraseSet.affirmations),
   FikrPhrase('light', FikrPhraseSet.affirmations),
+  // Созерцательные пары от владельца (2026-07-15): длинная фраза на вдохе,
+  // её раскрытие на выдохе. first_light и heart_waves — авторские формулировки
+  // владельца (практиковались на берегу), wave_ocean — в том же духе.
+  FikrPhrase('first_light', FikrPhraseSet.affirmations),
+  FikrPhrase('heart_waves', FikrPhraseSet.affirmations),
+  FikrPhrase('wave_ocean', FikrPhraseSet.affirmations),
+  // Собственные пары в том же духе (2026-07-15, «придумай своё»):
+  // море/тишина/отдача — темы бренда (Штиль…Прибой) и философии школы.
+  FikrPhrase('shore', FikrPhraseSet.affirmations),
+  FikrPhrase('gift', FikrPhraseSet.affirmations),
+  FikrPhrase('stillness', FikrPhraseSet.affirmations),
+  FikrPhrase('sky_mind', FikrPhraseSet.affirmations),
   FikrPhrase('ishq', FikrPhraseSet.wazifa),
   FikrPhrase('shafee', FikrPhraseSet.wazifa),
   FikrPhrase('allah', FikrPhraseSet.wazifa),

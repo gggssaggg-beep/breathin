@@ -16,7 +16,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tech_box_desc =>
-      'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.';
+      'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.\n\nЭто же — «тактическое (боевое) дыхание»: под этим именем технику используют военные и спецподразделения (Navy SEALs, снайперы, полиция), чтобы сбросить адреналин и вернуть ясность в стрессовой ситуации за минуту-другую.';
 
   @override
   String get tech_box_benefit =>
@@ -202,6 +202,48 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get fikr_light_ex => 'Излучаю Жизнь и Свет';
+
+  @override
+  String get fikr_first_light_in => 'В начале был Свет';
+
+  @override
+  String get fikr_first_light_ex => 'И Пространство озарилось этим Светом';
+
+  @override
+  String get fikr_heart_waves_in => 'Моё сердце отражает вселенскую любовь';
+
+  @override
+  String get fikr_heart_waves_ex => 'Как волны отражают солнечный свет';
+
+  @override
+  String get fikr_wave_ocean_in => 'Я — волна';
+
+  @override
+  String get fikr_wave_ocean_ex => 'Океан дышит мной';
+
+  @override
+  String get fikr_shore_in => 'Волна приходит';
+
+  @override
+  String get fikr_shore_ex => 'Волна уходит';
+
+  @override
+  String get fikr_gift_in => 'Принимаю вдох как дар';
+
+  @override
+  String get fikr_gift_ex => 'Возвращаю его миру';
+
+  @override
+  String get fikr_stillness_in => 'В глубине — тишина';
+
+  @override
+  String get fikr_stillness_ex => 'Я опускаюсь в неё';
+
+  @override
+  String get fikr_sky_mind_in => 'Во мне — небо';
+
+  @override
+  String get fikr_sky_mind_ex => 'Мысли — облака, они проплывают';
 
   @override
   String get fikr_ishq_in => 'Ишк Аллах';

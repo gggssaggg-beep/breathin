@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_box_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.'**
+  /// **'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.\n\nЭто же — «тактическое (боевое) дыхание»: под этим именем технику используют военные и спецподразделения (Navy SEALs, снайперы, полиция), чтобы сбросить адреналин и вернуть ясность в стрессовой ситуации за минуту-другую.'**
   String get tech_box_desc;
 
   /// No description provided for @tech_box_benefit.
@@ -427,6 +427,90 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Излучаю Жизнь и Свет'**
   String get fikr_light_ex;
+
+  /// No description provided for @fikr_first_light_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'В начале был Свет'**
+  String get fikr_first_light_in;
+
+  /// No description provided for @fikr_first_light_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'И Пространство озарилось этим Светом'**
+  String get fikr_first_light_ex;
+
+  /// No description provided for @fikr_heart_waves_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Моё сердце отражает вселенскую любовь'**
+  String get fikr_heart_waves_in;
+
+  /// No description provided for @fikr_heart_waves_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как волны отражают солнечный свет'**
+  String get fikr_heart_waves_ex;
+
+  /// No description provided for @fikr_wave_ocean_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Я — волна'**
+  String get fikr_wave_ocean_in;
+
+  /// No description provided for @fikr_wave_ocean_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Океан дышит мной'**
+  String get fikr_wave_ocean_ex;
+
+  /// No description provided for @fikr_shore_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Волна приходит'**
+  String get fikr_shore_in;
+
+  /// No description provided for @fikr_shore_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Волна уходит'**
+  String get fikr_shore_ex;
+
+  /// No description provided for @fikr_gift_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Принимаю вдох как дар'**
+  String get fikr_gift_in;
+
+  /// No description provided for @fikr_gift_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвращаю его миру'**
+  String get fikr_gift_ex;
+
+  /// No description provided for @fikr_stillness_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'В глубине — тишина'**
+  String get fikr_stillness_in;
+
+  /// No description provided for @fikr_stillness_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Я опускаюсь в неё'**
+  String get fikr_stillness_ex;
+
+  /// No description provided for @fikr_sky_mind_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Во мне — небо'**
+  String get fikr_sky_mind_in;
+
+  /// No description provided for @fikr_sky_mind_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мысли — облака, они проплывают'**
+  String get fikr_sky_mind_ex;
 
   /// No description provided for @fikr_ishq_in.
   ///

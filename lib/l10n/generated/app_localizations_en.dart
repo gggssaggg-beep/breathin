@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_box_desc =>
-      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.';
+      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.\n\nAlso known as tactical (combat) breathing: military and special units (Navy SEALs, snipers, police) use this exact technique to dump adrenaline and regain clarity under stress within a minute or two.';
 
   @override
   String get tech_box_benefit =>
@@ -202,6 +202,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fikr_light_ex => 'I radiate Life and Light';
+
+  @override
+  String get fikr_first_light_in => 'In the beginning was Light';
+
+  @override
+  String get fikr_first_light_ex => 'And Space was lit by that Light';
+
+  @override
+  String get fikr_heart_waves_in => 'My heart reflects universal love';
+
+  @override
+  String get fikr_heart_waves_ex => 'As waves reflect the sunlight';
+
+  @override
+  String get fikr_wave_ocean_in => 'I am a wave';
+
+  @override
+  String get fikr_wave_ocean_ex => 'The ocean breathes through me';
+
+  @override
+  String get fikr_shore_in => 'The wave arrives';
+
+  @override
+  String get fikr_shore_ex => 'The wave recedes';
+
+  @override
+  String get fikr_gift_in => 'I receive this breath as a gift';
+
+  @override
+  String get fikr_gift_ex => 'I return it to the world';
+
+  @override
+  String get fikr_stillness_in => 'In the depths — stillness';
+
+  @override
+  String get fikr_stillness_ex => 'I settle into it';
+
+  @override
+  String get fikr_sky_mind_in => 'The sky is within me';
+
+  @override
+  String get fikr_sky_mind_ex => 'Thoughts are clouds passing by';
 
   @override
   String get fikr_ishq_in => 'Ishq Allah';

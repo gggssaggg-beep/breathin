@@ -8,11 +8,11 @@ import 'package:breathin/l10n/technique_texts.dart';
 
 void main() {
   group('Каталог фраз фикра (№10)', () {
-    test('6 пар: 3 аффирмации + 3 вазифы', () {
-      expect(fikrPhrases, hasLength(6));
+    test('13 пар: 10 аффирмаций + 3 вазифы', () {
+      expect(fikrPhrases, hasLength(13));
       expect(
         fikrPhrases.where((p) => p.set == FikrPhraseSet.affirmations),
-        hasLength(3),
+        hasLength(10),
       );
       expect(
         fikrPhrases.where((p) => p.set == FikrPhraseSet.wazifa),
