@@ -79,6 +79,10 @@
   "segNineBoth": "Обе ноздри",
 
   "fikrPhrasesLabel": "Фразы",
+  "fikrCustomLabel": "Своя фраза",
+  "fikrCustomHint": "Нажмите, чтобы написать свою",
+  "fikrCustomInLabel": "Фраза на вдохе",
+  "fikrCustomExLabel": "Фраза на выдохе",
   "fikr_calm_in": "Вдыхаю покой",
   "fikr_calm_ex": "Отпускаю напряжение",
   "fikr_presence_in": "Я здесь",

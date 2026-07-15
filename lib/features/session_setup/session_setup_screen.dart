@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/bolt_repository.dart';
+import '../../data/custom_fikr_store.dart';
 import '../../data/difficulty_store.dart';
 import '../../data/technique_settings_repository.dart';
 import '../../features/onboarding/coach_mark.dart';
@@ -123,6 +124,26 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
       variant = variantOf(config.phaseSeconds);
     }
 
+    // Резолвим тексты фразы фикра заранее (до push), чтобы view видел
+    // уже готовые строки и не зависел от локализации внутри.
+    ({String inhale, String exhale})? phraseTexts;
+    if (_t.id == 'fikr') {
+      if (s.phraseId == customFikrPhraseId) {
+        final custom = await CustomFikrPhraseStore().load();
+        if (custom != null) {
+          phraseTexts = custom;
+        } else {
+          // Своя фраза не задана — fallback к дефолтной ('calm').
+          final p = defaultFikrPhrase;
+          phraseTexts = (inhale: l.fikrPhraseIn(p), exhale: l.fikrPhraseEx(p));
+        }
+      } else {
+        final p = fikrPhraseById(s.phraseId);
+        phraseTexts = (inhale: l.fikrPhraseIn(p), exhale: l.fikrPhraseEx(p));
+      }
+    }
+    if (!mounted) return;
+
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SessionRunner(
@@ -131,7 +152,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           feedback: s.feedback,
           mediaTitle: _techniqueName(l, _t),
           variant: variant,
-          phrase: _t.id == 'fikr' ? fikrPhraseById(s.phraseId) : null,
+          phraseTexts: phraseTexts,
         ),
       ),
     );
@@ -591,13 +612,14 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
   /// для новых техник (фикр) — теперь единый источник из technique_texts.
   String _techniqueName(AppLocalizations l, Technique t) => l.techniqueName(t);
 
-  /// Выбор пары фраз фикра: плоский список аффирмаций, отмеченная
-  /// пара — галочка. Без Radio: его groupValue-API в новых Flutter уходит
-  /// в RadioGroup, а selected+галочка читается не хуже.
+  /// Выбор пары фраз фикра: плоский список аффирмаций + «своя фраза»,
+  /// отмеченная пара — галочка.
   Widget _buildFikrPhraseSection(
       AppLocalizations l, TechniqueSettings s, ThemeData theme) {
-    final selected = fikrPhraseById(s.phraseId).id;
+    final selected = s.phraseId ?? defaultFikrPhrase.id;
     final children = <Widget>[];
+
+    // Каталожные аффирмации
     for (final p in fikrPhrases) {
       final isSelected = p.id == selected;
       children.add(ListTile(
@@ -615,9 +637,117 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
         onTap: () => setState(() => _settings = s.copyWith(phraseId: p.id)),
       ));
     }
+
+    // «Своя фраза» — открывает диалог ввода.
+    children.add(_CustomPhraseTile(
+      l: l,
+      theme: theme,
+      isSelected: selected == customFikrPhraseId,
+      onSelect: (phraseId) =>
+          setState(() => _settings = s.copyWith(phraseId: phraseId)),
+    ));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: children,
+    );
+  }
+}
+
+/// Плитка «Своя фраза» — хранит сохранённые тексты и открывает диалог ввода.
+class _CustomPhraseTile extends StatefulWidget {
+  final AppLocalizations l;
+  final ThemeData theme;
+  final bool isSelected;
+  final void Function(String phraseId) onSelect;
+
+  const _CustomPhraseTile({
+    required this.l,
+    required this.theme,
+    required this.isSelected,
+    required this.onSelect,
+  });
+
+  @override
+  State<_CustomPhraseTile> createState() => _CustomPhraseTileState();
+}
+
+class _CustomPhraseTileState extends State<_CustomPhraseTile> {
+  ({String inhale, String exhale})? _saved;
+
+  @override
+  void initState() {
+    super.initState();
+    CustomFikrPhraseStore().load().then((v) {
+      if (mounted) setState(() => _saved = v);
+    });
+  }
+
+  Future<void> _showDialog() async {
+    final inCtrl = TextEditingController(text: _saved?.inhale ?? '');
+    final exCtrl = TextEditingController(text: _saved?.exhale ?? '');
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: inCtrl,
+              decoration:
+                  InputDecoration(labelText: widget.l.fikrCustomInLabel),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: exCtrl,
+              decoration:
+                  InputDecoration(labelText: widget.l.fikrCustomExLabel),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(widget.l.commonCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(widget.l.commonSave),
+          ),
+        ],
+      ),
+    );
+    if (result != true) return;
+    final trimIn = inCtrl.text.trim();
+    final trimEx = exCtrl.text.trim();
+    // Пустые обе строки — не выбираем custom.
+    if (trimIn.isEmpty && trimEx.isEmpty) return;
+    await CustomFikrPhraseStore().save(trimIn, trimEx);
+    if (mounted) {
+      setState(() => _saved = (inhale: trimIn, exhale: trimEx));
+      widget.onSelect(customFikrPhraseId);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final saved = _saved;
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      selected: widget.isSelected,
+      title: Text(widget.l.fikrCustomLabel),
+      subtitle: saved != null
+          ? Text('${saved.inhale} · ${saved.exhale}')
+          : Text(widget.l.fikrCustomHint),
+      trailing: widget.isSelected
+          ? BreathinIcon(
+              BreathinIcons.circleCheck,
+              size: 20,
+              color: widget.theme.colorScheme.primary,
+            )
+          : null,
+      onTap: _showDialog,
     );
   }
 }

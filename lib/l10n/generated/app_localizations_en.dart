@@ -222,6 +222,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fikrPhrasesLabel => 'Phrases';
 
   @override
+  String get fikrCustomLabel => 'My own phrase';
+
+  @override
+  String get fikrCustomHint => 'Tap to write your own';
+
+  @override
+  String get fikrCustomInLabel => 'Inhale phrase';
+
+  @override
+  String get fikrCustomExLabel => 'Exhale phrase';
+
+  @override
   String get fikr_calm_in => 'Breathing in calm';
 
   @override

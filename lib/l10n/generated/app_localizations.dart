@@ -452,6 +452,30 @@ abstract class AppLocalizations {
   /// **'Фразы'**
   String get fikrPhrasesLabel;
 
+  /// No description provided for @fikrCustomLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Своя фраза'**
+  String get fikrCustomLabel;
+
+  /// No description provided for @fikrCustomHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите, чтобы написать свою'**
+  String get fikrCustomHint;
+
+  /// No description provided for @fikrCustomInLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фраза на вдохе'**
+  String get fikrCustomInLabel;
+
+  /// No description provided for @fikrCustomExLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фраза на выдохе'**
+  String get fikrCustomExLabel;
+
   /// No description provided for @fikr_calm_in.
   ///
   /// In ru, this message translates to:

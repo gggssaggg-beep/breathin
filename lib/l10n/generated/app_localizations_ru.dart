@@ -222,6 +222,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fikrPhrasesLabel => 'Фразы';
 
   @override
+  String get fikrCustomLabel => 'Своя фраза';
+
+  @override
+  String get fikrCustomHint => 'Нажмите, чтобы написать свою';
+
+  @override
+  String get fikrCustomInLabel => 'Фраза на вдохе';
+
+  @override
+  String get fikrCustomExLabel => 'Фраза на выдохе';
+
+  @override
   String get fikr_calm_in => 'Вдыхаю покой';
 
   @override

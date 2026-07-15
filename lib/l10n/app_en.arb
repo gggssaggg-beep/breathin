@@ -79,6 +79,10 @@
   "segNineBoth": "Both nostrils",
 
   "fikrPhrasesLabel": "Phrases",
+  "fikrCustomLabel": "My own phrase",
+  "fikrCustomHint": "Tap to write your own",
+  "fikrCustomInLabel": "Inhale phrase",
+  "fikrCustomExLabel": "Exhale phrase",
   "fikr_calm_in": "Breathing in calm",
   "fikr_calm_ex": "Letting go of tension",
   "fikr_presence_in": "I am here",
