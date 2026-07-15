@@ -1,5 +1,8 @@
 plugins {
     id("com.android.application")
+    // AGP 9 + builtInKotlin=false: KGP нужно применять явно, иначе release-компиляция
+    // не видит классы плагинов (flutter/flutter#186800, wakelock_plus#117).
+    id("org.jetbrains.kotlin.android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
