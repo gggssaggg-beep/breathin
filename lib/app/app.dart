@@ -34,6 +34,10 @@ class BreathinApp extends StatefulWidget {
 
 class _BreathinAppState extends State<BreathinApp> {
   final _messengerKey = GlobalKey<ScaffoldMessengerState>();
+  // Ключ Navigator'а: приветствие показываем через showDialog из контекста
+  // ПОД Navigator. Контекст ScaffoldMessenger выше него — оттуда Navigator
+  // не находится, и диалог не открылся бы.
+  final _navKey = GlobalKey<NavigatorState>();
   final _store = CoachStore();
   late final CoachController _coachController;
 
@@ -66,7 +70,7 @@ class _BreathinAppState extends State<BreathinApp> {
     final seen = await _store.welcomeSeen();
     if (seen) return;
     if (!mounted) return;
-    final ctx = _messengerKey.currentContext;
+    final ctx = _navKey.currentContext;
     if (ctx == null || !ctx.mounted) return;
     await showDialog<void>(
       context: ctx,
@@ -123,6 +127,7 @@ class _BreathinAppState extends State<BreathinApp> {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
+      navigatorKey: _navKey,
       scaffoldMessengerKey: _messengerKey,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
