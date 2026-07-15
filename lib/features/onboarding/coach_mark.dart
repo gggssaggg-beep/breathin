@@ -60,7 +60,8 @@ class _CoachMarkState extends State<CoachMark>
     super.didChangeDependencies();
     // Читаем shouldShow здесь (а не в build), чтобы AnimatedBuilder не
     // регистрировал зависимость от CoachScope и не создавал цикл перестроения.
-    final newShow = CoachScope.of(context).shouldShow(widget.id);
+    final newShow =
+        CoachScope.maybeOf(context)?.shouldShow(widget.id) ?? false;
     if (newShow != _shouldShow) {
       _shouldShow = newShow;
       if (_shouldShow) {
@@ -85,7 +86,7 @@ class _CoachMarkState extends State<CoachMark>
     await _animCtrl.reverse();
     if (!mounted) return;
     // Читаем контроллер синхронно — mounted гарантирует безопасность.
-    await CoachScope.of(context).dismiss(widget.id);
+    await CoachScope.maybeOf(context)?.dismiss(widget.id);
   }
 
   @override
@@ -100,7 +101,7 @@ class _CoachMarkState extends State<CoachMark>
 
     final bubble = AnimatedBuilder(
       animation: _animCtrl,
-      builder: (_, __) {
+      builder: (_, _) {
         return Opacity(
           opacity: _opacity.value,
           child: Transform.translate(

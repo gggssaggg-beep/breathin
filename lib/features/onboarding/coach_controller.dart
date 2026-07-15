@@ -64,4 +64,10 @@ class CoachScope extends InheritedNotifier<CoachController> {
     assert(scope != null, 'CoachScope не найден в дереве виджетов');
     return scope!.notifier!;
   }
+
+  /// Как [of], но null, если [CoachScope] нет в дереве. Нужно для экранов,
+  /// которые показываются вне обёртки приложения (виджет-тесты отдельных
+  /// экранов) — тогда обучалки просто не рисуются, экран работает как обычно.
+  static CoachController? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<CoachScope>()?.notifier;
 }
