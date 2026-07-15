@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../data/bolt_repository.dart';
+import '../../data/difficulty_store.dart';
 import '../../data/technique_settings_repository.dart';
 import '../../features/onboarding/coach_mark.dart';
+import '../../domain/bolt/bolt_interpretation.dart';
 import '../../domain/catalog/fikr_phrases.dart';
+import '../../domain/difficulty/difficulty.dart';
 import '../../domain/engine/phase_scaling.dart';
 import '../../domain/engine/session_plan.dart';
 import '../../domain/engine/session_plan_compiler.dart';
@@ -38,6 +42,10 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
   /// Текущие настройки; null — идёт загрузка.
   TechniqueSettings? _settings;
 
+  /// Базовые настройки под текущий глобальный пресет сложности — состояние
+  /// кнопки «Сбросить» и дефолт для ни разу не настроенной техники (§4–5).
+  TechniqueSettings? _baseline;
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +61,34 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
   }
 
   Future<void> _load() async {
-    final s = await _repo.load(widget.technique);
-    if (mounted) setState(() => _settings = s);
+    // Базовые длительности под глобальный пресет сложности; для «Своего
+    // дыхания» — по последнему BOLT (§4). Сохранённые вручную настройки
+    // имеют приоритет над пресетом (пресет не перетирает выбор пользователя).
+    final saved = await _repo.loadSaved(widget.technique);
+    final preset = await DifficultyStore().load();
+    BoltLevel? boltLevel;
+    if (preset == DifficultyPreset.mine) {
+      final results = await BoltRepository().all();
+      if (results.isNotEmpty) {
+        boltLevel = boltLevelFor(results.last.seconds);
+      }
+    }
+    final baseline = _presetBaseline(preset, boltLevel);
+    if (mounted) {
+      setState(() {
+        _baseline = baseline;
+        _settings = saved ?? baseline;
+      });
+    }
+  }
+
+  /// Классические настройки, домноженные на пресет сложности (только для
+  /// counted-техник со свободными фазами; иначе — чистая классика).
+  TechniqueSettings _presetBaseline(DifficultyPreset preset, BoltLevel? bolt) {
+    final classic = TechniqueSettings.classic(_t);
+    if (!presetAffects(_t)) return classic;
+    final mult = difficultyMultiplier(preset, boltLevel: bolt);
+    return classic.copyWith(phaseSeconds: presetPhaseSeconds(_t, mult));
   }
 
   Technique get _t => widget.technique;
@@ -137,8 +171,10 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           if (!isScripted)
             TextButton(
               onPressed: () {
+                // Сброс — к базовым настройкам под текущий пресет сложности
+                // (не к «голой» классике, иначе пресет было бы не вернуть).
                 setState(() {
-                  _settings = TechniqueSettings.classic(_t);
+                  _settings = _baseline ?? TechniqueSettings.classic(_t);
                 });
               },
               child: Text(l.resetToClassic),
