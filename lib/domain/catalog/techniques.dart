@@ -246,6 +246,73 @@ const fikr = Technique(
   defaultCycles: 30, // ~5 минут при 4+6 с
 );
 
+/// Мягкое дыхание сосуда (контент владельца 2026-07-15, тибетское «кувшинное»
+/// в безопасном варианте): вдох вниз → мягкая задержка 3–5 c (максимум
+/// ЖЁСТКО 8 c — требование владельца) → медленный выдох; внимание на точке
+/// ниже пупка. Стабилизация «бьющей вверх» энергии.
+const vesselBreath = Technique(
+  id: 'vessel',
+  type: TechniqueType.counted,
+  safetyLevel: SafetyLevel.medium,
+  safetyKey: 'safety_holds_generic',
+  icon: TechniqueIcon.vessel,
+  phases: [
+    PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4.0),
+    PhaseSpec(kind: PhaseKind.holdIn, defaultSec: 4.0, maxSec: 8.0),
+    PhaseSpec(kind: PhaseKind.exhale, defaultSec: 6.0),
+  ],
+  scaling: ScalingMode.perPhase,
+  defaultCycles: 10, // 7–15 по контенту
+);
+
+/// Дыхание по центральной оси (контент владельца): естественное дыхание без
+/// счёта, внимание скользит по вертикали тела — timer-техника.
+const axisBreath = Technique(
+  id: 'axis',
+  type: TechniqueType.timer,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.axis,
+  defaultTimerMin: 7,
+  minTimerMin: 5,
+  maxTimerMin: 10,
+);
+
+/// Девять очищающих дыханий (контент владельца, тибетская очистка каналов):
+/// ровно 9 дыханий — 3 «вдох левой/выдох правой», 3 наоборот, 3 обеими.
+/// Скриптовая, как элементы: сегменты дают метку стороны на экране.
+final nineBreaths = Technique(
+  id: 'nine_breaths',
+  type: TechniqueType.scripted,
+  safetyLevel: SafetyLevel.medium,
+  safetyKey: 'safety_holds_generic',
+  icon: TechniqueIcon.sparkles,
+  cycleScript: [
+    for (var i = 0; i < 9; i++)
+      const [
+        PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4.0, editable: false),
+        PhaseSpec(kind: PhaseKind.exhale, defaultSec: 4.0, editable: false),
+      ],
+  ],
+  segments: const [
+    BreathSegment(
+        id: 'nine_left',
+        cycles: 3,
+        inhale: BreathRoute.nose,
+        exhale: BreathRoute.nose),
+    BreathSegment(
+        id: 'nine_right',
+        cycles: 3,
+        inhale: BreathRoute.nose,
+        exhale: BreathRoute.nose),
+    BreathSegment(
+        id: 'nine_both',
+        cycles: 3,
+        inhale: BreathRoute.nose,
+        exhale: BreathRoute.nose),
+  ],
+);
+
 /// Метод Вима Хофа — особая логика движка: машина раундов WimHofMachine
 /// (ПЛАН §3.4), запуск через полноэкранное предупреждение (ТЗ §2.4).
 const wimHof = Technique(
@@ -313,9 +380,12 @@ final List<Technique> catalog = [
   coherent,
   stretchBreath,
   elementalBreath,
+  nineBreaths,
   fikr,
+  vesselBreath,
   diaphragmatic,
   nadiShodhana,
+  axisBreath,
   soundBreath,
   wimHof,
 ];

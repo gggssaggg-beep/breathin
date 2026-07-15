@@ -37,5 +37,11 @@ BreathinIconData iconDataFor(TechniqueIcon icon) {
       return BreathinIcons.circles;
     case TechniqueIcon.quote:
       return BreathinIcons.quote;
+    case TechniqueIcon.vessel:
+      return BreathinIcons.flask;
+    case TechniqueIcon.axis:
+      return BreathinIcons.arrowsVertical;
+    case TechniqueIcon.sparkles:
+      return BreathinIcons.sparkles;
   }
 }
