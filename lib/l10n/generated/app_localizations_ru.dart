@@ -691,4 +691,104 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sizeUnitsCsv => 'Б,КБ,МБ,ГБ';
+
+  @override
+  String get boltTitle => 'Дыхательный тест';
+
+  @override
+  String get boltEntrySubtitle => 'Оцените, как дыхание переносит паузу';
+
+  @override
+  String get boltIntroHeading => 'Как это работает';
+
+  @override
+  String get boltIntro =>
+      'BOLT — показатель того, насколько комфортно вы переносите накопление CO₂ после спокойного выдоха. Он отражает текущую чувствительность дыхания и обычно растёт при регулярной практике.\n\nИзмеряйте в покое, лучше утром и в одинаковых условиях — так число сравнимо со вчерашним.';
+
+  @override
+  String get boltMethodHeading => 'Как измерять';
+
+  @override
+  String get boltMethod =>
+      'Сядьте спокойно и сделайте несколько обычных вдохов-выдохов. Затем сделайте спокойный, НЕ максимальный выдох через нос, зажмите нос и засеките время.\n\nОстановитесь при первом непроизвольном позыве — подёргивание диафрагмы, желание сглотнуть, первое напряжение. Это не соревнование на терпение: первый вдох после теста должен быть спокойным.';
+
+  @override
+  String get boltDisclaimer =>
+      'BOLT не является клиническим диагностическим тестом. Результат отражает текущую чувствительность дыхания, а не медицинское состояние. При проблемах с дыханием обратитесь к врачу.';
+
+  @override
+  String get boltStartAction => 'Начать тест';
+
+  @override
+  String get boltPrepHint => 'Дышите спокойно и приготовьтесь';
+
+  @override
+  String get boltHoldInstruction => 'Задержите дыхание после спокойного выдоха';
+
+  @override
+  String get boltFirstUrgeHint => 'Коснитесь экрана при первом позыве вдохнуть';
+
+  @override
+  String get boltStopAction => 'Первый позыв — стоп';
+
+  @override
+  String get boltResultHeading => 'Ваш результат';
+
+  @override
+  String boltSecondsValue(int seconds) {
+    return '$seconds с';
+  }
+
+  @override
+  String boltRangeLabel(String range) {
+    return 'Диапазон $range с';
+  }
+
+  @override
+  String get boltLevelLow => 'Низкая толерантность к CO₂';
+
+  @override
+  String get boltLevelLowDesc =>
+      'Дыхание сейчас чувствительно к CO₂ — это часто у тех, кто дышит часто и поверхностно. Хорошая новость: показатель тренируется. Помогут спокойные практики с удлинённым выдохом.';
+
+  @override
+  String get boltLevelMedium => 'Средняя толерантность';
+
+  @override
+  String get boltLevelMediumDesc =>
+      'Обычная реактивность дыхания в покое. Регулярная спокойная практика мягко сдвигает результат вверх.';
+
+  @override
+  String get boltLevelHigh => 'Высокая толерантность';
+
+  @override
+  String get boltLevelHighDesc =>
+      'Дыхание спокойно переносит накопление CO₂. Так держать — поддерживайте ровный носовой ритм.';
+
+  @override
+  String get boltLevelVeryHigh => 'Очень высокая толерантность';
+
+  @override
+  String get boltLevelVeryHighDesc =>
+      'Такой результат обычно у тренированных. Не гонитесь за рекордом: важнее ровное комфортное дыхание в жизни.';
+
+  @override
+  String get boltSaveAction => 'Сохранить результат';
+
+  @override
+  String get boltRetryAction => 'Ещё раз';
+
+  @override
+  String get boltHistoryTitle => 'Динамика';
+
+  @override
+  String get boltLatestLabel => 'Последний результат';
+
+  @override
+  String get boltHistoryEmpty =>
+      'Пока нет результатов — пройдите тест, чтобы отслеживать динамику.';
+
+  @override
+  String get boltProgressHint =>
+      'Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд.';
 }

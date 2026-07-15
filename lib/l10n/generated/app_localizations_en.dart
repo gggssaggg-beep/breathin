@@ -682,4 +682,104 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sizeUnitsCsv => 'B,KB,MB,GB';
+
+  @override
+  String get boltTitle => 'Breathing test';
+
+  @override
+  String get boltEntrySubtitle => 'See how your breath handles a pause';
+
+  @override
+  String get boltIntroHeading => 'How it works';
+
+  @override
+  String get boltIntro =>
+      'BOLT reflects how comfortably you tolerate CO₂ build-up after a calm exhale. It tracks your current breathing sensitivity and usually rises with regular practice.\n\nMeasure at rest, ideally in the morning and under the same conditions — that keeps the number comparable to yesterday\'s.';
+
+  @override
+  String get boltMethodHeading => 'How to measure';
+
+  @override
+  String get boltMethod =>
+      'Sit calmly and take a few normal breaths. Then exhale calmly — NOT fully — through the nose, pinch your nose and start the timer.\n\nStop at the first involuntary urge: a twitch of the diaphragm, the wish to swallow, the first tension. It\'s not an endurance contest — your first breath afterwards should be calm.';
+
+  @override
+  String get boltDisclaimer =>
+      'BOLT is not a clinical diagnostic test. The result reflects your current breathing sensitivity, not a medical condition. If you have breathing problems, see a doctor.';
+
+  @override
+  String get boltStartAction => 'Start test';
+
+  @override
+  String get boltPrepHint => 'Breathe calmly and get ready';
+
+  @override
+  String get boltHoldInstruction => 'Hold after a calm exhale';
+
+  @override
+  String get boltFirstUrgeHint => 'Tap the screen at the first urge to breathe';
+
+  @override
+  String get boltStopAction => 'First urge — stop';
+
+  @override
+  String get boltResultHeading => 'Your result';
+
+  @override
+  String boltSecondsValue(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String boltRangeLabel(String range) {
+    return 'Range $range s';
+  }
+
+  @override
+  String get boltLevelLow => 'Low CO₂ tolerance';
+
+  @override
+  String get boltLevelLowDesc =>
+      'Your breathing is sensitive to CO₂ right now — common if you breathe fast and shallow. The good news: it\'s trainable. Calm practices with a longer exhale help.';
+
+  @override
+  String get boltLevelMedium => 'Moderate tolerance';
+
+  @override
+  String get boltLevelMediumDesc =>
+      'A typical resting breathing response. Regular calm practice gently nudges the result upward.';
+
+  @override
+  String get boltLevelHigh => 'High tolerance';
+
+  @override
+  String get boltLevelHighDesc =>
+      'Your breath handles CO₂ build-up calmly. Keep it up — maintain a steady nasal rhythm.';
+
+  @override
+  String get boltLevelVeryHigh => 'Very high tolerance';
+
+  @override
+  String get boltLevelVeryHighDesc =>
+      'A result usually seen in trained individuals. Don\'t chase records — a calm, even everyday breath matters more.';
+
+  @override
+  String get boltSaveAction => 'Save result';
+
+  @override
+  String get boltRetryAction => 'Try again';
+
+  @override
+  String get boltHistoryTitle => 'Progress';
+
+  @override
+  String get boltLatestLabel => 'Latest result';
+
+  @override
+  String get boltHistoryEmpty =>
+      'No results yet — take the test to track your progress.';
+
+  @override
+  String get boltProgressHint =>
+      'Compare results under the same conditions: day-to-day variation is normal, watch the trend.';
 }
