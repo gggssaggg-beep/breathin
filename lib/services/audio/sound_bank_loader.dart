@@ -12,6 +12,7 @@ import 'wav_io.dart';
 /// тестом полноты (каждый ClipId в каждом наборе).
 Map<ClipId, String> assetsForSet(SoundSet set) {
   final dir = switch (set) {
+    SoundSet.bowls => 'bowls',
     SoundSet.nature => 'nature',
     SoundSet.minimal => 'minimal',
   };

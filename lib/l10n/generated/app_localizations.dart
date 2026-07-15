@@ -1148,6 +1148,18 @@ abstract class AppLocalizations {
   /// **'Звуковой набор'**
   String get soundSetLabel;
 
+  /// No description provided for @soundSetBowls.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чаши'**
+  String get soundSetBowls;
+
+  /// No description provided for @soundSetBowlsNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поющие чаши и колокольчики'**
+  String get soundSetBowlsNote;
+
   /// No description provided for @soundSetNature.
   ///
   /// In ru, this message translates to:

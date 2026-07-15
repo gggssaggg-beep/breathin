@@ -6,7 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Звуковые наборы приложения. Порядок = порядок в настройках.
 enum SoundSet {
-  /// Волны на вдох/выдох, капли на задержки и тики (дефолт).
+  /// Поющие чаши и колокольчики (дефолт с 2026-07-15: владелице волны/шум
+  /// не зашли — нужен музыкальный тембр, но не дыхание и не писк).
+  bowls,
+
+  /// Волны на вдох/выдох, капли на задержки и тики.
   nature,
 
   /// Исторический синтетический набор: свипы и тоны.
@@ -20,7 +24,7 @@ class SoundSetStore {
   Future<SoundSet> load() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_key);
-    return SoundSet.values.asNameMap()[raw] ?? SoundSet.nature;
+    return SoundSet.values.asNameMap()[raw] ?? SoundSet.bowls;
   }
 
   Future<void> save(SoundSet set) async {

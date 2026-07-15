@@ -9,9 +9,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('SoundSetStore', () {
-    test('дефолт — «Природа» (отзыв №5: свипы неприятны)', () async {
+    test('дефолт — «Чаши» (решение владельца 2026-07-15)', () async {
       SharedPreferences.setMockInitialValues({});
-      expect(await SoundSetStore().load(), SoundSet.nature);
+      expect(await SoundSetStore().load(), SoundSet.bowls);
     });
 
     test('save/load сохраняет выбор «Минимал»', () async {
@@ -23,7 +23,7 @@ void main() {
 
     test('мусорное значение в prefs откатывается к дефолту', () async {
       SharedPreferences.setMockInitialValues({'sound.set': 'jazz'});
-      expect(await SoundSetStore().load(), SoundSet.nature);
+      expect(await SoundSetStore().load(), SoundSet.bowls);
     });
   });
 
@@ -38,9 +38,11 @@ void main() {
 
     test('фазовые клипы идут из каталога своего набора, события — из common',
         () {
+      final bowls = assetsForSet(SoundSet.bowls);
+      expect(bowls[ClipId.inhale], contains('sets/bowls/'));
+      expect(bowls[ClipId.gong], contains('common/'));
       final nature = assetsForSet(SoundSet.nature);
       expect(nature[ClipId.inhale], contains('sets/nature/'));
-      expect(nature[ClipId.gong], contains('common/'));
       final minimal = assetsForSet(SoundSet.minimal);
       expect(minimal[ClipId.inhale], contains('sets/minimal/'));
     });

@@ -638,6 +638,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get soundSetLabel => 'Звуковой набор';
 
   @override
+  String get soundSetBowls => 'Чаши';
+
+  @override
+  String get soundSetBowlsNote => 'Поющие чаши и колокольчики';
+
+  @override
   String get soundSetNature => 'Природа';
 
   @override

@@ -271,6 +271,8 @@
   "upToDateNote": "You're on the latest version",
   "soundSection": "Sound",
   "soundSetLabel": "Sound set",
+  "soundSetBowls": "Bowls",
+  "soundSetBowlsNote": "Singing bowls and chimes",
   "soundSetNature": "Nature",
   "soundSetNatureNote": "Waves and drops",
   "soundSetMinimal": "Minimal",
