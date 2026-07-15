@@ -7,14 +7,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Каталог техник (ПЛАН §5.2)', () {
-    test('15 записей: 9 counted + 3 timer + Вим Хоф + вытягивающее + элементы',
+    test(
+        '18 записей: 10 counted + 4 timer + Вим Хоф + вытягивающее + элементы + девять дыханий',
         () {
-      expect(catalog, hasLength(15));
-      expect(catalog.where((t) => t.type == TechniqueType.counted), hasLength(9));
-      expect(catalog.where((t) => t.type == TechniqueType.timer), hasLength(3));
+      expect(catalog, hasLength(18));
+      expect(
+          catalog.where((t) => t.type == TechniqueType.counted), hasLength(10));
+      expect(catalog.where((t) => t.type == TechniqueType.timer), hasLength(4));
       expect(catalog.where((t) => t.type == TechniqueType.wimHof), hasLength(1));
       expect(
-          catalog.where((t) => t.type == TechniqueType.scripted), hasLength(2));
+          catalog.where((t) => t.type == TechniqueType.scripted), hasLength(3));
     });
 
     test('вытягивающее: 25 дыханий, вдох 4/выдох 4→28→4 (+2), компилируется', () {
@@ -108,12 +110,22 @@ void main() {
       }
     });
 
-    test('timer-техники: таймер 5 мин по умолчанию, диапазон 1–30 (ТЗ §2.2)', () {
+    test('timer-техники: фаз нет, диапазон таймера задан', () {
       for (final t in catalog.where((t) => t.type == TechniqueType.timer)) {
         expect(t.phases, isNull, reason: t.id);
-        expect(t.defaultTimerMin, 5, reason: t.id);
-        expect(t.minTimerMin, 1, reason: t.id);
-        expect(t.maxTimerMin, 30, reason: t.id);
+        expect(t.defaultTimerMin, isNotNull, reason: t.id);
+        expect(t.minTimerMin, isNotNull, reason: t.id);
+        expect(t.maxTimerMin, isNotNull, reason: t.id);
+      }
+    });
+
+    test('стандартные timer-техники (не ось): таймер 5 мин, диапазон 1–30', () {
+      const standardTimers = ['diaphragmatic', 'nadi_shodhana', 'sound_breath'];
+      for (final id in standardTimers) {
+        final t = techniqueById(id);
+        expect(t.defaultTimerMin, 5, reason: id);
+        expect(t.minTimerMin, 1, reason: id);
+        expect(t.maxTimerMin, 30, reason: id);
       }
     });
 
@@ -172,6 +184,27 @@ void main() {
           reason: t.id,
         );
       }
+    });
+
+    test('девять очищающих: 9 циклов по 2 фазы, сегменты 3+3+3', () {
+      final script = nineBreaths.cycleScript!;
+      expect(script, hasLength(9));
+      for (final cycle in script) {
+        expect(cycle, hasLength(2), reason: 'вдох + выдох');
+      }
+      final segs = nineBreaths.segments!;
+      expect(segs, hasLength(3));
+      expect(segs.fold<int>(0, (sum, s) => sum + s.cycles), 9);
+      expect(nineBreaths.segmentForCycle(0)?.id, 'nine_left');
+      expect(nineBreaths.segmentForCycle(4)?.id, 'nine_right');
+      expect(nineBreaths.segmentForCycle(8)?.id, 'nine_both');
+    });
+
+    test('сосуд: задержка ограничена 8 с', () {
+      final t = vesselBreath;
+      final holdPhase = t.phases!.firstWhere((p) => p.kind == PhaseKind.holdIn);
+      expect(holdPhase.kind, PhaseKind.holdIn);
+      expect(holdPhase.maxSec, 8.0);
     });
 
     test('timer/wimHof не компилируются фазовым конвейером', () {

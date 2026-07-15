@@ -16,7 +16,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tech_box_desc =>
-      'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.\n\nЭто же — «тактическое (боевое) дыхание»: под этим именем технику используют военные и спецподразделения (Navy SEALs, снайперы, полиция), чтобы сбросить адреналин и вернуть ясность в стрессовой ситуации за минуту-другую.';
+      'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.';
 
   @override
   String get tech_box_benefit =>
@@ -170,7 +170,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tech_fikr_desc =>
-      'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии набор по душе: нейтральные аффирмации или традиционные вазифы. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.';
+      'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии фразу по душе. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.';
 
   @override
   String get tech_fikr_benefit =>
@@ -222,10 +222,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fikrPhrasesLabel => 'Фразы';
 
   @override
-  String get fikrSetAffirmations => 'Аффирмации';
+  String get fikrCustomLabel => 'Своя фраза';
 
   @override
-  String get fikrSetWazifa => 'Вазифы';
+  String get fikrCustomHint => 'Нажмите, чтобы написать свою';
+
+  @override
+  String get fikrCustomInLabel => 'Фраза на вдохе';
+
+  @override
+  String get fikrCustomExLabel => 'Фраза на выдохе';
 
   @override
   String get fikr_calm_in => 'Вдыхаю покой';
@@ -286,24 +292,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get fikr_sky_mind_ex => 'Мысли — облака, они проплывают';
-
-  @override
-  String get fikr_ishq_in => 'Ишк Аллах';
-
-  @override
-  String get fikr_ishq_ex => 'Мабуд Лиллах';
-
-  @override
-  String get fikr_shafee_in => 'Йа Шафи';
-
-  @override
-  String get fikr_shafee_ex => 'Йа Кафи';
-
-  @override
-  String get fikr_allah_in => '…';
-
-  @override
-  String get fikr_allah_ex => 'Аллах';
 
   @override
   String get safety_low =>
@@ -729,6 +717,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get soundSetBowlsNote => 'Поющие чаши и колокольчики';
+
+  @override
+  String get languageSection => 'Язык';
+
+  @override
+  String get languageSystem => 'Как в системе';
+
+  @override
+  String get favoriteTooltip => 'В избранное';
 
   @override
   String get difficultySection => 'Сложность';

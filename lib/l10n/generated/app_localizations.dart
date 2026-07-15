@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_box_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.\n\nЭто же — «тактическое (боевое) дыхание»: под этим именем технику используют военные и спецподразделения (Navy SEALs, снайперы, полиция), чтобы сбросить адреналин и вернуть ясность в стрессовой ситуации за минуту-другую.'**
+  /// **'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.'**
   String get tech_box_desc;
 
   /// No description provided for @tech_box_benefit.
@@ -365,7 +365,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_fikr_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии набор по душе: нейтральные аффирмации или традиционные вазифы. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.'**
+  /// **'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии фразу по душе. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.'**
   String get tech_fikr_desc;
 
   /// No description provided for @tech_fikr_benefit.
@@ -452,17 +452,29 @@ abstract class AppLocalizations {
   /// **'Фразы'**
   String get fikrPhrasesLabel;
 
-  /// No description provided for @fikrSetAffirmations.
+  /// No description provided for @fikrCustomLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Аффирмации'**
-  String get fikrSetAffirmations;
+  /// **'Своя фраза'**
+  String get fikrCustomLabel;
 
-  /// No description provided for @fikrSetWazifa.
+  /// No description provided for @fikrCustomHint.
   ///
   /// In ru, this message translates to:
-  /// **'Вазифы'**
-  String get fikrSetWazifa;
+  /// **'Нажмите, чтобы написать свою'**
+  String get fikrCustomHint;
+
+  /// No description provided for @fikrCustomInLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фраза на вдохе'**
+  String get fikrCustomInLabel;
+
+  /// No description provided for @fikrCustomExLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фраза на выдохе'**
+  String get fikrCustomExLabel;
 
   /// No description provided for @fikr_calm_in.
   ///
@@ -583,42 +595,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Мысли — облака, они проплывают'**
   String get fikr_sky_mind_ex;
-
-  /// No description provided for @fikr_ishq_in.
-  ///
-  /// In ru, this message translates to:
-  /// **'Ишк Аллах'**
-  String get fikr_ishq_in;
-
-  /// No description provided for @fikr_ishq_ex.
-  ///
-  /// In ru, this message translates to:
-  /// **'Мабуд Лиллах'**
-  String get fikr_ishq_ex;
-
-  /// No description provided for @fikr_shafee_in.
-  ///
-  /// In ru, this message translates to:
-  /// **'Йа Шафи'**
-  String get fikr_shafee_in;
-
-  /// No description provided for @fikr_shafee_ex.
-  ///
-  /// In ru, this message translates to:
-  /// **'Йа Кафи'**
-  String get fikr_shafee_ex;
-
-  /// No description provided for @fikr_allah_in.
-  ///
-  /// In ru, this message translates to:
-  /// **'…'**
-  String get fikr_allah_in;
-
-  /// No description provided for @fikr_allah_ex.
-  ///
-  /// In ru, this message translates to:
-  /// **'Аллах'**
-  String get fikr_allah_ex;
 
   /// No description provided for @safety_low.
   ///
@@ -1321,6 +1297,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Поющие чаши и колокольчики'**
   String get soundSetBowlsNote;
+
+  /// No description provided for @languageSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык'**
+  String get languageSection;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как в системе'**
+  String get languageSystem;
+
+  /// No description provided for @favoriteTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'В избранное'**
+  String get favoriteTooltip;
 
   /// No description provided for @difficultySection.
   ///

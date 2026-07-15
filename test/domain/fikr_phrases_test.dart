@@ -8,27 +8,22 @@ import 'package:breathin/l10n/technique_texts.dart';
 
 void main() {
   group('Каталог фраз фикра (№10)', () {
-    test('13 пар: 10 аффирмаций + 3 вазифы', () {
-      expect(fikrPhrases, hasLength(13));
-      expect(
-        fikrPhrases.where((p) => p.set == FikrPhraseSet.affirmations),
-        hasLength(10),
-      );
-      expect(
-        fikrPhrases.where((p) => p.set == FikrPhraseSet.wazifa),
-        hasLength(3),
-      );
+    test('10 аффирмаций без вазиф', () {
+      expect(fikrPhrases, hasLength(10));
     });
 
-    test('дефолт — нейтральная аффирмация (светская подача по умолчанию)', () {
-      expect(defaultFikrPhrase.set, FikrPhraseSet.affirmations);
+    test('дефолт — первая пара (calm)', () {
+      expect(defaultFikrPhrase.id, 'calm');
       expect(fikrPhrases.first.id, defaultFikrPhrase.id);
     });
 
     test('fikrPhraseById: null и мусор из старых сохранений → дефолт', () {
       expect(fikrPhraseById(null).id, defaultFikrPhrase.id);
       expect(fikrPhraseById('unknown').id, defaultFikrPhrase.id);
-      expect(fikrPhraseById('shafee').id, 'shafee');
+      // Старые wazifa-id из сохранений → дефолт (вазифы удалены)
+      expect(fikrPhraseById('shafee').id, defaultFikrPhrase.id);
+      expect(fikrPhraseById('ishq').id, defaultFikrPhrase.id);
+      expect(fikrPhraseById('allah').id, defaultFikrPhrase.id);
     });
 
     test('каждая пара локализована непустыми строками (ru и en)', () {
@@ -40,8 +35,6 @@ void main() {
           expect(l.fikrPhraseEx(p), isNotEmpty,
               reason: 'fikr_${p.id}_ex @ $locale');
         }
-        expect(l.fikrSetLabel(FikrPhraseSet.affirmations), isNotEmpty);
-        expect(l.fikrSetLabel(FikrPhraseSet.wazifa), isNotEmpty);
       }
     });
   });

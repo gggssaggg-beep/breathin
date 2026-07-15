@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:breathin/domain/catalog/fikr_phrases.dart';
 import 'package:breathin/domain/engine/phase_engine.dart';
 import 'package:breathin/domain/models/technique.dart';
 import 'package:breathin/features/session/session_view.dart';
@@ -49,7 +48,7 @@ Widget wrap(
   VoidCallback? onStop,
   VisualShape shape = VisualShape.circle,
   BreathSegment? segment,
-  FikrPhrase? phrase,
+  ({String inhale, String exhale})? phraseTexts,
 }) =>
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -61,7 +60,7 @@ Widget wrap(
         onPauseResume: onPauseResume,
         onStop: onStop,
         segment: segment,
-        phrase: phrase,
+        phraseTexts: phraseTexts,
       ),
     );
 
@@ -69,22 +68,22 @@ void main() {
   group('фразы фикра (№10)', () {
     testWidgets('на вдохе — фраза вдоха, на выдохе — фраза выдоха',
         (tester) async {
-      const p = FikrPhrase('shafee', FikrPhraseSet.wazifa);
-      await tester
-          .pumpWidget(wrap(breathing(phase: PhaseKind.inhale), phrase: p));
-      expect(find.text('Ya Shafee'), findsOneWidget);
-      expect(find.text('Ya Kafee'), findsNothing);
+      const p = (inhale: 'I am here', exhale: 'Now');
+      await tester.pumpWidget(
+          wrap(breathing(phase: PhaseKind.inhale), phraseTexts: p));
+      expect(find.text('I am here'), findsOneWidget);
+      expect(find.text('Now'), findsNothing);
 
-      await tester
-          .pumpWidget(wrap(breathing(phase: PhaseKind.exhale), phrase: p));
+      await tester.pumpWidget(
+          wrap(breathing(phase: PhaseKind.exhale), phraseTexts: p));
       await tester.pumpAndSettle(); // AnimatedSwitcher доигрывает смену
-      expect(find.text('Ya Kafee'), findsOneWidget);
+      expect(find.text('Now'), findsOneWidget);
     });
 
     testWidgets('без фразы (обычная техника) текстов фикра нет',
         (tester) async {
       await tester.pumpWidget(wrap(breathing(phase: PhaseKind.inhale)));
-      expect(find.text('Ya Shafee'), findsNothing);
+      expect(find.text('I am here'), findsNothing);
     });
   });
 

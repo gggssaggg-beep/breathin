@@ -66,7 +66,7 @@ Management API (`external_google_enabled=true`), в приложении
   шаблон; в коде тогда `verifyOTP(email, token, type: OtpType.email)`. Сейчас
   сделан вариант со ссылкой (magic-link, вариант 1 — выбор владельца).
 
-## 2в. Веб-версия (PWA для iPhone) — нужно 1 действие владельца
+## 2в. Веб-версия (PWA для iPhone) — ✅ СДЕЛАНО владельцем (2026-07-15)
 
 PWA живёт на **https://gggssaggg-beep.github.io/breathin/** (Safari → «Поделиться»
 → «На экран „Домой“»). Чтобы **Google-вход работал в вебе**, добавить этот адрес

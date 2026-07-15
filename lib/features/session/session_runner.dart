@@ -7,7 +7,6 @@ import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../data/session_log_repository.dart';
-import '../../domain/catalog/fikr_phrases.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../l10n/system_l10n.dart';
 import '../../domain/engine/session_plan.dart';
@@ -51,9 +50,9 @@ class SessionRunner extends StatefulWidget {
   /// Паттерн фаз сессии («4-8-8») для записи истории (влад. §15).
   final String? variant;
 
-  /// Пара фраз фикра (№10): показывается на экране синхронно фазе;
+  /// Тексты фраз фикра (№10): показываются на экране синхронно фазе;
   /// null — техника без фраз.
-  final FikrPhrase? phrase;
+  final ({String inhale, String exhale})? phraseTexts;
 
   const SessionRunner({
     super.key,
@@ -63,7 +62,7 @@ class SessionRunner extends StatefulWidget {
     this.log,
     this.mediaTitle,
     this.variant,
-    this.phrase,
+    this.phraseTexts,
   });
 
   @override
@@ -362,6 +361,6 @@ class _SessionRunnerState extends State<SessionRunner>
         onPauseResume: _togglePause,
         onStop: _stop,
         segment: widget.technique.segmentForCycle(_state.cycleIndex),
-        phrase: widget.phrase,
+        phraseTexts: widget.phraseTexts,
       );
 }

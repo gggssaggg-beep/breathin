@@ -4,7 +4,7 @@
   "appTitle": "Breathe",
 
   "tech_box_name": "Box Breathing",
-  "tech_box_desc": "A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.\n\nAlso known as tactical (combat) breathing: military and special units (Navy SEALs, snipers, police) use this exact technique to dump adrenaline and regain clarity under stress within a minute or two.",
+  "tech_box_desc": "A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.",
   "tech_box_benefit": "Quickly reduces stress and anxiety, restores focus, and calms the nervous system through an even, rhythmic breathing pattern.",
 
   "tech_triangle_name": "Triangle Breathing",
@@ -60,7 +60,7 @@
   "tech_elemental_benefit": "Cleanses and attunes the breath, guiding you through five qualities — stability, flow, energy, lightness and stillness — and gathers attention for the day ahead.",
 
   "tech_fikr_name": "Fikr",
-  "tech_fikr_desc": "A remembrance practice from the Sufi Movement (the teaching of Hazrat Inayat Khan). Calm nasal breathing: inhale for 4 counts, exhale for 6. A phrase is silently repeated with each phase — one on the inhale, another on the exhale; the screen shows it in rhythm with your breath.\n\nPick the set that suits you in the session settings: neutral affirmations or traditional wazifas. The point is not the words themselves — the phrase gives attention a gentle anchor, and the breath settles deeper on its own.",
+  "tech_fikr_desc": "A remembrance practice from the Sufi Movement (the teaching of Hazrat Inayat Khan). Calm nasal breathing: inhale for 4 counts, exhale for 6. A phrase is silently repeated with each phase — one on the inhale, another on the exhale; the screen shows it in rhythm with your breath.\n\nPick the phrase that suits you in the session settings. The point is not the words themselves — the phrase gives attention a gentle anchor, and the breath settles deeper on its own.",
   "tech_fikr_benefit": "Quiets mental chatter, trains steady attention and ties breath to intention. A good anchor under stress and before sleep.",
   "tech_vessel_name": "Vessel Breathing",
   "tech_vessel_desc": "Gathers scattered or upward-surging energy (arousal, emotional flare-ups) into a stable centre below the navel. A soft, safe variant of the Tibetan \"vase breathing\".\n\nWhen to use: when there is energy but it is chaotic — you cannot sit still, you are being \"carried away\", strong desire or anger with no outlet. Not for an acute panic attack (use the extended exhale 2-8 for that).\n\nHow to practise: sitting, spine straight, hands on the knees or palms on the lower belly. Inhale through the nose, calmly, directing it \"downward\" — the belly gently expands. At the end of the inhale, softly (no throat tension!) hold the breath for 3–5 seconds, slightly lowering the diaphragm and drawing the lower belly gently towards it — as if the air \"sits in a vessel\" below the navel. Attention stays on a point four fingers below the navel; you may picture a warm sphere there. Exhale through the nose, slowly, leaving attention at the same point. 7–15 cycles, no more.\n\nMarker: warmth or density in the lower belly, a sense of \"axis\": the energy has not gone anywhere, but it has stopped jerking upward and outward. The intensity remains — the vector is gone.\n\nContraindications: hypertension, heart disease, pregnancy, recent abdominal surgery, proneness to panic attacks, epilepsy. The hold must always be comfortable: no pressure in the head or throat. At any pressure in the head — stop and switch to the extended exhale.",
@@ -79,8 +79,10 @@
   "segNineBoth": "Both nostrils",
 
   "fikrPhrasesLabel": "Phrases",
-  "fikrSetAffirmations": "Affirmations",
-  "fikrSetWazifa": "Wazifas",
+  "fikrCustomLabel": "My own phrase",
+  "fikrCustomHint": "Tap to write your own",
+  "fikrCustomInLabel": "Inhale phrase",
+  "fikrCustomExLabel": "Exhale phrase",
   "fikr_calm_in": "Breathing in calm",
   "fikr_calm_ex": "Letting go of tension",
   "fikr_presence_in": "I am here",
@@ -101,12 +103,6 @@
   "fikr_stillness_ex": "I settle into it",
   "fikr_sky_mind_in": "The sky is within me",
   "fikr_sky_mind_ex": "Thoughts are clouds passing by",
-  "fikr_ishq_in": "Ishq Allah",
-  "fikr_ishq_ex": "Mabud Lillah",
-  "fikr_shafee_in": "Ya Shafee",
-  "fikr_shafee_ex": "Ya Kafee",
-  "fikr_allah_in": "…",
-  "fikr_allah_ex": "Allah",
 
   "safety_low": "Breathe at a comfortable pace. If you feel dizzy or uncomfortable, stop the exercise and breathe normally.",
   "safety_holds_generic": "This technique includes breath holds. Mild tingling in the limbs is normal; dizziness or tunnel vision is a signal to stop and breathe freely. Never practise this technique in water, while driving, or in any situation that requires focused attention.",
@@ -304,6 +300,9 @@
   "soundSetFlowNote": "A singing tone that breathes with you",
   "soundSetBowls": "Bowls",
   "soundSetBowlsNote": "Singing bowls and chimes",
+  "languageSection": "Language",
+  "languageSystem": "System default",
+  "favoriteTooltip": "Favourite",
   "difficultySection": "Difficulty",
   "difficultyNote": "The preset gently changes phase lengths for new techniques. Techniques you've already tuned by hand are left untouched.",
   "difficultyCalm": "Calm",

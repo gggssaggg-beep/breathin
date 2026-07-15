@@ -18,7 +18,7 @@ void main() {
 
         setUp(() => loc = l10n(locale));
 
-        test('techniqueName непустой для всех 12 техник', () {
+        test('techniqueName непустой для всех техник каталога', () {
           for (final t in catalog) {
             expect(
               loc.techniqueName(t),
@@ -28,7 +28,7 @@ void main() {
           }
         });
 
-        test('techniqueDescription непустой для всех 12 техник', () {
+        test('techniqueDescription непустой для всех техник каталога', () {
           for (final t in catalog) {
             expect(
               loc.techniqueDescription(t),
@@ -38,7 +38,7 @@ void main() {
           }
         });
 
-        test('techniqueBenefit непустой для всех 12 техник', () {
+        test('techniqueBenefit непустой для всех техник каталога', () {
           for (final t in catalog) {
             expect(
               loc.techniqueBenefit(t),
@@ -48,7 +48,7 @@ void main() {
           }
         });
 
-        test('safetyText не бросает исключение для всех 12 техник', () {
+        test('safetyText не бросает исключение для всех техник каталога', () {
           for (final t in catalog) {
             expect(
               () => loc.safetyText(t),

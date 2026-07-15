@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_box_desc =>
-      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.\n\nAlso known as tactical (combat) breathing: military and special units (Navy SEALs, snipers, police) use this exact technique to dump adrenaline and regain clarity under stress within a minute or two.';
+      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.';
 
   @override
   String get tech_box_benefit =>
@@ -170,7 +170,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_fikr_desc =>
-      'A remembrance practice from the Sufi Movement (the teaching of Hazrat Inayat Khan). Calm nasal breathing: inhale for 4 counts, exhale for 6. A phrase is silently repeated with each phase — one on the inhale, another on the exhale; the screen shows it in rhythm with your breath.\n\nPick the set that suits you in the session settings: neutral affirmations or traditional wazifas. The point is not the words themselves — the phrase gives attention a gentle anchor, and the breath settles deeper on its own.';
+      'A remembrance practice from the Sufi Movement (the teaching of Hazrat Inayat Khan). Calm nasal breathing: inhale for 4 counts, exhale for 6. A phrase is silently repeated with each phase — one on the inhale, another on the exhale; the screen shows it in rhythm with your breath.\n\nPick the phrase that suits you in the session settings. The point is not the words themselves — the phrase gives attention a gentle anchor, and the breath settles deeper on its own.';
 
   @override
   String get tech_fikr_benefit =>
@@ -222,10 +222,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fikrPhrasesLabel => 'Phrases';
 
   @override
-  String get fikrSetAffirmations => 'Affirmations';
+  String get fikrCustomLabel => 'My own phrase';
 
   @override
-  String get fikrSetWazifa => 'Wazifas';
+  String get fikrCustomHint => 'Tap to write your own';
+
+  @override
+  String get fikrCustomInLabel => 'Inhale phrase';
+
+  @override
+  String get fikrCustomExLabel => 'Exhale phrase';
 
   @override
   String get fikr_calm_in => 'Breathing in calm';
@@ -286,24 +292,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fikr_sky_mind_ex => 'Thoughts are clouds passing by';
-
-  @override
-  String get fikr_ishq_in => 'Ishq Allah';
-
-  @override
-  String get fikr_ishq_ex => 'Mabud Lillah';
-
-  @override
-  String get fikr_shafee_in => 'Ya Shafee';
-
-  @override
-  String get fikr_shafee_ex => 'Ya Kafee';
-
-  @override
-  String get fikr_allah_in => '…';
-
-  @override
-  String get fikr_allah_ex => 'Allah';
 
   @override
   String get safety_low =>
@@ -720,6 +708,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get soundSetBowlsNote => 'Singing bowls and chimes';
+
+  @override
+  String get languageSection => 'Language';
+
+  @override
+  String get languageSystem => 'System default';
+
+  @override
+  String get favoriteTooltip => 'Favourite';
 
   @override
   String get difficultySection => 'Difficulty';
