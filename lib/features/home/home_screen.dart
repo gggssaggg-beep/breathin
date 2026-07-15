@@ -232,18 +232,25 @@ class _TechniqueGridCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Иконка
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: isDimmed
-                    ? theme.colorScheme.surfaceContainerHighest
-                    : theme.colorScheme.primaryContainer,
-                child: BreathinIcon(
-                  iconDataFor(t.icon),
-                  color: isDimmed
-                      ? theme.colorScheme.onSurfaceVariant
-                      : theme.colorScheme.onPrimaryContainer,
-                  size: 28,
+              // Иконка. Flexible+FittedBox: при нехватке высоты (двухстрочное
+              // название, крупный системный шрифт) сжимается ИКОНКА, а не
+              // текст — иначе «BOTTOM OVERFLOWED» на карточке Вима Хофа.
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: isDimmed
+                        ? theme.colorScheme.surfaceContainerHighest
+                        : theme.colorScheme.primaryContainer,
+                    child: BreathinIcon(
+                      iconDataFor(t.icon),
+                      color: isDimmed
+                          ? theme.colorScheme.onSurfaceVariant
+                          : theme.colorScheme.onPrimaryContainer,
+                      size: 28,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),

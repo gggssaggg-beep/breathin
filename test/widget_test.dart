@@ -1,8 +1,36 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:breathin/app/app.dart';
 
 void main() {
+  testWidgets(
+      'регресс: карточка Вима Хофа не переполняется при крупном шрифте', (
+    tester,
+  ) async {
+    // Отзыв 2026-07-15: «BOTTOM OVERFLOWED BY 7 PIXELS» на карточке
+    // «Метод Вима Хофа» — двухстрочное название + солнышко не влезали в
+    // квадратную ячейку грида при крупном системном шрифте. Переполнение
+    // в тесте падает само (FlutterError), отдельных expect не нужно.
+    tester.view.physicalSize = const Size(1080, 2280); // типовой телефон
+    tester.view.devicePixelRatio = 3.0; // логически 360×760
+    tester.platformDispatcher.textScaleFactorTestValue = 1.4;
+    addTearDown(() {
+      tester.view.reset();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+    });
+    await tester.pumpWidget(
+      const BreathinApp(checkUpdates: false, showOnboarding: false),
+    );
+    // Карточка 11-я — доскролливаем ленивый грид до её построения.
+    await tester.scrollUntilVisible(
+      find.text('Wim Hof Method'),
+      200,
+      scrollable: find.byType(Scrollable),
+    );
+    expect(find.text('Wim Hof Method'), findsOneWidget);
+  });
+
   testWidgets('приложение стартует на главном экране «Breathe» (en)', (
     tester,
   ) async {
