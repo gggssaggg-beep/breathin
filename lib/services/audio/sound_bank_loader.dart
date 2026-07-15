@@ -2,46 +2,34 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show AssetBundle, rootBundle;
 
-import 'sound_preferences.dart';
 import 'timeline_renderer.dart';
 import 'wav_io.dart';
 
-/// Пути ассетов по наборам (см. tools/generate_audio.py, ПЛАН §10.2).
-/// Клипы фаз/тиков лежат в sets/<набор>/, события сессии (отсчёт, гонг) —
-/// общие в common/. Манифест JSON Dart не читает — пути вшиты и покрыты
-/// тестом полноты (каждый ClipId в каждом наборе).
-Map<ClipId, String> assetsForSet(SoundSet set) {
-  final dir = switch (set) {
-    SoundSet.bowls => 'bowls',
-    SoundSet.nature => 'nature',
-    SoundSet.minimal => 'minimal',
-  };
-  return {
-    ClipId.inhale: 'assets/audio/sets/$dir/inhale.wav',
-    ClipId.holdIn: 'assets/audio/sets/$dir/hold_in.wav',
-    ClipId.exhale: 'assets/audio/sets/$dir/exhale.wav',
-    ClipId.holdOut: 'assets/audio/sets/$dir/hold_out.wav',
-    ClipId.tick: 'assets/audio/sets/$dir/tick.wav',
-    ClipId.tickAccent: 'assets/audio/sets/$dir/tick_accent.wav',
-    ClipId.prepBeep: 'assets/audio/common/prep_beep.wav',
-    ClipId.gong: 'assets/audio/common/gong.wav',
-  };
-}
+/// Пути клипов-событий (см. tools/generate_audio.py). Единственный звуковой
+/// вариант — «прибой» (решение владельца 2026-07-15): фазы синтезируются
+/// рендерером (surf_synth.dart), клипами остались события — отсчёт, гонг,
+/// тики метронома — и фиксированные волны вдоха/выдоха для one-shot'ов
+/// Вима Хофа. Покрыто тестом полноты (каждый ClipId имеет путь).
+const Map<ClipId, String> soundAssetPaths = {
+  ClipId.inhale: 'assets/audio/common/breath_in.wav',
+  ClipId.exhale: 'assets/audio/common/breath_out.wav',
+  ClipId.prepBeep: 'assets/audio/common/prep_beep.wav',
+  ClipId.gong: 'assets/audio/common/gong.wav',
+  ClipId.tick: 'assets/audio/common/tick.wav',
+  ClipId.tickAccent: 'assets/audio/common/tick_accent.wav',
+};
 
-/// Загружает и декодирует звуковой набор [set] из ассетов приложения.
+/// Загружает и декодирует клипы-события из ассетов приложения.
 ///
 /// [bundle] внедряется для тестов (rootBundle требует биндинга/ассетов).
 /// Все клипы обязаны иметь один sample rate (гарантия generate_audio.py);
 /// расхождение — [FormatException]: лучше упасть громко на старте сессии,
 /// чем тихо рассинхронизировать таймлайн.
-Future<SoundBank> loadSoundBank(
-  SoundSet set, {
-  AssetBundle? bundle,
-}) async {
+Future<SoundBank> loadSoundBank({AssetBundle? bundle}) async {
   final b = bundle ?? rootBundle;
   int? sampleRate;
   final clips = <ClipId, Int16List>{};
-  for (final entry in assetsForSet(set).entries) {
+  for (final entry in soundAssetPaths.entries) {
     final data = await b.load(entry.value);
     final wav = WavIo.decode(data.buffer.asUint8List());
     sampleRate ??= wav.sampleRate;

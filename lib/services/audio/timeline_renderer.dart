@@ -2,13 +2,14 @@ import 'dart:typed_data';
 
 import '../../domain/engine/session_plan.dart';
 import '../../domain/models/technique.dart';
+import 'surf_synth.dart';
 
-/// Логический звук в наборе. Резолвится из [EngineEvent] (см. ниже).
+/// Логический клип-событие. Фазы дыхания клипами НЕ являются — их звук
+/// («прибой») синтезируется на всю длительность фазы (surf_synth.dart);
+/// inhale/exhale остались для one-shot'ов Вима Хофа (фиксированные волны).
 enum ClipId {
   inhale,
-  holdIn,
   exhale,
-  holdOut,
   prepBeep,
   gong,
   tick,
@@ -35,7 +36,8 @@ class TimelineRenderer {
   /// Позиция сэмпла для момента [ms]. Публичный — проверяется тестом.
   int sampleOffsetForMs(int ms) => (ms * sampleRate / 1000).round();
 
-  /// Сопоставить событие клипу набора. Возвращает null для событий без звука.
+  /// Сопоставить событие клипу. Возвращает null для событий без клипа
+  /// (фазы звучат синтезом прибоя, не клипом — см. [_phaseSpans]).
   static ClipId? clipForEvent(EngineEvent e) {
     switch (e.type) {
       case EngineEventType.prepCountdown:
@@ -45,19 +47,32 @@ class TimelineRenderer {
       case EngineEventType.metronomeTick:
         return e.accent ? ClipId.tickAccent : ClipId.tick;
       case EngineEventType.sessionEnd:
-        return null;
       case EngineEventType.phaseStart:
-        switch (e.phase!) {
-          case PhaseKind.inhale:
-            return ClipId.inhale;
-          case PhaseKind.holdIn:
-            return ClipId.holdIn;
-          case PhaseKind.exhale:
-            return ClipId.exhale;
-          case PhaseKind.holdOut:
-            return ClipId.holdOut;
-        }
+        return null;
     }
+  }
+
+  /// Интервалы фаз плана: (kind, старт, длительность, стартовый уровень).
+  /// Длительность — до следующего phaseStart, иначе до конца плана; стартовый
+  /// уровень прибоя — уровень конца предыдущей фазы (без щелчков на стыках).
+  static List<({PhaseKind kind, int tMs, int durMs, double startLevel})>
+      _phaseSpans(SessionPlan plan) {
+    final starts = plan.phaseStarts.toList(growable: false);
+    return [
+      for (var i = 0; i < starts.length; i++)
+        (
+          kind: starts[i].phase!,
+          tMs: starts[i].tMs,
+          durMs: (i + 1 < starts.length
+                  ? starts[i + 1].tMs
+                  : plan.totalDurationMs) -
+              starts[i].tMs,
+          startLevel: surfStartLevel(
+            starts[i].phase!,
+            i > 0 ? starts[i - 1].phase : null,
+          ),
+        ),
+    ];
   }
 
   /// Полная длина сессии в сэмплах: конец плана либо хвост последнего клипа
@@ -105,6 +120,20 @@ class TimelineRenderer {
       for (var i = from; i < to; i++) {
         acc[clipStart + i - startSample] += clip[i];
       }
+    }
+    // Прибой фаз: волна тянется ВСЮ фазу (вдох накатывает, выдох отступает,
+    // задержки — тихий фон). Чанковость сохраняется: синтез детерминирован.
+    for (final span in _phaseSpans(plan)) {
+      mixSurfPhase(
+        acc: acc,
+        kind: span.kind,
+        startLevel: span.startLevel,
+        phaseStartSample: sampleOffsetForMs(span.tMs),
+        phaseSamples: sampleOffsetForMs(span.tMs + span.durMs) -
+            sampleOffsetForMs(span.tMs),
+        chunkStartSample: startSample,
+        sampleRate: sampleRate,
+      );
     }
     for (var i = 0; i < out.length; i++) {
       final v = acc[i];

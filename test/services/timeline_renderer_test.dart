@@ -32,22 +32,50 @@ void main() {
   });
 
   group('render — точность позиций', () {
-    test('клип фазы лежит ровно на round(t·SR/1000)', () {
+    test('клип-событие лежит ровно на round(t·SR/1000)', () {
       const cfg = SessionConfig(
         endMode: EndMode.cycles,
         cycles: 1,
         phaseSeconds: [4, 4, 4, 4],
-        prepSeconds: 0, // без бипов — чистая тишина до первой фазы
+        prepSeconds: 3, // бипы отсчёта на 0/1000/2000 — фазы после 3000
       );
       final plan = compiler.compile(boxBreathing, cfg);
       final buf = renderer.render(plan, constantBank(44100, len: 100));
 
-      // Выдох стартует на 8000 мс (вдох 4 + задержка 4).
-      final off = renderer.sampleOffsetForMs(8000); // 352800
+      // Бип «2» стартует на 1000 мс; вокруг подготовки фаз ещё нет — тишина.
+      final off = renderer.sampleOffsetForMs(1000); // 44100
       expect(buf[off - 1], 0, reason: 'сэмпл перед стартом клипа — тишина');
       expect(buf[off], 1000, reason: 'клип начинается ровно на off');
       expect(buf[off + 99], 1000);
       expect(buf[off + 100], 0, reason: 'после клипа снова тишина');
+    });
+
+    test('прибой фаз: вдох звучит всю фазу и накатывает, задержка — тихий фон',
+        () {
+      const cfg = SessionConfig(
+        endMode: EndMode.cycles,
+        cycles: 1,
+        phaseSeconds: [4, 4, 4, 4],
+        prepSeconds: 0,
+      );
+      final plan = compiler.compile(boxBreathing, cfg);
+      final buf = renderer.render(plan, constantBank(44100, len: 10));
+
+      double rms(int fromMs, int toMs) {
+        final a = renderer.sampleOffsetForMs(fromMs);
+        final b = renderer.sampleOffsetForMs(toMs);
+        var sum = 0.0;
+        for (var i = a; i < b; i++) {
+          sum += buf[i] * buf[i].toDouble();
+        }
+        return sum / (b - a);
+      }
+
+      // Вдох [0..4000): энергия в конце фазы много выше начала (накат).
+      expect(rms(3000, 3900), greaterThan(rms(100, 1000) * 4));
+      // Задержка [4000..8000): фон стабилен и тише конца вдоха.
+      expect(rms(6000, 7000), lessThan(rms(3000, 3900) / 4));
+      expect(rms(6000, 7000), greaterThan(0), reason: 'фон не тишина');
     });
 
     test('длина буфера учитывает хвост гонга за концом сессии', () {
@@ -103,12 +131,12 @@ void main() {
           WavIo.decode(File('assets/audio/$rel').readAsBytesSync()).samples;
 
       final bank = SoundBank(sampleRate: 44100, clips: {
-        ClipId.inhale: load('sets/minimal/inhale.wav'),
-        ClipId.holdIn: load('sets/minimal/hold_in.wav'),
-        ClipId.exhale: load('sets/minimal/exhale.wav'),
-        ClipId.holdOut: load('sets/minimal/hold_out.wav'),
+        ClipId.inhale: load('common/breath_in.wav'),
+        ClipId.exhale: load('common/breath_out.wav'),
         ClipId.prepBeep: load('common/prep_beep.wav'),
         ClipId.gong: load('common/gong.wav'),
+        ClipId.tick: load('common/tick.wav'),
+        ClipId.tickAccent: load('common/tick_accent.wav'),
       });
 
       final plan =
