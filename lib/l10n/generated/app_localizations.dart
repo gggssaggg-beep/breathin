@@ -1136,6 +1136,60 @@ abstract class AppLocalizations {
   /// **'Чистые сигналы'**
   String get soundSetMinimalNote;
 
+  /// No description provided for @difficultySection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сложность'**
+  String get difficultySection;
+
+  /// No description provided for @difficultyNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пресет мягко меняет длительность фаз для новых техник. Уже настроенные вручную техники не трогаются.'**
+  String get difficultyNote;
+
+  /// No description provided for @difficultyCalm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Штиль'**
+  String get difficultyCalm;
+
+  /// No description provided for @difficultyBreeze.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бриз'**
+  String get difficultyBreeze;
+
+  /// No description provided for @difficultyWave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Волна'**
+  String get difficultyWave;
+
+  /// No description provided for @difficultyTide.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прибой'**
+  String get difficultyTide;
+
+  /// No description provided for @difficultyMine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Своё дыхание'**
+  String get difficultyMine;
+
+  /// No description provided for @difficultyMineNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подбирается по вашему дыхательному тесту'**
+  String get difficultyMineNote;
+
+  /// No description provided for @difficultyMineNoTest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройдите дыхательный тест в «Практике», чтобы подобрать своё дыхание. Пока используется «Бриз».'**
+  String get difficultyMineNoTest;
+
   /// No description provided for @communitySection.
   ///
   /// In ru, this message translates to:

@@ -31,6 +31,21 @@ class TechniqueSettingsRepository {
     }
   }
 
+  /// Возвращает сохранённые настройки или null, если техника ещё ни разу не
+  /// настраивалась. В отличие от [load], НЕ подменяет отсутствие классикой —
+  /// нужно вызывающему, чтобы отличить «нет записи» (применить глобальный
+  /// пресет сложности) от «пользователь сохранил классику».
+  Future<TechniqueSettings?> loadSaved(Technique t) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_key(t.id));
+      if (raw == null) return null;
+      return TechniqueSettings.fromJson(t, jsonDecode(raw) as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// Сохраняет настройки [s] по ключу техники.
   Future<void> save(TechniqueSettings s) async {
     final prefs = await SharedPreferences.getInstance();

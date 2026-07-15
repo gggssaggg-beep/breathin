@@ -621,6 +621,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soundSetMinimalNote => 'Clean tones';
 
   @override
+  String get difficultySection => 'Difficulty';
+
+  @override
+  String get difficultyNote =>
+      'The preset gently changes phase lengths for new techniques. Techniques you\'ve already tuned by hand are left untouched.';
+
+  @override
+  String get difficultyCalm => 'Calm';
+
+  @override
+  String get difficultyBreeze => 'Breeze';
+
+  @override
+  String get difficultyWave => 'Wave';
+
+  @override
+  String get difficultyTide => 'Tide';
+
+  @override
+  String get difficultyMine => 'My breath';
+
+  @override
+  String get difficultyMineNote => 'Tuned to your breathing test';
+
+  @override
+  String get difficultyMineNoTest =>
+      'Take the breathing test in Practice to tune your breath. Using Breeze for now.';
+
+  @override
   String get communitySection => 'Community';
 
   @override

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../data/bolt_repository.dart';
+import '../../data/difficulty_store.dart';
+import '../../domain/difficulty/difficulty.dart';
 import '../../features/onboarding/coach_controller.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_preferences.dart';
 import '../../services/update/update_preferences.dart';
+import 'difficulty_section.dart';
 import '../../services/update/update_runtime.dart';
 import '../../services/update/update_service.dart';
 import '../../ui/icons/breathin_icon.dart';
@@ -27,6 +31,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   UpdatePreferences _prefs = const UpdatePreferences();
   UpdateCheckResult _update = UpdateCheckResult.upToDate;
   SoundSet _soundSet = SoundSet.nature;
+  DifficultyPreset _difficulty = DifficultyPreset.breeze;
+  bool _hasBoltResult = false;
   String? _version;
 
   @override
@@ -38,6 +44,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     SoundSetStore().load().then((s) {
       if (mounted) setState(() => _soundSet = s);
+    });
+    DifficultyStore().load().then((p) {
+      if (mounted) setState(() => _difficulty = p);
+    });
+    BoltRepository().all().then((r) {
+      if (mounted) setState(() => _hasBoltResult = r.isNotEmpty);
     });
     currentAppVersion().then((v) {
       if (mounted && v != null) setState(() => _version = v.toString());
@@ -66,6 +78,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _soundSet = s);
     // Fire-and-forget, как и остальные настройки экрана.
     SoundSetStore().save(s);
+  }
+
+  void _onDifficultyChanged(DifficultyPreset p) {
+    setState(() => _difficulty = p);
+    DifficultyStore().save(p);
   }
 
   /// Открывает внешнюю ссылку (Telegram) в браузере/приложении.
@@ -110,6 +127,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             autoUpdate: _prefs.autoUpdate,
             onAutoUpdateChanged: _onAutoUpdateChanged,
             onUpdateNow: _downloadUpdate,
+          ),
+          const SizedBox(height: 24),
+          // --- Сложность: глобальный пресет длительностей (эпик §4–5) ---
+          Text(l.difficultySection,
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          DifficultySection(
+            preset: _difficulty,
+            hasBoltResult: _hasBoltResult,
+            onChanged: _onDifficultyChanged,
           ),
           const SizedBox(height: 24),
           // --- Звук: выбор набора сигналов сессии (отзыв №5) ---

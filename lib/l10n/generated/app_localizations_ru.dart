@@ -630,6 +630,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get soundSetMinimalNote => 'Чистые сигналы';
 
   @override
+  String get difficultySection => 'Сложность';
+
+  @override
+  String get difficultyNote =>
+      'Пресет мягко меняет длительность фаз для новых техник. Уже настроенные вручную техники не трогаются.';
+
+  @override
+  String get difficultyCalm => 'Штиль';
+
+  @override
+  String get difficultyBreeze => 'Бриз';
+
+  @override
+  String get difficultyWave => 'Волна';
+
+  @override
+  String get difficultyTide => 'Прибой';
+
+  @override
+  String get difficultyMine => 'Своё дыхание';
+
+  @override
+  String get difficultyMineNote => 'Подбирается по вашему дыхательному тесту';
+
+  @override
+  String get difficultyMineNoTest =>
+      'Пройдите дыхательный тест в «Практике», чтобы подобрать своё дыхание. Пока используется «Бриз».';
+
+  @override
   String get communitySection => 'Сообщество';
 
   @override
