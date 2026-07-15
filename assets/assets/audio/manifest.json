@@ -1,60 +1,102 @@
 {
   "sample_rate": 44100,
   "format": "wav_pcm_s16_mono",
-  "assets": {
-    "inhale": {
-      "file": "sets/minimal/inhale.wav",
-      "duration_ms": 700.0,
-      "level_dbfs": -6.0,
-      "purpose": "фаза вдоха — восходящий свип 300→600 Гц"
-    },
-    "hold_in": {
-      "file": "sets/minimal/hold_in.wav",
-      "duration_ms": 500.0,
-      "level_dbfs": -6.0,
-      "purpose": "задержка на вдохе — ровный тон 450 Гц"
-    },
-    "exhale": {
-      "file": "sets/minimal/exhale.wav",
-      "duration_ms": 700.0,
-      "level_dbfs": -6.0,
-      "purpose": "фаза выдоха — нисходящий свип 600→300 Гц"
-    },
-    "hold_out": {
-      "file": "sets/minimal/hold_out.wav",
-      "duration_ms": 500.0,
-      "level_dbfs": -6.0,
-      "purpose": "задержка на выдохе — ровный тон 400 Гц (различим от hold_in)"
-    },
-    "tick": {
-      "file": "sets/minimal/tick.wav",
-      "duration_ms": 30.0,
-      "level_dbfs": -14.0,
-      "purpose": "тик метронома"
-    },
-    "tick_accent": {
-      "file": "sets/minimal/tick_accent.wav",
-      "duration_ms": 40.0,
-      "level_dbfs": -10.0,
-      "purpose": "акцентный тик на смене фазы"
-    },
+  "common": {
     "prep_beep": {
       "file": "common/prep_beep.wav",
-      "duration_ms": 120.0,
+      "duration_ms": 160.0,
       "level_dbfs": -8.0,
-      "purpose": "бип обратного отсчёта «3…2…1»"
-    },
-    "gong": {
-      "file": "common/gong.wav",
-      "duration_ms": 6000.0,
-      "level_dbfs": -3.0,
-      "purpose": "гонг в конце сессии"
+      "purpose": "отсчёт «3…2…1» — капля (бип 800 Гц был неприятен, №5)"
     },
     "wim_hof_pace": {
       "file": "common/wim_hof_pace.wav",
-      "duration_ms": 420.0,
+      "duration_ms": 640.0,
       "level_dbfs": -8.0,
-      "purpose": "ритм дыханий Вима Хофа (этап 2)"
+      "purpose": "ритм дыханий Вима Хофа — накат+откат (вместо свип-пары)"
+    },
+    "gong": {
+      "file": "common/gong.wav",
+      "duration_ms": 9000.0,
+      "level_dbfs": -3.0,
+      "purpose": "гонг в конце сессии — freesound #42095 fauxpress, CC0 (одобрен владельцем; синтез-фолбэк: gong(220, 6000))"
+    }
+  },
+  "sets": {
+    "minimal": {
+      "inhale": {
+        "file": "sets/minimal/inhale.wav",
+        "duration_ms": 700.0,
+        "level_dbfs": -6.0,
+        "purpose": "фаза вдоха — восходящий свип 300→600 Гц"
+      },
+      "hold_in": {
+        "file": "sets/minimal/hold_in.wav",
+        "duration_ms": 500.0,
+        "level_dbfs": -6.0,
+        "purpose": "задержка на вдохе — ровный тон 450 Гц"
+      },
+      "exhale": {
+        "file": "sets/minimal/exhale.wav",
+        "duration_ms": 700.0,
+        "level_dbfs": -6.0,
+        "purpose": "фаза выдоха — нисходящий свип 600→300 Гц"
+      },
+      "hold_out": {
+        "file": "sets/minimal/hold_out.wav",
+        "duration_ms": 500.0,
+        "level_dbfs": -6.0,
+        "purpose": "задержка на выдохе — ровный тон 400 Гц (различим от hold_in)"
+      },
+      "tick": {
+        "file": "sets/minimal/tick.wav",
+        "duration_ms": 30.0,
+        "level_dbfs": -14.0,
+        "purpose": "тик метронома"
+      },
+      "tick_accent": {
+        "file": "sets/minimal/tick_accent.wav",
+        "duration_ms": 40.0,
+        "level_dbfs": -10.0,
+        "purpose": "акцентный тик на смене фазы"
+      }
+    },
+    "nature": {
+      "inhale": {
+        "file": "sets/nature/inhale.wav",
+        "duration_ms": 1200.0,
+        "level_dbfs": -6.0,
+        "purpose": "фаза вдоха — накат волны (шум, растущая яркость)"
+      },
+      "hold_in": {
+        "file": "sets/nature/hold_in.wav",
+        "duration_ms": 220.0,
+        "level_dbfs": -8.0,
+        "purpose": "задержка на вдохе — капля повыше"
+      },
+      "exhale": {
+        "file": "sets/nature/exhale.wav",
+        "duration_ms": 1500.0,
+        "level_dbfs": -6.0,
+        "purpose": "фаза выдоха — откат волны (спадающая яркость)"
+      },
+      "hold_out": {
+        "file": "sets/nature/hold_out.wav",
+        "duration_ms": 220.0,
+        "level_dbfs": -8.0,
+        "purpose": "задержка на выдохе — капля пониже (различима от hold_in)"
+      },
+      "tick": {
+        "file": "sets/nature/tick.wav",
+        "duration_ms": 60.0,
+        "level_dbfs": -16.0,
+        "purpose": "тик метронома — тихая капелька"
+      },
+      "tick_accent": {
+        "file": "sets/nature/tick_accent.wav",
+        "duration_ms": 90.0,
+        "level_dbfs": -12.0,
+        "purpose": "акцентный тик — капля ярче"
+      }
     }
   }
 }
