@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:breathin/domain/catalog/fikr_phrases.dart';
 import 'package:breathin/domain/engine/phase_engine.dart';
 import 'package:breathin/domain/models/technique.dart';
 import 'package:breathin/features/session/session_view.dart';
@@ -48,6 +49,7 @@ Widget wrap(
   VoidCallback? onStop,
   VisualShape shape = VisualShape.circle,
   BreathSegment? segment,
+  FikrPhrase? phrase,
 }) =>
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -59,10 +61,33 @@ Widget wrap(
         onPauseResume: onPauseResume,
         onStop: onStop,
         segment: segment,
+        phrase: phrase,
       ),
     );
 
 void main() {
+  group('фразы фикра (№10)', () {
+    testWidgets('на вдохе — фраза вдоха, на выдохе — фраза выдоха',
+        (tester) async {
+      const p = FikrPhrase('shafee', FikrPhraseSet.wazifa);
+      await tester
+          .pumpWidget(wrap(breathing(phase: PhaseKind.inhale), phrase: p));
+      expect(find.text('Ya Shafee'), findsOneWidget);
+      expect(find.text('Ya Kafee'), findsNothing);
+
+      await tester
+          .pumpWidget(wrap(breathing(phase: PhaseKind.exhale), phrase: p));
+      await tester.pumpAndSettle(); // AnimatedSwitcher доигрывает смену
+      expect(find.text('Ya Kafee'), findsOneWidget);
+    });
+
+    testWidgets('без фразы (обычная техника) текстов фикра нет',
+        (tester) async {
+      await tester.pumpWidget(wrap(breathing(phase: PhaseKind.inhale)));
+      expect(find.text('Ya Shafee'), findsNothing);
+    });
+  });
+
   testWidgets('фаза вдоха: подпись, отсчёт и номер цикла', (tester) async {
     await tester.pumpWidget(wrap(breathing(
       phase: PhaseKind.inhale,

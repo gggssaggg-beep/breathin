@@ -31,6 +31,10 @@ class TechniqueSettings {
   /// Подготовительный отсчёт перед первым вдохом (3..5 c, ТЗ §3.4).
   final int prepSeconds;
 
+  /// Пара фраз техники с фразами по фазам (фикр, №10); null у прочих техник
+  /// и у фикра до первого выбора (означает дефолтную пару).
+  final String? phraseId;
+
   const TechniqueSettings({
     required this.techniqueId,
     required this.endMode,
@@ -42,6 +46,7 @@ class TechniqueSettings {
     this.useSimplified = true,
     this.feedback = const FeedbackChannels(),
     this.prepSeconds = 3,
+    this.phraseId,
   });
 
   /// Классические настройки техники — состояние «Сбросить к классике»
@@ -69,6 +74,7 @@ class TechniqueSettings {
     bool? useSimplified,
     FeedbackChannels? feedback,
     int? prepSeconds,
+    String? phraseId,
   }) {
     return TechniqueSettings(
       techniqueId: techniqueId,
@@ -81,6 +87,7 @@ class TechniqueSettings {
       useSimplified: useSimplified ?? this.useSimplified,
       feedback: feedback ?? this.feedback,
       prepSeconds: prepSeconds ?? this.prepSeconds,
+      phraseId: phraseId ?? this.phraseId,
     );
   }
 
@@ -123,6 +130,7 @@ class TechniqueSettings {
         'useSimplified': useSimplified,
         'feedback': feedback.toJson(),
         'prepSeconds': prepSeconds,
+        if (phraseId != null) 'phraseId': phraseId,
       };
 
   /// Читает JSON; неизвестные/отсутствующие поля закрываются классикой [t],
@@ -149,6 +157,7 @@ class TechniqueSettings {
           : classic.feedback,
       prepSeconds:
           (json['prepSeconds'] as num?)?.toInt() ?? classic.prepSeconds,
+      phraseId: json['phraseId'] as String?,
     );
   }
 }

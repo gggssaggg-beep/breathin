@@ -1,4 +1,5 @@
 import 'generated/app_localizations.dart';
+import 'package:breathin/domain/catalog/fikr_phrases.dart';
 import 'package:breathin/domain/models/technique.dart';
 
 /// Extension на [AppLocalizations], преобразующий доменные ключи техник
@@ -35,6 +36,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_stretch_name;
       case 'elemental':
         return tech_elemental_name;
+      case 'fikr':
+        return tech_fikr_name;
       case 'wim_hof':
         return tech_wim_hof_name;
       default:
@@ -71,6 +74,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_stretch_desc;
       case 'elemental':
         return tech_elemental_desc;
+      case 'fikr':
+        return tech_fikr_desc;
       case 'wim_hof':
         return tech_wim_hof_desc;
       default:
@@ -107,10 +112,62 @@ extension TechniqueTexts on AppLocalizations {
         return tech_stretch_benefit;
       case 'elemental':
         return tech_elemental_benefit;
+      case 'fikr':
+        return tech_fikr_benefit;
       case 'wim_hof':
         return tech_wim_hof_benefit;
       default:
         throw StateError('Неизвестный id техники: ${t.id}');
+    }
+  }
+
+  /// Фраза фикра на вдохе (ARB-ключ `fikr_<id>_in`).
+  String fikrPhraseIn(FikrPhrase p) {
+    switch (p.id) {
+      case 'calm':
+        return fikr_calm_in;
+      case 'presence':
+        return fikr_presence_in;
+      case 'light':
+        return fikr_light_in;
+      case 'ishq':
+        return fikr_ishq_in;
+      case 'shafee':
+        return fikr_shafee_in;
+      case 'allah':
+        return fikr_allah_in;
+      default:
+        throw StateError('Неизвестная фраза фикра: ${p.id}');
+    }
+  }
+
+  /// Фраза фикра на выдохе (ARB-ключ `fikr_<id>_ex`).
+  String fikrPhraseEx(FikrPhrase p) {
+    switch (p.id) {
+      case 'calm':
+        return fikr_calm_ex;
+      case 'presence':
+        return fikr_presence_ex;
+      case 'light':
+        return fikr_light_ex;
+      case 'ishq':
+        return fikr_ishq_ex;
+      case 'shafee':
+        return fikr_shafee_ex;
+      case 'allah':
+        return fikr_allah_ex;
+      default:
+        throw StateError('Неизвестная фраза фикра: ${p.id}');
+    }
+  }
+
+  /// Название набора фраз фикра.
+  String fikrSetLabel(FikrPhraseSet set) {
+    switch (set) {
+      case FikrPhraseSet.affirmations:
+        return fikrSetAffirmations;
+      case FikrPhraseSet.wazifa:
+        return fikrSetWazifa;
     }
   }
 
