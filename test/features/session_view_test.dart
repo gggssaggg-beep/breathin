@@ -69,22 +69,22 @@ void main() {
   group('фразы фикра (№10)', () {
     testWidgets('на вдохе — фраза вдоха, на выдохе — фраза выдоха',
         (tester) async {
-      const p = FikrPhrase('shafee', FikrPhraseSet.wazifa);
+      const p = FikrPhrase('presence');
       await tester
           .pumpWidget(wrap(breathing(phase: PhaseKind.inhale), phrase: p));
-      expect(find.text('Ya Shafee'), findsOneWidget);
-      expect(find.text('Ya Kafee'), findsNothing);
+      expect(find.text('I am here'), findsOneWidget);
+      expect(find.text('Now'), findsNothing);
 
       await tester
           .pumpWidget(wrap(breathing(phase: PhaseKind.exhale), phrase: p));
       await tester.pumpAndSettle(); // AnimatedSwitcher доигрывает смену
-      expect(find.text('Ya Kafee'), findsOneWidget);
+      expect(find.text('Now'), findsOneWidget);
     });
 
     testWidgets('без фразы (обычная техника) текстов фикра нет',
         (tester) async {
       await tester.pumpWidget(wrap(breathing(phase: PhaseKind.inhale)));
-      expect(find.text('Ya Shafee'), findsNothing);
+      expect(find.text('I am here'), findsNothing);
     });
   });
 

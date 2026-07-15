@@ -591,40 +591,29 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
   /// для новых техник (фикр) — теперь единый источник из technique_texts.
   String _techniqueName(AppLocalizations l, Technique t) => l.techniqueName(t);
 
-  /// Выбор пары фраз фикра: два подсписка (аффирмации, вазифы), отмеченная
+  /// Выбор пары фраз фикра: плоский список аффирмаций, отмеченная
   /// пара — галочка. Без Radio: его groupValue-API в новых Flutter уходит
   /// в RadioGroup, а selected+галочка читается не хуже.
   Widget _buildFikrPhraseSection(
       AppLocalizations l, TechniqueSettings s, ThemeData theme) {
     final selected = fikrPhraseById(s.phraseId).id;
     final children = <Widget>[];
-    for (final set in FikrPhraseSet.values) {
-      children.add(Padding(
-        padding: const EdgeInsets.only(top: 8, bottom: 2),
-        child: Text(
-          l.fikrSetLabel(set),
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
+    for (final p in fikrPhrases) {
+      final isSelected = p.id == selected;
+      children.add(ListTile(
+        contentPadding: EdgeInsets.zero,
+        dense: true,
+        selected: isSelected,
+        title: Text('${l.fikrPhraseIn(p)} · ${l.fikrPhraseEx(p)}'),
+        trailing: isSelected
+            ? BreathinIcon(
+                BreathinIcons.circleCheck,
+                size: 20,
+                color: theme.colorScheme.primary,
+              )
+            : null,
+        onTap: () => setState(() => _settings = s.copyWith(phraseId: p.id)),
       ));
-      for (final p in fikrPhrases.where((p) => p.set == set)) {
-        final isSelected = p.id == selected;
-        children.add(ListTile(
-          contentPadding: EdgeInsets.zero,
-          dense: true,
-          selected: isSelected,
-          title: Text('${l.fikrPhraseIn(p)} · ${l.fikrPhraseEx(p)}'),
-          trailing: isSelected
-              ? BreathinIcon(
-                  BreathinIcons.circleCheck,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                )
-              : null,
-          onTap: () => setState(() => _settings = s.copyWith(phraseId: p.id)),
-        ));
-      }
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
