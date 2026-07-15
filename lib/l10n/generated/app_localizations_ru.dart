@@ -166,6 +166,62 @@ class AppLocalizationsRu extends AppLocalizations {
       'Очищает и настраивает дыхание, помогает последовательно пройти пять качеств — устойчивость, текучесть, энергию, лёгкость и тишину — и собрать внимание перед началом дня.';
 
   @override
+  String get tech_fikr_name => 'Фикр';
+
+  @override
+  String get tech_fikr_desc =>
+      'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии набор по душе: нейтральные аффирмации или традиционные вазифы. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.';
+
+  @override
+  String get tech_fikr_benefit =>
+      'Успокаивает поток мыслей, тренирует устойчивое внимание и связывает дыхание с намерением. Хорошая опора в стрессе и перед сном.';
+
+  @override
+  String get fikrPhrasesLabel => 'Фразы';
+
+  @override
+  String get fikrSetAffirmations => 'Аффирмации';
+
+  @override
+  String get fikrSetWazifa => 'Вазифы';
+
+  @override
+  String get fikr_calm_in => 'Вдыхаю покой';
+
+  @override
+  String get fikr_calm_ex => 'Отпускаю напряжение';
+
+  @override
+  String get fikr_presence_in => 'Я здесь';
+
+  @override
+  String get fikr_presence_ex => 'Сейчас';
+
+  @override
+  String get fikr_light_in => 'Вдыхаю Свет и Жизнь';
+
+  @override
+  String get fikr_light_ex => 'Излучаю Жизнь и Свет';
+
+  @override
+  String get fikr_ishq_in => 'Ишк Аллах';
+
+  @override
+  String get fikr_ishq_ex => 'Мабуд Лиллах';
+
+  @override
+  String get fikr_shafee_in => 'Йа Шафи';
+
+  @override
+  String get fikr_shafee_ex => 'Йа Кафи';
+
+  @override
+  String get fikr_allah_in => '…';
+
+  @override
+  String get fikr_allah_ex => 'Аллах';
+
+  @override
   String get safety_low =>
       'Дышите в комфортном темпе. Если почувствуете головокружение или дискомфорт — прервите упражнение и дышите нормально.';
 

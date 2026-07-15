@@ -242,11 +242,17 @@ abstract final class BreathinIcons {
   ]);
 
   /// Все иконки набора (для тестов парсинга).
+  /// Кавычки — фикр (мысленное повторение фразы с дыханием).
+  static const quote = BreathinIconData([
+    'M10 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5',
+    'M19 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5',
+  ]);
+
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
     arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
-    trophy, copy, send, sun, stretch, circles,
+    trophy, copy, send, sun, stretch, circles, quote,
   ];
 }

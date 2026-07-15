@@ -48,6 +48,7 @@ enum TechniqueIcon {
   hum,
   stretch,
   elements,
+  quote,
 }
 
 /// Маршрут дыхания: через нос или через рот.

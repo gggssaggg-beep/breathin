@@ -356,6 +356,114 @@ abstract class AppLocalizations {
   /// **'Очищает и настраивает дыхание, помогает последовательно пройти пять качеств — устойчивость, текучесть, энергию, лёгкость и тишину — и собрать внимание перед началом дня.'**
   String get tech_elemental_benefit;
 
+  /// No description provided for @tech_fikr_name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фикр'**
+  String get tech_fikr_name;
+
+  /// No description provided for @tech_fikr_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии набор по душе: нейтральные аффирмации или традиционные вазифы. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.'**
+  String get tech_fikr_desc;
+
+  /// No description provided for @tech_fikr_benefit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Успокаивает поток мыслей, тренирует устойчивое внимание и связывает дыхание с намерением. Хорошая опора в стрессе и перед сном.'**
+  String get tech_fikr_benefit;
+
+  /// No description provided for @fikrPhrasesLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фразы'**
+  String get fikrPhrasesLabel;
+
+  /// No description provided for @fikrSetAffirmations.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аффирмации'**
+  String get fikrSetAffirmations;
+
+  /// No description provided for @fikrSetWazifa.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вазифы'**
+  String get fikrSetWazifa;
+
+  /// No description provided for @fikr_calm_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдыхаю покой'**
+  String get fikr_calm_in;
+
+  /// No description provided for @fikr_calm_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отпускаю напряжение'**
+  String get fikr_calm_ex;
+
+  /// No description provided for @fikr_presence_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Я здесь'**
+  String get fikr_presence_in;
+
+  /// No description provided for @fikr_presence_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сейчас'**
+  String get fikr_presence_ex;
+
+  /// No description provided for @fikr_light_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдыхаю Свет и Жизнь'**
+  String get fikr_light_in;
+
+  /// No description provided for @fikr_light_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Излучаю Жизнь и Свет'**
+  String get fikr_light_ex;
+
+  /// No description provided for @fikr_ishq_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ишк Аллах'**
+  String get fikr_ishq_in;
+
+  /// No description provided for @fikr_ishq_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мабуд Лиллах'**
+  String get fikr_ishq_ex;
+
+  /// No description provided for @fikr_shafee_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'Йа Шафи'**
+  String get fikr_shafee_in;
+
+  /// No description provided for @fikr_shafee_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Йа Кафи'**
+  String get fikr_shafee_ex;
+
+  /// No description provided for @fikr_allah_in.
+  ///
+  /// In ru, this message translates to:
+  /// **'…'**
+  String get fikr_allah_in;
+
+  /// No description provided for @fikr_allah_ex.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аллах'**
+  String get fikr_allah_ex;
+
   /// No description provided for @safety_low.
   ///
   /// In ru, this message translates to:

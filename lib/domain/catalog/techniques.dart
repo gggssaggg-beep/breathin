@@ -229,6 +229,23 @@ final elementalBreath = Technique(
   ],
 );
 
+/// Фикр (№10, школа Инайят Хана в светской подаче): спокойное дыхание носом
+/// вдох 4 / выдох 6, на каждой фазе мысленно повторяется фраза (аффирмация
+/// или традиционная вазифа — выбор в настройке сессии, см. fikr_phrases.dart).
+const fikr = Technique(
+  id: 'fikr',
+  type: TechniqueType.counted,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.quote,
+  phases: [
+    PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4.0),
+    PhaseSpec(kind: PhaseKind.exhale, defaultSec: 6.0),
+  ],
+  scaling: ScalingMode.perPhase,
+  defaultCycles: 30, // ~5 минут при 4+6 с
+);
+
 /// Метод Вима Хофа — особая логика движка (ПЛАН §3.4); этап 2 (П18).
 const wimHof = Technique(
   id: 'wim_hof',
@@ -296,6 +313,7 @@ final List<Technique> catalog = [
   coherent,
   stretchBreath,
   elementalBreath,
+  fikr,
   diaphragmatic,
   nadiShodhana,
   soundBreath,

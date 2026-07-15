@@ -166,6 +166,62 @@ class AppLocalizationsEn extends AppLocalizations {
       'Cleanses and attunes the breath, guiding you through five qualities — stability, flow, energy, lightness and stillness — and gathers attention for the day ahead.';
 
   @override
+  String get tech_fikr_name => 'Fikr';
+
+  @override
+  String get tech_fikr_desc =>
+      'A remembrance practice from the Sufi Movement (the teaching of Hazrat Inayat Khan). Calm nasal breathing: inhale for 4 counts, exhale for 6. A phrase is silently repeated with each phase — one on the inhale, another on the exhale; the screen shows it in rhythm with your breath.\n\nPick the set that suits you in the session settings: neutral affirmations or traditional wazifas. The point is not the words themselves — the phrase gives attention a gentle anchor, and the breath settles deeper on its own.';
+
+  @override
+  String get tech_fikr_benefit =>
+      'Quiets mental chatter, trains steady attention and ties breath to intention. A good anchor under stress and before sleep.';
+
+  @override
+  String get fikrPhrasesLabel => 'Phrases';
+
+  @override
+  String get fikrSetAffirmations => 'Affirmations';
+
+  @override
+  String get fikrSetWazifa => 'Wazifas';
+
+  @override
+  String get fikr_calm_in => 'Breathing in calm';
+
+  @override
+  String get fikr_calm_ex => 'Letting go of tension';
+
+  @override
+  String get fikr_presence_in => 'I am here';
+
+  @override
+  String get fikr_presence_ex => 'Now';
+
+  @override
+  String get fikr_light_in => 'I breathe in Light and Life';
+
+  @override
+  String get fikr_light_ex => 'I radiate Life and Light';
+
+  @override
+  String get fikr_ishq_in => 'Ishq Allah';
+
+  @override
+  String get fikr_ishq_ex => 'Mabud Lillah';
+
+  @override
+  String get fikr_shafee_in => 'Ya Shafee';
+
+  @override
+  String get fikr_shafee_ex => 'Ya Kafee';
+
+  @override
+  String get fikr_allah_in => '…';
+
+  @override
+  String get fikr_allah_ex => 'Allah';
+
+  @override
   String get safety_low =>
       'Breathe at a comfortable pace. If you feel dizzy or uncomfortable, stop the exercise and breathe normally.';
 

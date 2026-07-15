@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/catalog/fikr_phrases.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../l10n/technique_texts.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import 'breathing_painter.dart';
@@ -29,6 +31,11 @@ class SessionView extends StatelessWidget {
   /// Текущий сегмент элементной техники; null — обычная техника без сегментов.
   final BreathSegment? segment;
 
+  /// Пара фраз фикра (№10): на вдохе одна, на выдохе другая; null — техника
+  /// без фраз. Показывается в том же слоте, что метка элемента (техники
+  /// с сегментами и с фразами не пересекаются).
+  final FikrPhrase? phrase;
+
   const SessionView({
     super.key,
     required this.state,
@@ -37,7 +44,23 @@ class SessionView extends StatelessWidget {
     this.onPauseResume,
     this.onStop,
     this.segment,
+    this.phrase,
   });
+
+  /// Фраза текущей фазы: вдох/выдох; на задержках и вне дыхания — null
+  /// (у фикра задержек нет, но защищаемся от чужих конфигураций).
+  String? _phraseFor(AppLocalizations l) {
+    final p = phrase;
+    if (p == null) return null;
+    switch (state.phase) {
+      case PhaseKind.inhale:
+        return l.fikrPhraseIn(p);
+      case PhaseKind.exhale:
+        return l.fikrPhraseEx(p);
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +85,23 @@ class SessionView extends StatelessWidget {
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: elementColor(segment!.id),
                     fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+              // Фраза фикра — в такт фазе (№10). AnimatedSwitcher мягко
+              // меняет текст на границе вдох/выдох.
+              if (phrase != null && !finished) ...[
+                const SizedBox(height: 8),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  child: Text(
+                    _phraseFor(l) ?? '',
+                    key: ValueKey(_phraseFor(l) ?? ''),
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],

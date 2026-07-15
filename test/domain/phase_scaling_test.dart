@@ -41,6 +41,17 @@ void main() {
       expect(restored.feedback, s.feedback);
     });
 
+    test('phraseId (фикр №10): roundtrip и null у старых сохранений', () {
+      final fikrTech = techniqueById('fikr');
+      final s = TechniqueSettings.classic(fikrTech)
+          .copyWith(phraseId: 'shafee');
+      final restored = TechniqueSettings.fromJson(fikrTech, s.toJson());
+      expect(restored.phraseId, 'shafee');
+      // Старое сохранение без ключа — null (означает дефолтную пару).
+      final legacy = TechniqueSettings.fromJson(fikrTech, {});
+      expect(legacy.phraseId, isNull);
+    });
+
     test('fromJson: пустой/битый JSON закрывается классикой', () {
       final restored = TechniqueSettings.fromJson(boxBreathing, {});
       final classic = TechniqueSettings.classic(boxBreathing);

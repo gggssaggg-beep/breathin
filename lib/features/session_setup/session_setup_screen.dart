@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/technique_settings_repository.dart';
 import '../../features/onboarding/coach_mark.dart';
+import '../../domain/catalog/fikr_phrases.dart';
 import '../../domain/engine/phase_scaling.dart';
 import '../../domain/engine/session_plan.dart';
 import '../../domain/engine/session_plan_compiler.dart';
@@ -11,6 +12,9 @@ import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
 import '../../domain/models/technique_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../l10n/technique_texts.dart';
+import '../../ui/icons/breathin_icon.dart';
+import '../../ui/icons/breathin_icons.dart';
 import '../session/phase_labels.dart';
 import '../session/session_runner.dart';
 
@@ -93,6 +97,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           feedback: s.feedback,
           mediaTitle: _techniqueName(l, _t),
           variant: variant,
+          phrase: _t.id == 'fikr' ? fikrPhraseById(s.phraseId) : null,
         ),
       ),
     );
@@ -173,6 +178,14 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
               _SectionHeader(title: l.tempoLabel),
               const SizedBox(height: 8),
               _buildTempoSection(l, s, theme),
+              const SizedBox(height: 8),
+            ],
+
+            // --- Фразы фикра (№10): аффирмации / вазифы ---
+            if (_t.id == 'fikr') ...[
+              _SectionHeader(title: l.fikrPhrasesLabel),
+              const SizedBox(height: 4),
+              _buildFikrPhraseSection(l, s, theme),
               const SizedBox(height: 8),
             ],
           ],
@@ -538,34 +551,49 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
 
   /// Локализованное название техники через ARB-ключ (через switch по id,
   /// т.к. AppLocalizations не поддерживает динамические ключи).
-  String _techniqueName(AppLocalizations l, Technique t) {
-    // Используем уже существующую утилиту из technique_texts через l
-    // Ключи вида tech_<id>_name; AppLocalizations хранит их как геттеры.
-    // Самый надёжный способ — обратиться к уже реализованному методу.
-    switch (t.id) {
-      case 'box':
-        return l.tech_box_name;
-      case 'triangle':
-        return l.tech_triangle_name;
-      case 'four_seven_eight':
-        return l.tech_four_seven_eight_name;
-      case 'four_two_four':
-        return l.tech_four_two_four_name;
-      case 'two_eight':
-        return l.tech_two_eight_name;
-      case 'two_ten':
-        return l.tech_two_ten_name;
-      case 'four_sixteen_eight':
-        return l.tech_four_sixteen_eight_name;
-      case 'coherent':
-        return l.tech_coherent_name;
-      case 'stretch':
-        return l.tech_stretch_name;
-      case 'elemental':
-        return l.tech_elemental_name;
-      default:
-        return t.id;
+  /// Локальный switch дублировал TechniqueTexts и молча отдавал сырой id
+  /// для новых техник (фикр) — теперь единый источник из technique_texts.
+  String _techniqueName(AppLocalizations l, Technique t) => l.techniqueName(t);
+
+  /// Выбор пары фраз фикра: два подсписка (аффирмации, вазифы), отмеченная
+  /// пара — галочка. Без Radio: его groupValue-API в новых Flutter уходит
+  /// в RadioGroup, а selected+галочка читается не хуже.
+  Widget _buildFikrPhraseSection(
+      AppLocalizations l, TechniqueSettings s, ThemeData theme) {
+    final selected = fikrPhraseById(s.phraseId).id;
+    final children = <Widget>[];
+    for (final set in FikrPhraseSet.values) {
+      children.add(Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 2),
+        child: Text(
+          l.fikrSetLabel(set),
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ));
+      for (final p in fikrPhrases.where((p) => p.set == set)) {
+        final isSelected = p.id == selected;
+        children.add(ListTile(
+          contentPadding: EdgeInsets.zero,
+          dense: true,
+          selected: isSelected,
+          title: Text('${l.fikrPhraseIn(p)} · ${l.fikrPhraseEx(p)}'),
+          trailing: isSelected
+              ? BreathinIcon(
+                  BreathinIcons.circleCheck,
+                  size: 20,
+                  color: theme.colorScheme.primary,
+                )
+              : null,
+          onTap: () => setState(() => _settings = s.copyWith(phraseId: p.id)),
+        ));
+      }
     }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: children,
+    );
   }
 }
 
