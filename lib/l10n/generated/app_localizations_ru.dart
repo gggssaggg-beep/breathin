@@ -565,6 +565,33 @@ class AppLocalizationsRu extends AppLocalizations {
   String get communityChatAction => 'Чат нашего сообщества';
 
   @override
+  String get welcomeBody =>
+      'Простые дыхательные практики на каждый день — успокоиться, сосредоточиться или зарядиться энергией.';
+
+  @override
+  String get welcomeStart => 'Начать';
+
+  @override
+  String get coachHomePick => 'Выберите технику — их можно настроить под себя.';
+
+  @override
+  String get coachCardStart =>
+      'Нажмите, чтобы настроить длительность, звук и начать.';
+
+  @override
+  String get coachSetupFeedback =>
+      'Включите звук, метроном или вибрацию — как удобно.';
+
+  @override
+  String get coachDismiss => 'Понятно';
+
+  @override
+  String get replayOnboarding => 'Показать обучение заново';
+
+  @override
+  String get onboardingReset => 'Подсказки будут показаны снова';
+
+  @override
   String get pauseAction => 'Пауза';
 
   @override

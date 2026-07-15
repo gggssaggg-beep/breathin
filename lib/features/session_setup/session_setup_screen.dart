@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/technique_settings_repository.dart';
+import '../../features/onboarding/coach_mark.dart';
 import '../../domain/engine/phase_scaling.dart';
 import '../../domain/engine/session_plan.dart';
 import '../../domain/engine/session_plan_compiler.dart';
@@ -183,6 +184,11 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           const SizedBox(height: 8),
 
           // --- Сопровождение ---
+          // Коучмарк над секцией: показывается один раз
+          CoachMark(
+            id: 'setup.feedback',
+            message: l.coachSetupFeedback,
+          ),
           _SectionHeader(title: l.feedbackSection),
           _buildFeedbackSection(l, s),
           const SizedBox(height: 16),

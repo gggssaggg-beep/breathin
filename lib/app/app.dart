@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../features/home/home_screen.dart';
+import '../features/onboarding/coach_controller.dart';
+import '../features/onboarding/welcome_screen.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../services/onboarding/coach_store.dart';
 import '../services/permissions/notification_permission.dart';
 import '../services/update/update_preferences.dart';
 import '../services/update/update_runtime.dart';
@@ -15,7 +18,15 @@ import 'theme.dart';
 class BreathinApp extends StatefulWidget {
   /// Отключается в тестах: проверка обновлений при старте не нужна.
   final bool checkUpdates;
-  const BreathinApp({super.key, this.checkUpdates = true});
+
+  /// Отключается в тестах: приветственный экран и коучмарки не нужны.
+  final bool showOnboarding;
+
+  const BreathinApp({
+    super.key,
+    this.checkUpdates = true,
+    this.showOnboarding = true,
+  });
 
   @override
   State<BreathinApp> createState() => _BreathinAppState();
@@ -23,15 +34,48 @@ class BreathinApp extends StatefulWidget {
 
 class _BreathinAppState extends State<BreathinApp> {
   final _messengerKey = GlobalKey<ScaffoldMessengerState>();
+  // Ключ Navigator'а: приветствие показываем через showDialog из контекста
+  // ПОД Navigator. Контекст ScaffoldMessenger выше него — оттуда Navigator
+  // не находится, и диалог не открылся бы.
+  final _navKey = GlobalKey<NavigatorState>();
+  final _store = CoachStore();
+  late final CoachController _coachController;
 
   @override
   void initState() {
     super.initState();
+    _coachController = CoachController(store: _store);
+    if (widget.showOnboarding) {
+      // Загружаем данные контроллера подсказок.
+      _coachController.init();
+    }
     if (widget.checkUpdates) _checkUpdatesOnStart();
     // Разрешение на уведомления (Android 13+, медиа-уведомление сессии) —
     // после первого кадра, чтобы системный диалог лёг поверх готового UI.
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => NotificationPermission.ensureRequestedOnce(),
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationPermission.ensureRequestedOnce();
+      if (widget.showOnboarding) _maybeShowWelcome();
+    });
+  }
+
+  @override
+  void dispose() {
+    _coachController.dispose();
+    super.dispose();
+  }
+
+  /// Показывает приветственный экран, если пользователь ещё его не видел.
+  /// Вызывается после первого кадра через addPostFrameCallback — безопасно.
+  Future<void> _maybeShowWelcome() async {
+    final seen = await _store.welcomeSeen();
+    if (seen) return;
+    if (!mounted) return;
+    final ctx = _navKey.currentContext;
+    if (ctx == null || !ctx.mounted) return;
+    await showDialog<void>(
+      context: ctx,
+      barrierDismissible: false,
+      builder: (_) => WelcomeScreen(store: _store),
     );
   }
 
@@ -83,12 +127,21 @@ class _BreathinAppState extends State<BreathinApp> {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
+      navigatorKey: _navKey,
       scaffoldMessengerKey: _messengerKey,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.system,
+      // CoachScope вставляется через builder ВНУТРЬ MaterialApp (после
+      // локализаций и темы), но ВЫШЕ Navigator — так он доступен всем
+      // экранам через CoachScope.of(context) и не вызывает бесконечный
+      // rebuild самого MaterialApp.
+      builder: (context, child) => CoachScope(
+        controller: _coachController,
+        child: child!,
+      ),
       home: const HomeScreen(),
     );
   }

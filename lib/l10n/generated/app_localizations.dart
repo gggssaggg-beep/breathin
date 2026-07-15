@@ -1010,6 +1010,54 @@ abstract class AppLocalizations {
   /// **'Чат нашего сообщества'**
   String get communityChatAction;
 
+  /// No description provided for @welcomeBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Простые дыхательные практики на каждый день — успокоиться, сосредоточиться или зарядиться энергией.'**
+  String get welcomeBody;
+
+  /// No description provided for @welcomeStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать'**
+  String get welcomeStart;
+
+  /// No description provided for @coachHomePick.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите технику — их можно настроить под себя.'**
+  String get coachHomePick;
+
+  /// No description provided for @coachCardStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите, чтобы настроить длительность, звук и начать.'**
+  String get coachCardStart;
+
+  /// No description provided for @coachSetupFeedback.
+  ///
+  /// In ru, this message translates to:
+  /// **'Включите звук, метроном или вибрацию — как удобно.'**
+  String get coachSetupFeedback;
+
+  /// No description provided for @coachDismiss.
+  ///
+  /// In ru, this message translates to:
+  /// **'Понятно'**
+  String get coachDismiss;
+
+  /// No description provided for @replayOnboarding.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать обучение заново'**
+  String get replayOnboarding;
+
+  /// No description provided for @onboardingReset.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подсказки будут показаны снова'**
+  String get onboardingReset;
+
   /// No description provided for @pauseAction.
   ///
   /// In ru, this message translates to:

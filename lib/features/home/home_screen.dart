@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/catalog/techniques.dart';
 import '../../domain/models/technique.dart';
+import '../../features/onboarding/coach_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../ui/icons/breathin_icon.dart';
@@ -18,6 +19,7 @@ import '../stats/stats_screen.dart';
 /// Отображает все 12 техник из [catalog] в GridView 2 колонки.
 /// Для stage2-техник (Вим Хоф) — визуальная пометка «скоро» и приглушённый вид,
 /// но карточка тапабельна и ведёт на [TechniqueCardScreen].
+/// Над сеткой — коучмарк 'home.pick' (показывается один раз).
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -51,27 +53,44 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(12),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 1.0,
-        ),
-        itemCount: catalog.length,
-        itemBuilder: (context, index) {
-          final t = catalog[index];
-          return _TechniqueGridCard(
-            technique: t,
-            subtitle: techniqueSubtitle(l, t),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => TechniqueCardScreen(technique: t),
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Коучмарк над сеткой: показывается один раз при первом запуске.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+            child: CoachMark(
+              id: 'home.pick',
+              message: l.coachHomePick,
             ),
-          );
-        },
+          ),
+          // Сетка техник — занимает оставшееся место и прокручивается.
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(12),
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.0,
+              ),
+              itemCount: catalog.length,
+              itemBuilder: (context, index) {
+                final t = catalog[index];
+                return _TechniqueGridCard(
+                  technique: t,
+                  subtitle: techniqueSubtitle(l, t),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => TechniqueCardScreen(technique: t),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

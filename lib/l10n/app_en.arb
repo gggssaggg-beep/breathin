@@ -243,6 +243,15 @@
   "feedbackAction": "Feedback",
   "communityChatAction": "Our community chat",
 
+  "welcomeBody": "Simple breathing practices for every day — calm down, focus, or recharge.",
+  "welcomeStart": "Start",
+  "coachHomePick": "Choose a technique — you can customise each one.",
+  "coachCardStart": "Tap to set the duration, sound and begin.",
+  "coachSetupFeedback": "Turn on sound, metronome or vibration — whatever feels right.",
+  "coachDismiss": "Got it",
+  "replayOnboarding": "Replay tutorial",
+  "onboardingReset": "Tips will be shown again",
+
   "pauseAction": "Pause",
   "resumeAction": "Resume",
   "stopAction": "Stop",
