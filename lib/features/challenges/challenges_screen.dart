@@ -263,9 +263,13 @@ class _ErrorState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            FilledButton.tonal(
-              onPressed: onRetry,
-              child: Text(l.commonRetry),
+            // Полноширинная CTA — явной обёрткой (minWidth темы больше не ∞).
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.tonal(
+                onPressed: onRetry,
+                child: Text(l.commonRetry),
+              ),
             ),
           ],
         ),
