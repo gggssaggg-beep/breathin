@@ -78,6 +78,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pronounced parasympathetic activation and deep relaxation: ideal for relieving strong stress and preparing for sleep.';
 
   @override
+  String get tech_sigh_name => 'Physiological Sigh';
+
+  @override
+  String get tech_sigh_desc =>
+      'The fastest scientifically proven way to discharge acute stress — a double inhale and a long exhale. The body does it by itself when sobbing or \"sighing with relief\": the mechanism is built into our physiology.\n\nHow to practise: take an ordinary calm inhale through the nose and, without exhaling, immediately add a short top-up inhale — filling the lungs completely (the second short inhale reopens collapsed alveoli). Then a long, slow exhale through the mouth, noticeably longer than the inhale. 1–3 repetitions are enough — the effect arrives within seconds.\n\nWhen to use: acute stress, oncoming panic, anger, before a difficult conversation or a performance. It is an emergency button, not a meditation.\n\nOn screen the figure grows through one inhale — breathe in normally and add the short top-up at its peak; the whole shrink is one even mouth exhale.';
+
+  @override
+  String get tech_sigh_benefit =>
+      'Discharges acute stress within a few sighs: the double inhale reopens the alveoli, the long exhale engages the parasympathetic system and slows the pulse.';
+
+  @override
   String get tech_four_sixteen_eight_name => '4-16-8';
 
   @override
