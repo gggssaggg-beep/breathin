@@ -50,7 +50,7 @@ void main() {
       expect(buf[off + 100], 0, reason: 'после клипа снова тишина');
     });
 
-    test('прибой фаз: вдох звучит всю фазу и накатывает, задержка — тихий фон',
+    test('«Поток»: тон вдоха звучит всю фазу и нарастает, задержка — тихо',
         () {
       const cfg = SessionConfig(
         endMode: EndMode.cycles,
@@ -59,7 +59,14 @@ void main() {
         prepSeconds: 0,
       );
       final plan = compiler.compile(boxBreathing, cfg);
-      final buf = renderer.render(plan, constantBank(44100, len: 10));
+      final buf = renderer.render(
+        plan,
+        SoundBank(
+          sampleRate: 44100,
+          synthPhases: true,
+          clips: {ClipId.gong: Int16List(10)},
+        ),
+      );
 
       double rms(int fromMs, int toMs) {
         final a = renderer.sampleOffsetForMs(fromMs);
@@ -130,13 +137,14 @@ void main() {
       Int16List load(String rel) =>
           WavIo.decode(File('assets/audio/$rel').readAsBytesSync()).samples;
 
+      // Режим «Чаши»: реальные клипы фаз кладутся на старты фаз.
       final bank = SoundBank(sampleRate: 44100, clips: {
-        ClipId.inhale: load('common/breath_in.wav'),
-        ClipId.exhale: load('common/breath_out.wav'),
+        ClipId.inhale: load('sets/bowls/inhale.wav'),
+        ClipId.holdIn: load('sets/bowls/hold_in.wav'),
+        ClipId.exhale: load('sets/bowls/exhale.wav'),
+        ClipId.holdOut: load('sets/bowls/hold_out.wav'),
         ClipId.prepBeep: load('common/prep_beep.wav'),
         ClipId.gong: load('common/gong.wav'),
-        ClipId.tick: load('common/tick.wav'),
-        ClipId.tickAccent: load('common/tick_accent.wav'),
       });
 
       final plan =

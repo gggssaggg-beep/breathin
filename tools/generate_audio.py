@@ -144,6 +144,51 @@ def droplet(f0: float, f1: float, dur_ms: float,
     return np.sin(phase) * exp_env * atk
 
 
+# Соотношения парциалов тибетской чаши (~1:2.8:5.2:8.4 у реальных чаш).
+_BOWL_PARTIALS = (1.0, 2.78, 5.18, 8.36)
+
+
+def bowl_strike(f0: float, dur_ms: float, tau0_ms: float = 1400.0) -> np.ndarray:
+    """Удар чаши: мгновенная атака, долгое тёплое затухание (выдох)."""
+    t = _t(dur_ms)
+    rng = np.random.default_rng(_RNG_SEED + int(f0))
+    sig = np.zeros(t.size, dtype=np.float64)
+    for k, mult in enumerate(_BOWL_PARTIALS, start=1):
+        detune = 1.0 + rng.uniform(-0.002, 0.002)
+        tau = (tau0_ms / mult) / 1000.0
+        sig += (1.0 / k) * np.sin(2.0 * np.pi * f0 * mult * detune * t) \
+            * np.exp(-t / tau)
+    a = max(1, int(round(SR * 4.0 / 1000.0)))
+    sig[:a] *= 0.5 * (1.0 - np.cos(np.pi * np.arange(a) / a))
+    return sig
+
+
+def bowl_swell(f0: float, dur_ms: float) -> np.ndarray:
+    """«Смычок» по чаше: звук нарастает к концу (вдох)."""
+    t = _t(dur_ms)
+    rng = np.random.default_rng(_RNG_SEED + int(f0) + 7)
+    sig = np.zeros(t.size, dtype=np.float64)
+    vibrato = 1.0 + 0.004 * np.sin(2.0 * np.pi * 4.5 * t)
+    for k, mult in enumerate(_BOWL_PARTIALS[:3], start=1):
+        detune = 1.0 + rng.uniform(-0.002, 0.002)
+        sig += (1.0 / k) * np.sin(2.0 * np.pi * f0 * mult * detune * t * vibrato)
+    n = t.size
+    x = np.arange(n) / max(1, n - 1)
+    sig *= (x ** 1.5) * raised_cosine_env(n, attack_ms=30.0, release_ms=150.0)
+    return sig
+
+
+def chime(f0: float, dur_ms: float = 500.0, tau_ms: float = 220.0) -> np.ndarray:
+    """Колокольчик: два парциала, серебристое затухание (задержки)."""
+    t = _t(dur_ms)
+    sig = np.sin(2.0 * np.pi * f0 * t) \
+        + 0.4 * np.sin(2.0 * np.pi * f0 * 2.51 * t)
+    a = max(1, int(round(SR * 3.0 / 1000.0)))
+    atk = np.ones(t.size)
+    atk[:a] = 0.5 * (1.0 - np.cos(np.pi * np.arange(a) / a))
+    return sig * np.exp(-t / (tau_ms / 1000.0)) * atk
+
+
 def wood_tap(dur_ms: float = 45.0, freq: float = 220.0) -> np.ndarray:
     """Глухой деревянный тап (тик метронома): низкий короткий стук без
     пронзительности — «деревянная рыба» из практик, не системный клик."""
@@ -159,12 +204,32 @@ def wood_tap(dur_ms: float = 45.0, freq: float = 220.0) -> np.ndarray:
 # Спецификация наборов (см. ПЛАН §10.2; «Природа» — отзыв №5 2026-07-14)
 # --------------------------------------------------------------------------- #
 def build_specs() -> list[dict]:
-    # ЕДИНСТВЕННЫЙ звуковой вариант — «прибой» (решение владельца 2026-07-15,
-    # наборы minimal/nature/bowls удалены). Фазы дыхания синтезируются
-    # РЕНДЕРЕРОМ на всю длительность фазы (lib/services/audio/surf_synth.dart);
-    # здесь остались клипы-события + фиксированные волны для one-shot'ов
-    # Вима Хофа (у него длительность фазы задаёт темп, клипы короткие).
+    # Два варианта звука (итог итераций 2026-07-15): «Поток» — фазы синтезирует
+    # РЕНДЕРЕР на всю длительность (lib/services/audio/pad_synth.dart), клипов
+    # фаз нет; «Чаши» — клипы ниже. Общие клипы-события + волны для
+    # one-shot'ов Вима Хофа.
     return [
+        # --- Набор «Чаши» ---
+        dict(id="inhale", path="sets/bowls/inhale.wav", dbfs=-7.0,
+             gen=lambda: bowl_swell(392.0, 1200.0),
+             purpose="фаза вдоха — «смычок» по чаше, звук нарастает"),
+        dict(id="hold_in", path="sets/bowls/hold_in.wav", dbfs=-10.0,
+             gen=lambda: chime(1318.5),
+             purpose="задержка на вдохе — колокольчик повыше"),
+        dict(id="exhale", path="sets/bowls/exhale.wav", dbfs=-6.0,
+             gen=lambda: bowl_strike(261.6, 1500.0),
+             purpose="фаза выдоха — удар чаши, тёплое затухание"),
+        dict(id="hold_out", path="sets/bowls/hold_out.wav", dbfs=-10.0,
+             gen=lambda: chime(987.8),
+             purpose="задержка на выдохе — колокольчик пониже"),
+        dict(id="tick_bowls", path="sets/bowls/tick.wav", dbfs=-16.0,
+             gen=lambda: wood_tap(),
+             purpose="тик метронома — глухой деревянный тап"),
+        dict(id="tick_accent_bowls", path="sets/bowls/tick_accent.wav",
+             dbfs=-12.0,
+             gen=lambda: wood_tap(freq=330.0),
+             purpose="акцентный тик — тап повыше"),
+        # --- Общие клипы-события ---
         dict(id="tick", path="common/tick.wav", dbfs=-16.0,
              gen=lambda: wood_tap(),
              purpose="тик метронома — глухой деревянный тап"),

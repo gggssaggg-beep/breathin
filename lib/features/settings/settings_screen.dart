@@ -6,6 +6,7 @@ import '../../data/difficulty_store.dart';
 import '../../domain/difficulty/difficulty.dart';
 import '../../features/onboarding/coach_controller.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../services/audio/sound_preferences.dart';
 import '../../services/update/update_preferences.dart';
 import 'difficulty_section.dart';
 import '../../services/update/update_runtime.dart';
@@ -29,6 +30,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   UpdatePreferences _prefs = const UpdatePreferences();
   UpdateCheckResult _update = UpdateCheckResult.upToDate;
+  SoundSet _soundSet = SoundSet.flow;
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
   bool _hasBoltResult = false;
   String? _version;
@@ -39,6 +41,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Персист настроек обновлений: поднимаем сохранённое значение галочки.
     UpdatePreferencesStore().load().then((p) {
       if (mounted) setState(() => _prefs = p);
+    });
+    SoundSetStore().load().then((s) {
+      if (mounted) setState(() => _soundSet = s);
     });
     DifficultyStore().load().then((p) {
       if (mounted) setState(() => _difficulty = p);
@@ -67,6 +72,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _prefs = _prefs.copyWith(autoUpdate: v));
     // Сохраняем fire-and-forget — UI не ждёт записи в prefs.
     UpdatePreferencesStore().save(_prefs);
+  }
+
+  void _onSoundSetChanged(SoundSet s) {
+    setState(() => _soundSet = s);
+    // Fire-and-forget, как и остальные настройки экрана.
+    SoundSetStore().save(s);
   }
 
   void _onDifficultyChanged(DifficultyPreset p) {
@@ -116,6 +127,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
             autoUpdate: _prefs.autoUpdate,
             onAutoUpdateChanged: _onAutoUpdateChanged,
             onUpdateNow: _downloadUpdate,
+          ),
+          const SizedBox(height: 24),
+          // --- Звук: «Поток» (синтез на всю фазу) или «Чаши» (клипы) ---
+          Text(l.soundSection, style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              _soundSet == SoundSet.flow ? l.soundSetFlow : l.soundSetBowls,
+            ),
+            subtitle: Text(
+              _soundSet == SoundSet.flow
+                  ? l.soundSetFlowNote
+                  : l.soundSetBowlsNote,
+            ),
+          ),
+          SegmentedButton<SoundSet>(
+            segments: [
+              ButtonSegment(
+                value: SoundSet.flow,
+                label: Text(l.soundSetFlow),
+              ),
+              ButtonSegment(
+                value: SoundSet.bowls,
+                label: Text(l.soundSetBowls),
+              ),
+            ],
+            selected: {_soundSet},
+            onSelectionChanged: (s) => _onSoundSetChanged(s.first),
           ),
           const SizedBox(height: 24),
           // --- Сложность: глобальный пресет длительностей (эпик §4–5) ---

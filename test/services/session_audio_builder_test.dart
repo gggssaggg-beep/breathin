@@ -11,14 +11,12 @@ import 'package:breathin/services/audio/wav_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Маркерные клипы-события: у каждого своя амплитуда — по значению сэмпла в
-/// буфере видно, какой клип туда лёг. Фазы звучат синтезом прибоя: на ПЕРВОМ
-/// сэмпле вдоха после подготовки его уровень строго 0 (стартует с тишины) —
-/// маркеры на границах фаз остаются точно проверяемыми.
+/// буфере видно, какой клип туда лёг. Банк режима «Поток» (synthPhases):
+/// фазы поёт синтез, и на ПЕРВОМ сэмпле вдоха после подготовки его уровень
+/// строго 0 (тон стартует с тишины) — маркеры границ фаз точно проверяемы.
 SoundBank markerBank() {
   Int16List clip(int amp) => Int16List.fromList([amp, amp]);
-  return SoundBank(sampleRate: 1000, clips: {
-    ClipId.inhale: clip(100),
-    ClipId.exhale: clip(300),
+  return SoundBank(sampleRate: 1000, synthPhases: true, clips: {
     ClipId.prepBeep: clip(500),
     ClipId.gong: clip(600),
     ClipId.tick: clip(700),

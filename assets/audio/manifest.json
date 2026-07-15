@@ -39,5 +39,44 @@
       "purpose": "гонг в конце сессии — freesound #42095 fauxpress, CC0 (одобрен владельцем; синтез-фолбэк: gong(220, 6000))"
     }
   },
-  "sets": {}
+  "sets": {
+    "bowls": {
+      "inhale": {
+        "file": "sets/bowls/inhale.wav",
+        "duration_ms": 1200.0,
+        "level_dbfs": -7.0,
+        "purpose": "фаза вдоха — «смычок» по чаше, звук нарастает"
+      },
+      "hold_in": {
+        "file": "sets/bowls/hold_in.wav",
+        "duration_ms": 500.0,
+        "level_dbfs": -10.0,
+        "purpose": "задержка на вдохе — колокольчик повыше"
+      },
+      "exhale": {
+        "file": "sets/bowls/exhale.wav",
+        "duration_ms": 1500.0,
+        "level_dbfs": -6.0,
+        "purpose": "фаза выдоха — удар чаши, тёплое затухание"
+      },
+      "hold_out": {
+        "file": "sets/bowls/hold_out.wav",
+        "duration_ms": 500.0,
+        "level_dbfs": -10.0,
+        "purpose": "задержка на выдохе — колокольчик пониже"
+      },
+      "tick_bowls": {
+        "file": "sets/bowls/tick.wav",
+        "duration_ms": 45.0,
+        "level_dbfs": -16.0,
+        "purpose": "тик метронома — глухой деревянный тап"
+      },
+      "tick_accent_bowls": {
+        "file": "sets/bowls/tick_accent.wav",
+        "duration_ms": 45.0,
+        "level_dbfs": -12.0,
+        "purpose": "акцентный тик — тап повыше"
+      }
+    }
+  }
 }
