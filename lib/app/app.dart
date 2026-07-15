@@ -142,7 +142,7 @@ class _BreathinAppState extends State<BreathinApp> {
         controller: _coachController,
         child: child!,
       ),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../data/session_log_repository.dart';
 import '../../domain/catalog/techniques.dart';
+import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
+import '../../domain/stats/practice_stats.dart';
 import '../../features/onboarding/coach_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
@@ -19,13 +22,54 @@ import '../stats/stats_screen.dart';
 /// Отображает все 12 техник из [catalog] в GridView 2 колонки.
 /// Для stage2-техник (Вим Хоф) — визуальная пометка «скоро» и приглушённый вид,
 /// но карточка тапабельна и ведёт на [TechniqueCardScreen].
-/// Над сеткой — коучмарк 'home.pick' (показывается один раз).
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+/// Над сеткой — «дуолинго»-стрик (огонёк «N дней подряд») при активной серии
+/// и коучмарк 'home.pick' (показывается один раз).
+class HomeScreen extends StatefulWidget {
+  final SessionLogRepository log;
+
+  /// «Сегодня» для тестируемости; по умолчанию — текущая дата устройства.
+  final DateTime? today;
+
+  HomeScreen({super.key, SessionLogRepository? log, this.today})
+      : log = log ?? SessionLogRepository();
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<SessionRecord>? _records;
+
+  @override
+  void initState() {
+    super.initState();
+    _reload();
+  }
+
+  void _reload() {
+    widget.log.all().then((r) {
+      if (mounted) setState(() => _records = r);
+    });
+  }
+
+  /// Пуш экрана с перезагрузкой стрика по возвращении: после сессии финиш
+  /// делает popUntil(isFirst) — Future возвращается сюда, серия обновляется
+  /// без ручного обновления главного экрана.
+  void _openThenReload(Widget page) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => page))
+        .then((_) {
+      if (mounted) _reload();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final records = _records;
+    final streak = records == null
+        ? 0
+        : PracticeStats.streakDays(records, today: widget.today);
     return Scaffold(
       appBar: AppBar(
         title: Text(l.appTitle),
@@ -41,7 +85,7 @@ class HomeScreen extends StatelessWidget {
             icon: const BreathinIcon(BreathinIcons.calendar),
             tooltip: l.statsTooltip,
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => StatsScreen()),
+              MaterialPageRoute(builder: (_) => StatsScreen(today: widget.today)),
             ),
           ),
           IconButton(
@@ -56,6 +100,16 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Стрик-баннер (огонёк «N дней подряд») — только при активной серии.
+          // Тап ведёт в «Практику» с календарём и деталями прогресса.
+          if (streak > 0)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              child: _StreakBanner(
+                streak: streak,
+                onTap: () => _openThenReload(StatsScreen(today: widget.today)),
+              ),
+            ),
           // Коучмарк над сеткой: показывается один раз при первом запуске.
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
@@ -81,16 +135,70 @@ class HomeScreen extends StatelessWidget {
                 return _TechniqueGridCard(
                   technique: t,
                   subtitle: techniqueSubtitle(l, t),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => TechniqueCardScreen(technique: t),
-                    ),
-                  ),
+                  onTap: () =>
+                      _openThenReload(TechniqueCardScreen(technique: t)),
                 );
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Компактный «дуолинго»-баннер серии: огонёк, число дней и подпись.
+/// Виден только при активной серии; тап ведёт в «Практику».
+class _StreakBanner extends StatelessWidget {
+  final int streak;
+  final VoidCallback onTap;
+
+  const _StreakBanner({required this.streak, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Card(
+      color: theme.colorScheme.primaryContainer,
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              BreathinIcon(
+                BreathinIcons.flame,
+                size: 32,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '$streak',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l.streakLabel(streak),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+              BreathinIcon(
+                BreathinIcons.chevronRight,
+                size: 20,
+                color: theme.colorScheme.onPrimaryContainer,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

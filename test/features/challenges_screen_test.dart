@@ -36,7 +36,7 @@ void main() {
   testWidgets(
     'home: тап по tooltip Challenges with friends открывает ChallengesScreen',
     (tester) async {
-      await tester.pumpWidget(wrap(const HomeScreen()));
+      await tester.pumpWidget(wrap(HomeScreen()));
       await tester.pump();
 
       // Находим кнопку по tooltip
