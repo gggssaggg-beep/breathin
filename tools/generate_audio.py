@@ -152,11 +152,79 @@ def two_tap(dur_ms: float = 150.0, gap_ms: float = 120.0) -> np.ndarray:
 
 
 # --------------------------------------------------------------------------- #
-# Спецификация набора (см. ПЛАН §10.2)
+# Набор «Природа» (отзыв №5: свипы/тоны неприятны → волны и капли)
+# --------------------------------------------------------------------------- #
+_RNG_SEED = 20260715  # фикс. seed всех шумов → побайтовая воспроизводимость
+
+
+def _fft_lowpass(sig: np.ndarray, cutoff_hz: float) -> np.ndarray:
+    """Brick-wall lowpass через rfft (без scipy)."""
+    spec = np.fft.rfft(sig)
+    freqs = np.fft.rfftfreq(sig.size, d=1.0 / SR)
+    spec[freqs > cutoff_hz] = 0.0
+    return np.fft.irfft(spec, n=sig.size)
+
+
+def _fft_bandpass(sig: np.ndarray, lo_hz: float, hi_hz: float) -> np.ndarray:
+    """Brick-wall bandpass через rfft."""
+    spec = np.fft.rfft(sig)
+    freqs = np.fft.rfftfreq(sig.size, d=1.0 / SR)
+    spec[(freqs < lo_hz) | (freqs > hi_hz)] = 0.0
+    return np.fft.irfft(spec, n=sig.size)
+
+
+def ocean_wave(dur_ms: float, rising: bool, seed_offset: int = 0) -> np.ndarray:
+    """Накат/откат волны: фильтрованный шум, огибающая и яркость движутся вместе.
+
+    rising=True — волна «накатывает» (вдох): громкость и яркость растут;
+    rising=False — «откатывает» (выдох): спадают. Яркость — кроссфейд тёмного
+    (НЧ) и светлого (СЧ) слоёв одного шума, чтобы не было двух разных «источников».
+    """
+    t = _t(dur_ms)
+    n = t.size
+    rng = np.random.default_rng(_RNG_SEED + seed_offset)
+    noise = rng.standard_normal(n)
+    dark = _fft_bandpass(noise, 120.0, 650.0)
+    bright = _fft_bandpass(noise, 120.0, 2400.0)
+    # Ход волны 0→1 (или 1→0): половина косинуса — плавный, без рывка.
+    x = 0.5 * (1.0 - np.cos(np.pi * np.arange(n) / max(1, n - 1)))
+    if not rising:
+        x = x[::-1]
+    sig = dark * (1.0 - x) + bright * x
+    # Громкость следует ходу волны + короткие края от щелчков.
+    amp = 0.15 + 0.85 * x
+    sig = sig * amp * raised_cosine_env(n, attack_ms=40.0, release_ms=120.0)
+    return sig
+
+
+def droplet(f0: float, f1: float, dur_ms: float,
+            decay_tau_ms: float = 60.0) -> np.ndarray:
+    """Капля: короткое глиссандо вверх × экспоненциальный спад («кап»)."""
+    t = _t(dur_ms)
+    # Линейный ход частоты; фаза = 2π·∫f dt — без разрывов.
+    T = t[-1] if t.size > 1 else 1.0 / SR
+    phase = 2.0 * np.pi * (f0 * t + (f1 - f0) * t * t / (2.0 * T))
+    exp_env = np.exp(-t / (decay_tau_ms / 1000.0))
+    a = max(1, int(round(SR * 3.0 / 1000.0)))  # микро-атака 3 мс
+    atk = np.ones(t.size)
+    atk[:a] = 0.5 * (1.0 - np.cos(np.pi * np.arange(a) / a))
+    return np.sin(phase) * exp_env * atk
+
+
+def wave_pair(dur_ms: float = 260.0, gap_ms: float = 120.0) -> np.ndarray:
+    """Ритм Вима Хофа: короткий накат + пауза + откат (вместо свип-пары)."""
+    up = ocean_wave(dur_ms, rising=True, seed_offset=71)
+    down = ocean_wave(dur_ms, rising=False, seed_offset=72)
+    gap = np.zeros(int(round(SR * gap_ms / 1000.0)))
+    return np.concatenate([up, gap, down])
+
+
+# --------------------------------------------------------------------------- #
+# Спецификация наборов (см. ПЛАН §10.2; «Природа» — отзыв №5 2026-07-14)
 # --------------------------------------------------------------------------- #
 def build_specs() -> list[dict]:
     return [
-        # id, relpath, target dBFS, generator (lambda), назначение
+        # --- Набор «Минимал» (синтетические свипы/тоны, исторический) ---
         dict(id="inhale", path="sets/minimal/inhale.wav", dbfs=-6.0,
              gen=lambda: sweep(300.0, 600.0, 700.0),
              purpose="фаза вдоха — восходящий свип 300→600 Гц"),
@@ -175,16 +243,42 @@ def build_specs() -> list[dict]:
         dict(id="tick_accent", path="sets/minimal/tick_accent.wav", dbfs=-10.0,
              gen=lambda: click(1500.0, 40.0, decay_tau_ms=8.0),
              purpose="акцентный тик на смене фазы"),
+        # --- Набор «Природа» (дефолт: волны на фазы, капли на события) ---
+        dict(id="inhale", path="sets/nature/inhale.wav", dbfs=-6.0,
+             gen=lambda: ocean_wave(1200.0, rising=True, seed_offset=1),
+             purpose="фаза вдоха — накат волны (шум, растущая яркость)"),
+        dict(id="hold_in", path="sets/nature/hold_in.wav", dbfs=-8.0,
+             gen=lambda: droplet(500.0, 1000.0, 220.0, decay_tau_ms=70.0),
+             purpose="задержка на вдохе — капля повыше"),
+        dict(id="exhale", path="sets/nature/exhale.wav", dbfs=-6.0,
+             gen=lambda: ocean_wave(1500.0, rising=False, seed_offset=2),
+             purpose="фаза выдоха — откат волны (спадающая яркость)"),
+        dict(id="hold_out", path="sets/nature/hold_out.wav", dbfs=-8.0,
+             gen=lambda: droplet(350.0, 700.0, 220.0, decay_tau_ms=70.0),
+             purpose="задержка на выдохе — капля пониже (различима от hold_in)"),
+        dict(id="tick", path="sets/nature/tick.wav", dbfs=-16.0,
+             gen=lambda: droplet(600.0, 900.0, 60.0, decay_tau_ms=18.0),
+             purpose="тик метронома — тихая капелька"),
+        dict(id="tick_accent", path="sets/nature/tick_accent.wav", dbfs=-12.0,
+             gen=lambda: droplet(700.0, 1200.0, 90.0, decay_tau_ms=25.0),
+             purpose="акцентный тик — капля ярче"),
+        # --- Общие (для всех наборов) ---
         dict(id="prep_beep", path="common/prep_beep.wav", dbfs=-8.0,
-             gen=lambda: steady_tone(800.0, 120.0, attack_ms=8.0, release_ms=40.0),
-             purpose="бип обратного отсчёта «3…2…1»"),
-        dict(id="gong", path="common/gong.wav", dbfs=-3.0,
-             gen=lambda: gong(220.0, 6000.0),
-             purpose="гонг в конце сессии"),
+             gen=lambda: droplet(450.0, 850.0, 160.0, decay_tau_ms=50.0),
+             purpose="отсчёт «3…2…1» — капля (бип 800 Гц был неприятен, №5)"),
         dict(id="wim_hof_pace", path="common/wim_hof_pace.wav", dbfs=-8.0,
-             gen=lambda: two_tap(),
-             purpose="ритм дыханий Вима Хофа (этап 2)"),
+             gen=lambda: wave_pair(),
+             purpose="ритм дыханий Вима Хофа — накат+откат (вместо свип-пары)"),
     ]
+
+
+# Внешние ассеты: НЕ синтезируются, лежат в git готовыми.
+# Обработка и лицензии — tools/audio_sources/README.md.
+EXTERNAL_ASSETS = [
+    dict(id="gong", path="common/gong.wav", dbfs=-3.0,
+         purpose="гонг в конце сессии — freesound #42095 fauxpress, CC0 "
+                 "(одобрен владельцем; синтез-фолбэк: gong(220, 6000))"),
+]
 
 
 def main() -> None:
@@ -193,7 +287,17 @@ def main() -> None:
     args = ap.parse_args()
 
     out = Path(args.out)
-    manifest: dict[str, dict] = {}
+    # Манифест: sets/<набор>/<id> + common/<id> — по каталогу файла.
+    manifest: dict = {"common": {}, "sets": {}}
+
+    def put(spec: dict, dur_ms: float) -> None:
+        entry = dict(file=spec["path"], duration_ms=dur_ms,
+                     level_dbfs=spec["dbfs"], purpose=spec["purpose"])
+        parts = Path(spec["path"]).parts
+        if parts[0] == "sets":
+            manifest["sets"].setdefault(parts[1], {})[spec["id"]] = entry
+        else:
+            manifest["common"][spec["id"]] = entry
 
     print(f"Синтез аудио-ассетов → {out}  (WAV {SR} Гц / 16 бит / моно)")
     for spec in build_specs():
@@ -201,23 +305,33 @@ def main() -> None:
         dest = out / spec["path"]
         n = write_wav(dest, sig)
         dur_ms = round(1000.0 * n / SR, 1)
-        manifest[spec["id"]] = dict(
-            file=spec["path"], duration_ms=dur_ms,
-            level_dbfs=spec["dbfs"], purpose=spec["purpose"],
-        )
+        put(spec, dur_ms)
         print(f"  ✓ {spec['path']:<28} {dur_ms:>7.1f} мс  {spec['dbfs']:>5} dBFS")
+
+    for spec in EXTERNAL_ASSETS:
+        src = out / spec["path"]
+        if not src.exists():
+            raise SystemExit(f"Внешний ассет отсутствует: {src} "
+                             "(см. tools/audio_sources/README.md)")
+        with wave.open(str(src), "rb") as w:
+            if w.getframerate() != SR or w.getnchannels() != 1:
+                raise SystemExit(f"{src}: ожидается {SR} Гц моно")
+            dur_ms = round(1000.0 * w.getnframes() / SR, 1)
+        put(spec, dur_ms)
+        print(f"  = {spec['path']:<28} {dur_ms:>7.1f} мс  (внешний, не трогаем)")
 
     manifest_path = out / "manifest.json"
     manifest_path.write_text(
         json.dumps({"sample_rate": SR, "format": "wav_pcm_s16_mono",
-                    "assets": manifest}, ensure_ascii=False, indent=2),
+                    **manifest}, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    total = sum(
-        (out / m["file"]).stat().st_size for m in manifest.values()
-    )
-    print(f"  ✓ manifest.json ({len(manifest)} записей)")
-    print(f"Готово. Суммарный размер набора: {total / 1024:.1f} КБ")
+    all_entries = list(manifest["common"].values()) + [
+        e for s in manifest["sets"].values() for e in s.values()
+    ]
+    total = sum((out / m["file"]).stat().st_size for m in all_entries)
+    print(f"  ✓ manifest.json ({len(all_entries)} записей)")
+    print(f"Готово. Суммарный размер наборов: {total / 1024:.1f} КБ")
 
 
 if __name__ == "__main__":
