@@ -665,30 +665,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upToDateNote => 'You\'re on the latest version';
 
   @override
-  String get soundSection => 'Sound';
-
-  @override
-  String get soundSetLabel => 'Sound set';
-
-  @override
-  String get soundSetBowls => 'Bowls';
-
-  @override
-  String get soundSetBowlsNote => 'Singing bowls and chimes';
-
-  @override
-  String get soundSetNature => 'Nature';
-
-  @override
-  String get soundSetNatureNote => 'Waves and drops';
-
-  @override
-  String get soundSetMinimal => 'Minimal';
-
-  @override
-  String get soundSetMinimalNote => 'Clean tones';
-
-  @override
   String get difficultySection => 'Difficulty';
 
   @override

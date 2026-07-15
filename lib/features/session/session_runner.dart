@@ -16,7 +16,6 @@ import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
 import '../../services/audio/audio_bootstrap.dart';
 import '../../services/audio/sound_bank_loader.dart';
-import '../../services/audio/sound_preferences.dart';
 import '../../services/audio/wav_target/session_wav_target.dart';
 import '../../services/haptics/vibration_pattern.dart';
 import '../../services/sync/session_sync_service.dart';
@@ -137,8 +136,7 @@ class _SessionRunnerState extends State<SessionRunner>
     if (handler != null &&
         (widget.feedback.sound || widget.feedback.metronome)) {
       try {
-        // Набор звуков — по выбору пользователя (настройки, дефолт «Природа»).
-        final bank = await loadSoundBank(await SoundSetStore().load());
+        final bank = await loadSoundBank();
         final target =
             await prepareSessionWav(widget.plan, bank, widget.feedback);
         if (target != null) {

@@ -10,7 +10,6 @@ import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_bank_loader.dart';
-import '../../services/audio/sound_preferences.dart';
 import '../../services/audio/timeline_renderer.dart';
 import '../../services/sync/session_sync_service.dart';
 
@@ -73,14 +72,12 @@ class _WimHofSessionScreenState extends State<WimHofSessionScreen>
       _canVibrate = await Vibration.hasVibrator();
     } catch (_) {}
     try {
-      final set = await SoundSetStore().load();
-      final assets = assetsForSet(set);
       final inhale = AudioPlayer();
-      await inhale.setAsset(assets[ClipId.inhale]!);
+      await inhale.setAsset(soundAssetPaths[ClipId.inhale]!);
       final exhale = AudioPlayer();
-      await exhale.setAsset(assets[ClipId.exhale]!);
+      await exhale.setAsset(soundAssetPaths[ClipId.exhale]!);
       final gong = AudioPlayer();
-      await gong.setAsset(assets[ClipId.gong]!);
+      await gong.setAsset(soundAssetPaths[ClipId.gong]!);
       if (!mounted) {
         inhale.dispose();
         exhale.dispose();

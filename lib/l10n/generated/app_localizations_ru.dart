@@ -674,30 +674,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get upToDateNote => 'Установлена последняя версия';
 
   @override
-  String get soundSection => 'Звук';
-
-  @override
-  String get soundSetLabel => 'Звуковой набор';
-
-  @override
-  String get soundSetBowls => 'Чаши';
-
-  @override
-  String get soundSetBowlsNote => 'Поющие чаши и колокольчики';
-
-  @override
-  String get soundSetNature => 'Природа';
-
-  @override
-  String get soundSetNatureNote => 'Волны и капли';
-
-  @override
-  String get soundSetMinimal => 'Минимал';
-
-  @override
-  String get soundSetMinimalNote => 'Чистые сигналы';
-
-  @override
   String get difficultySection => 'Сложность';
 
   @override

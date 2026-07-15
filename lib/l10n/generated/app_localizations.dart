@@ -1220,54 +1220,6 @@ abstract class AppLocalizations {
   /// **'Установлена последняя версия'**
   String get upToDateNote;
 
-  /// No description provided for @soundSection.
-  ///
-  /// In ru, this message translates to:
-  /// **'Звук'**
-  String get soundSection;
-
-  /// No description provided for @soundSetLabel.
-  ///
-  /// In ru, this message translates to:
-  /// **'Звуковой набор'**
-  String get soundSetLabel;
-
-  /// No description provided for @soundSetBowls.
-  ///
-  /// In ru, this message translates to:
-  /// **'Чаши'**
-  String get soundSetBowls;
-
-  /// No description provided for @soundSetBowlsNote.
-  ///
-  /// In ru, this message translates to:
-  /// **'Поющие чаши и колокольчики'**
-  String get soundSetBowlsNote;
-
-  /// No description provided for @soundSetNature.
-  ///
-  /// In ru, this message translates to:
-  /// **'Природа'**
-  String get soundSetNature;
-
-  /// No description provided for @soundSetNatureNote.
-  ///
-  /// In ru, this message translates to:
-  /// **'Волны и капли'**
-  String get soundSetNatureNote;
-
-  /// No description provided for @soundSetMinimal.
-  ///
-  /// In ru, this message translates to:
-  /// **'Минимал'**
-  String get soundSetMinimal;
-
-  /// No description provided for @soundSetMinimalNote.
-  ///
-  /// In ru, this message translates to:
-  /// **'Чистые сигналы'**
-  String get soundSetMinimalNote;
-
   /// No description provided for @difficultySection.
   ///
   /// In ru, this message translates to:
