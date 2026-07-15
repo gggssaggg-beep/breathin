@@ -8,11 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Каталог техник (ПЛАН §5.2)', () {
     test(
-        '18 записей: 10 counted + 4 timer + Вим Хоф + вытягивающее + элементы + девять дыханий',
+        '19 записей: 11 counted + 4 timer + Вим Хоф + вытягивающее + элементы + девять дыханий',
         () {
-      expect(catalog, hasLength(18));
+      expect(catalog, hasLength(19));
       expect(
-          catalog.where((t) => t.type == TechniqueType.counted), hasLength(10));
+          catalog.where((t) => t.type == TechniqueType.counted), hasLength(11));
       expect(catalog.where((t) => t.type == TechniqueType.timer), hasLength(4));
       expect(catalog.where((t) => t.type == TechniqueType.wimHof), hasLength(1));
       expect(
@@ -205,6 +205,17 @@ void main() {
       final holdPhase = t.phases!.firstWhere((p) => p.kind == PhaseKind.holdIn);
       expect(holdPhase.kind, PhaseKind.holdIn);
       expect(holdPhase.maxSec, 8.0);
+    });
+
+    test('физиологический вздох: 3-7 по умолчанию, 3 цикла, без задержек', () {
+      final t = physiologicalSigh;
+      expect(t.phases, hasLength(2));
+      expect(t.phases![0].kind, PhaseKind.inhale);
+      expect(t.phases![0].defaultSec, 3.0);
+      expect(t.phases![1].kind, PhaseKind.exhale);
+      expect(t.phases![1].defaultSec, 7.0);
+      expect(t.defaultCycles, 3);
+      expect(t.safetyLevel, SafetyLevel.low);
     });
 
     test('timer/wimHof не компилируются фазовым конвейером', () {

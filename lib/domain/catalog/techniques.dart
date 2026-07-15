@@ -111,6 +111,24 @@ const twoTen = Technique(
   ],
 );
 
+/// Физиологический вздох (запрос владельца 2026-07-16): двойной вдох +
+/// длинный выдох ртом — самый быстрый научно подтверждённый сброс острого
+/// стресса (аварийная кнопка, 1–3 повтора). Двойной вдох описан текстом:
+/// движок ведёт один вдох, довдох пользователь делает на его пике.
+const physiologicalSigh = Technique(
+  id: 'sigh',
+  type: TechniqueType.counted,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.sigh,
+  phases: [
+    PhaseSpec(kind: PhaseKind.inhale, defaultSec: 3.0, minSec: 2.0, maxSec: 5.0),
+    PhaseSpec(kind: PhaseKind.exhale, defaultSec: 7.0, minSec: 4.0, maxSec: 10.0),
+  ],
+  scaling: ScalingMode.perPhase,
+  defaultCycles: 3,
+);
+
 /// 4-16-8 — пранаяма-соотношение 1:4:2, только для опытных; по умолчанию
 /// предлагается упрощённый режим 4-8-8 (ТЗ §2.1). База масштабируется 3–5 с.
 const fourSixteenEight = Technique(
@@ -376,6 +394,7 @@ final List<Technique> catalog = [
   fourTwoFour,
   twoEight,
   twoTen,
+  physiologicalSigh,
   fourSixteenEight,
   coherent,
   stretchBreath,
