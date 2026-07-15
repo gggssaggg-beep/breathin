@@ -43,5 +43,7 @@ BreathinIconData iconDataFor(TechniqueIcon icon) {
       return BreathinIcons.arrowsVertical;
     case TechniqueIcon.sparkles:
       return BreathinIcons.sparkles;
+    case TechniqueIcon.sigh:
+      return BreathinIcons.trendingDown;
   }
 }

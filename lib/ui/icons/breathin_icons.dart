@@ -272,12 +272,18 @@ abstract final class BreathinIcons {
     'M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245',
   ]);
 
+  /// Нисходящая линия — физиологический вздох (длинный сброс-выдох).
+  static const trendingDown = BreathinIconData([
+    'M3 7l6 6l4 -4l8 8',
+    'M21 10l0 7l-7 0',
+  ]);
+
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
     arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
     trophy, copy, send, sun, stretch, circles, quote,
-    flask, arrowsVertical, sparkles, star,
+    flask, arrowsVertical, sparkles, star, trendingDown,
   ];
 }
