@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:breathin/domain/bolt/bolt_interpretation.dart';
 import 'package:breathin/domain/catalog/techniques.dart';
 import 'package:breathin/domain/difficulty/difficulty.dart';
-import 'package:breathin/domain/models/technique.dart';
 
 void main() {
   group('difficultyMultiplier', () {

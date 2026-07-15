@@ -45,6 +45,27 @@ Management API (`external_google_enabled=true`), в приложении
    Google-провайдер в Supabase через API. (Либо самостоятельно: Supabase →
    Authentication → Sign In / Up → Google → тумблер + вставить оба значения.)
 
+## 2а. E-mail-вход (magic-link) — ✅ СДЕЛАНО в коде, панель НЕ нужна
+
+Вход по ссылке из письма. Провайдер `email` в проекте включён по умолчанию
+(проверено 2026-07-15 через `GET /auth/v1/settings`: `"email": true`,
+`disable_signup: false`), redirect `dyshi://auth` уже в whitelist — **никаких
+действий в панели не требуется.** Код: `AuthService.signInWithEmail` (вход) и
+`linkEmailIdentity` (привязка почты к гостю); UI — форма в секции «Аккаунт».
+
+Как работает: пользователь вводит почту → Supabase шлёт письмо со ссылкой →
+тап по ссылке возвращает в приложение deep link'ом → сессия установлена (тот
+же PKCE-механизм, что у Google; SHA-1/пароль не нужны).
+
+**Опционально (на будущее, не требуется сейчас):**
+- *Свой SMTP.* Встроенная почта Supabase лимитирована (несколько писем/час) и
+  может попадать в спам. Для роста — Authentication → Emails → SMTP Settings
+  (напр. Resend/Postmark).
+- *Код вместо ссылки.* Если захочется вводить 6-значный код, а не жать ссылку:
+  Authentication → Email Templates → Magic Link → добавить `{{ .Token }}` в
+  шаблон; в коде тогда `verifyOTP(email, token, type: OtpType.email)`. Сейчас
+  сделан вариант со ссылкой (magic-link, вариант 1 — выбор владельца).
+
 ## 2в. Веб-версия (PWA для iPhone) — нужно 1 действие владельца
 
 PWA живёт на **https://gggssaggg-beep.github.io/breathin/** (Safari → «Поделиться»

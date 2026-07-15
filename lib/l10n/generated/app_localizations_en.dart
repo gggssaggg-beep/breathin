@@ -420,6 +420,26 @@ class AppLocalizationsEn extends AppLocalizations {
       'Something went wrong. Check your connection and try again.';
 
   @override
+  String get emailFieldLabel => 'Email';
+
+  @override
+  String get emailSignInAction => 'Sign in by email';
+
+  @override
+  String get linkEmailAction => 'Link email';
+
+  @override
+  String get emailInvalidNote => 'Enter a valid email address';
+
+  @override
+  String emailLinkSentNote(String email) {
+    return 'We sent a sign-in link to $email. Open the email on this device and tap the link.';
+  }
+
+  @override
+  String get emailOrDivider => 'or';
+
+  @override
   String get statsTitle => 'Practice';
 
   @override

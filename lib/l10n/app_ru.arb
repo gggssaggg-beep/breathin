@@ -162,6 +162,17 @@
   "accountGuestNote": "Практика и настройки работают без аккаунта. Вход понадобится для друзей и общей ленты.",
   "authNotConfiguredNote": "Вход через Google станет доступен в одном из ближайших обновлений.",
   "authActionFailed": "Не получилось. Проверьте интернет и попробуйте ещё раз.",
+  "emailFieldLabel": "Почта",
+  "emailSignInAction": "Войти по почте",
+  "linkEmailAction": "Привязать почту",
+  "emailInvalidNote": "Введите корректный адрес почты",
+  "emailLinkSentNote": "Мы отправили ссылку для входа на {email}. Откройте письмо на этом устройстве и нажмите ссылку.",
+  "@emailLinkSentNote": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "emailOrDivider": "или",
 
   "statsTitle": "Практика",
   "statsTooltip": "Календарь практик",

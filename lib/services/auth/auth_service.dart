@@ -91,6 +91,30 @@ class AuthService {
     );
   }
 
+  /// E-mail-вход (magic-link): Supabase шлёт письмо со ссылкой, тап по ней
+  /// возвращает в приложение deep link'ом [authRedirectUrl] и `supabase_flutter`
+  /// устанавливает сессию (тот же PKCE-механизм, что у Google). Пароля/SHA-1
+  /// не требуется. `shouldCreateUser: true` — новый адрес создаёт аккаунт.
+  Future<void> signInWithEmail(String email) async {
+    if (!isReady) return;
+    await Supabase.instance.client.auth.signInWithOtp(
+      email: email,
+      emailRedirectTo: authRedirectUrl,
+    );
+  }
+
+  /// Привязка почты к гостевому профилю: как [linkGoogleIdentity], но по
+  /// e-mail. `updateUser` шлёт письмо подтверждения; после клика uid НЕ
+  /// меняется — челленджи/ник/история сохраняются, профиль становится
+  /// постоянным (вход по почте с любого устройства).
+  Future<void> linkEmailIdentity(String email) async {
+    if (!isReady) return;
+    await Supabase.instance.client.auth.updateUser(
+      UserAttributes(email: email),
+      emailRedirectTo: authRedirectUrl,
+    );
+  }
+
   /// Гостевой профиль (анонимный вход): аккаунт без почты и пароля —
   /// достаточно для челленджей. Провайдер включён в проекте Supabase.
   /// Профиль в public.profiles создаёт триггер (display_name = 'Гость').
