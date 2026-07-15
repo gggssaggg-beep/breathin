@@ -17,6 +17,12 @@ String segmentLabel(AppLocalizations l, String id) {
       return l.segAir;
     case 'ether':
       return l.segEther;
+    case 'nine_left':
+      return l.segNineLeft;
+    case 'nine_right':
+      return l.segNineRight;
+    case 'nine_both':
+      return l.segNineBoth;
     default:
       return id;
   }
@@ -52,6 +58,12 @@ Color elementColor(String id) {
       return const Color(0xFF3F7FBF);
     case 'ether':
       return const Color(0xFF9C6BD6);
+    case 'nine_left':
+      return const Color(0xFF7A8CA8);
+    case 'nine_right':
+      return const Color(0xFF7FA88C);
+    case 'nine_both':
+      return const Color(0xFFA89B7A);
     default:
       return const Color(0xFF3F7FBF);
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../data/favorites_store.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/catalog/techniques.dart';
 import '../../domain/models/session_record.dart';
@@ -39,17 +40,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<SessionRecord>? _records;
+  Set<String> _favorites = {};
 
   @override
   void initState() {
     super.initState();
     _reload();
+    _reloadFavorites();
   }
 
   void _reload() {
     widget.log.all().then((r) {
       if (mounted) setState(() => _records = r);
     });
+  }
+
+  void _reloadFavorites() {
+    FavoritesStore().load().then((favs) {
+      if (mounted) setState(() => _favorites = favs);
+    });
+  }
+
+  Future<void> _toggleFavorite(String id) async {
+    await FavoritesStore().toggle(id);
+    _reloadFavorites();
   }
 
   /// Пуш экрана с перезагрузкой стрика по возвращении: после сессии финиш
@@ -120,26 +134,37 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           // Сетка техник — занимает оставшееся место и прокручивается.
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(12),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 1.0,
-              ),
-              itemCount: catalog.length,
-              itemBuilder: (context, index) {
-                final t = catalog[index];
-                return _TechniqueGridCard(
-                  technique: t,
-                  subtitle: techniqueSubtitle(l, t),
-                  onTap: () =>
-                      _openThenReload(TechniqueCardScreen(technique: t)),
-                );
-              },
-            ),
+            child: Builder(builder: (context) {
+              // Стабильная сортировка: избранные — первыми, внутри групп
+              // исходный порядок каталога сохраняется.
+              final favList =
+                  catalog.where((t) => _favorites.contains(t.id)).toList();
+              final restList =
+                  catalog.where((t) => !_favorites.contains(t.id)).toList();
+              final sorted = [...favList, ...restList];
+              return GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: sorted.length,
+                itemBuilder: (context, index) {
+                  final t = sorted[index];
+                  return _TechniqueGridCard(
+                    technique: t,
+                    subtitle: techniqueSubtitle(l, t),
+                    isFavorite: _favorites.contains(t.id),
+                    onToggleFavorite: () => _toggleFavorite(t.id),
+                    onTap: () =>
+                        _openThenReload(TechniqueCardScreen(technique: t)),
+                  );
+                },
+              );
+            }),
           ),
         ],
       ),
@@ -208,11 +233,15 @@ class _StreakBanner extends StatelessWidget {
 class _TechniqueGridCard extends StatelessWidget {
   final Technique technique;
   final String subtitle;
+  final bool isFavorite;
+  final VoidCallback onToggleFavorite;
   final VoidCallback onTap;
 
   const _TechniqueGridCard({
     required this.technique,
     required this.subtitle,
+    required this.isFavorite,
+    required this.onToggleFavorite,
     required this.onTap,
   });
 
@@ -225,11 +254,13 @@ class _TechniqueGridCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
+      child: Stack(
+        children: [
+          InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Иконка. Flexible+FittedBox: при нехватке высоты (двухстрочное
@@ -311,6 +342,24 @@ class _TechniqueGridCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+          // Звезда избранного: тап по ней НЕ открывает карточку.
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton(
+              icon: BreathinIcon(
+                BreathinIcons.star,
+                size: 20,
+                color: isFavorite
+                    ? const Color(0xFFF9A825)
+                    : theme.colorScheme.outlineVariant,
+              ),
+              tooltip: l.favoriteTooltip,
+              onPressed: onToggleFavorite,
+            ),
+          ),
+        ],
       ),
     );
   }

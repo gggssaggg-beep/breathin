@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_box_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.\n\nЭто же — «тактическое (боевое) дыхание»: под этим именем технику используют военные и спецподразделения (Navy SEALs, снайперы, полиция), чтобы сбросить адреналин и вернуть ясность в стрессовой ситуации за минуту-другую.'**
+  /// **'Классическая техника: вдох, задержка, выдох и повторная задержка — каждая фаза одинаковой длины, по умолчанию 4 секунды. Визуально образует квадрат: мысленно «обходите» его углы, удерживая ритм. Подходит для начинающих и регулярной практики в любой обстановке. Дышите через нос — и на вдохе, и на выдохе.'**
   String get tech_box_desc;
 
   /// No description provided for @tech_box_benefit.
@@ -185,7 +185,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_two_eight_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Техника удлинённого выдоха с соотношением 1:4 — короткий вдох на 2 секунды и длинный выдох на 8. Соотношение фаз можно сохранять или менять независимо. Вдох — через нос, выдох — плавно через рот, слегка сжав губы. Не требует задержек, проста в освоении.'**
+  /// **'Техника удлинённого выдоха с соотношением 1:4 — короткий вдох на 2 секунды и длинный выдох на 8. Соотношение фаз можно сохранять или менять независимо. Вдох — через нос, выдох — плавно через рот, слегка сжав губы. Не требует задержек, проста в освоении.\n\nЭто же — быстрая разрядка любого возбуждения: гнева, влечения, тревоги, взбудораженности. Удлинённый выдох активирует парасимпатическую систему и возвращает управление за 1–3 минуты, можно незаметно, в любой обстановке. Вариант 4/8: вдох носом на 4 счёта без усилия, выдох носом или через слегка приоткрытые губы (как через трубочку) на 8 — настройте фазы слайдерами. Внимание: на вдохе — нейтрально, на выдохе — провожать ощущение вниз, от груди к животу и в опору (стопы, сиденье). 10–20 циклов.\n\nМаркер: плечи опустились, «поднимающаяся волна» в груди и голове стекает вниз, мысли замедлились. При головокружении сократить счёт (3/6).'**
   String get tech_two_eight_desc;
 
   /// No description provided for @tech_two_eight_benefit.
@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_nadi_shodhana_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Попеременное дыхание ноздрями из традиции йоги: поочерёдно закрывая правую и левую ноздрю, вы синхронизируете полушария мозга. Практикуется по таймеру; доступны звуковые подсказки смены ноздри с настраиваемым интервалом или полностью свободный режим. Дыхание — только через нос, поочерёдно через ноздри.'**
+  /// **'Попеременное дыхание ноздрями из традиции йоги: поочерёдно закрывая правую и левую ноздрю, вы синхронизируете полушария мозга. Практикуется по таймеру; доступны звуковые подсказки смены ноздри с настраиваемым интервалом или полностью свободный режим. Дыхание — только через нос, поочерёдно через ноздри.\n\nБалансировка после эмоциональных качелей: когда состояние скачет между возбуждением и упадком, раздражением и апатией — выравнивает и успокаивает, не «выключая» энергию. Хорошо после конфликта, тяжёлого разговора, эмоционально заряженного дня, перед сном и перед медитацией.\n\nВариант со счётом: правая рука — большой палец закрывает правую ноздрю, безымянный — левую. Закрыть правую → вдох левой на 4 счёта; закрыть левую, открыть правую → выдох правой на 6–8; вдох правой на 4 → закрыть, выдох левой на 6–8 — это один цикл, всего 9–12. Дыхание плавное, беззвучное; внимание — на прохладе воздуха на вдохе и тепле на выдохе. Задержек в базовом варианте нет.\n\nМаркер: обе ноздри дышат ровнее, состояние ровное, ясное, спокойное. Если нос заложен — сначала прочистить или отложить.'**
   String get tech_nadi_shodhana_desc;
 
   /// No description provided for @tech_nadi_shodhana_benefit.
@@ -365,7 +365,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_fikr_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии набор по душе: нейтральные аффирмации или традиционные вазифы. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.'**
+  /// **'Практика памятования из Суфийского движения (учение Хазрата Инайят Хана). Спокойное дыхание носом: вдох на 4 счёта, выдох на 6. С каждой фазой мысленно повторяется фраза — одна на вдохе, другая на выдохе; экран подсказывает её в такт дыханию.\n\nВыберите в настройке сессии фразу по душе. Смысл не в словах как таковых — фраза даёт вниманию мягкую опору, и дыхание само становится ровнее и глубже.'**
   String get tech_fikr_desc;
 
   /// No description provided for @tech_fikr_benefit.
@@ -374,23 +374,107 @@ abstract class AppLocalizations {
   /// **'Успокаивает поток мыслей, тренирует устойчивое внимание и связывает дыхание с намерением. Хорошая опора в стрессе и перед сном.'**
   String get tech_fikr_benefit;
 
+  /// No description provided for @tech_vessel_name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхание сосуда'**
+  String get tech_vessel_name;
+
+  /// No description provided for @tech_vessel_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Собирает рассеянную или «бьющую вверх» энергию (возбуждение, вспышки эмоций) в устойчивый центр ниже пупка. Мягкий, безопасный вариант тибетского «кувшинного дыхания».\n\nКогда применять: когда энергия есть, но она хаотична — не можешь усидеть, «несёт», сильное влечение или гнев без выхода. Не для острого приступа паники (для него — удлинённый выдох 2-8).\n\nКак выполнять: сидя, спина прямая, руки на коленях или ладони на низе живота. Вдох носом, спокойный, направляя его «вниз» — живот мягко расширяется. В конце вдоха мягко (без напряжения горла!) задержать дыхание на 3–5 секунд, слегка опустив диафрагму и чуть подтянув низ живота навстречу — как будто воздух «сидит в сосуде» ниже пупка. Внимание всё время — на точке на 4 пальца ниже пупка; можно представлять там тёплую сферу. Выдох носом, медленный, оставляя внимание в той же точке. 7–15 циклов, не больше.\n\nМаркер: тепло или плотность внизу живота, ощущение «осевости» — энергия никуда не делась, но перестала дёргать вверх и наружу. Интенсивность осталась, вектор исчез.\n\nПротивопоказания: гипертония, болезни сердца, беременность, недавние операции на брюшной полости, склонность к паническим атакам, эпилепсия. Задержка всегда комфортная: никакого распирания в голове и горле. При любом давлении в голове — прекратить и перейти к удлинённому выдоху.'**
+  String get tech_vessel_desc;
+
+  /// No description provided for @tech_vessel_benefit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Собирает хаотичную энергию в устойчивый центр ниже пупка: интенсивность остаётся, но перестаёт дёргать вверх и наружу.'**
+  String get tech_vessel_benefit;
+
+  /// No description provided for @tech_axis_name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхание по оси'**
+  String get tech_axis_name;
+
+  /// No description provided for @tech_axis_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переводит внимание с объекта (человека, ситуации, картинки в голове) на собственную вертикаль. Классический принцип: энергия следует за вниманием — возвращаем внимание в своё тело, и энергия перестаёт утекать к объекту.\n\nКогда применять: навязчивые мысли о ком-то или о чём-то, «залипание», когда внимание снова и снова уходит к объекту.\n\nКак выполнять: сидя или стоя, макушка тянется вверх. Дыхание носом, естественное, без счёта. На вдохе внимание скользит по воображаемой оси внутри тела снизу вверх — от промежности вдоль позвоночника к макушке. На выдохе — сверху вниз по той же оси. Если внимание убежало к объекту — спокойно заметить («ушло») и на следующем вдохе вернуть на ось: само возвращение и есть упражнение. Глаза лучше прикрыть или расфокусировать.\n\nМаркер: ось ощущается как реальная линия тепла или покалывания; образ объекта тускнеет сам, без борьбы с ним. При лёгком головокружении дышать чуть поверхностнее.'**
+  String get tech_axis_desc;
+
+  /// No description provided for @tech_axis_benefit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возвращает внимание с объекта в собственную вертикаль — навязчивые мысли и «залипание» тускнеют сами, без борьбы.'**
+  String get tech_axis_benefit;
+
+  /// No description provided for @tech_nine_breaths_name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Девять очищающих дыханий'**
+  String get tech_nine_breaths_name;
+
+  /// No description provided for @tech_nine_breaths_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Короткий «сброс» застоявшихся состояний: раздражения, вялости, мутности. Традиционно выполняется перед медитацией как очистка каналов.\n\nКогда применять: перед любой практикой или медитацией; когда нужно быстро «переключить» состояние.\n\nКак выполнять: сидя, спина прямая — ровно 9 дыханий, экран подсказывает текущую тройку. Первые 3: закрыть правую ноздрю пальцем, вдох левой; закрыть левую — резковатый, но не насильственный выдох правой; на выдохе представлять, что выходит серый дым раздражения и гнева. Следующие 3 — наоборот: вдох правой, выдох левой; выходит муть привязанности и «залипания». Последние 3: вдох и выдох обеими ноздрями, чуть с усилием; выходит тусклость и вялость. Вдохи мягкие и полные, выдохи — акцентированные, «выбрасывающие». Внимание — на образе выходящего с выдохом.\n\nМаркер: ощущение свежести и пустоты в голове, как после проветривания комнаты.\n\nПротивопоказания: гипертония, беременность, недавние травмы головы — резкие выдохи заменить на обычные плавные. При головокружении — пауза, дышать обычно.'**
+  String get tech_nine_breaths_desc;
+
+  /// No description provided for @tech_nine_breaths_benefit.
+  ///
+  /// In ru, this message translates to:
+  /// **'За девять дыханий сбрасывает раздражение, «залипание» и вялость — свежесть, как после проветривания комнаты.'**
+  String get tech_nine_breaths_benefit;
+
+  /// No description provided for @segNineLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох левой · выдох правой'**
+  String get segNineLeft;
+
+  /// No description provided for @segNineRight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох правой · выдох левой'**
+  String get segNineRight;
+
+  /// No description provided for @segNineBoth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обе ноздри'**
+  String get segNineBoth;
+
   /// No description provided for @fikrPhrasesLabel.
   ///
   /// In ru, this message translates to:
   /// **'Фразы'**
   String get fikrPhrasesLabel;
 
-  /// No description provided for @fikrSetAffirmations.
+  /// No description provided for @fikrCustomLabel.
   ///
   /// In ru, this message translates to:
-  /// **'Аффирмации'**
-  String get fikrSetAffirmations;
+  /// **'Своя фраза'**
+  String get fikrCustomLabel;
 
-  /// No description provided for @fikrSetWazifa.
+  /// No description provided for @fikrCustomHint.
   ///
   /// In ru, this message translates to:
-  /// **'Вазифы'**
-  String get fikrSetWazifa;
+  /// **'Нажмите, чтобы написать свою'**
+  String get fikrCustomHint;
+
+  /// No description provided for @fikrCustomInLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фраза на вдохе'**
+  String get fikrCustomInLabel;
+
+  /// No description provided for @fikrCustomExLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фраза на выдохе'**
+  String get fikrCustomExLabel;
 
   /// No description provided for @fikr_calm_in.
   ///
@@ -511,42 +595,6 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Мысли — облака, они проплывают'**
   String get fikr_sky_mind_ex;
-
-  /// No description provided for @fikr_ishq_in.
-  ///
-  /// In ru, this message translates to:
-  /// **'Ишк Аллах'**
-  String get fikr_ishq_in;
-
-  /// No description provided for @fikr_ishq_ex.
-  ///
-  /// In ru, this message translates to:
-  /// **'Мабуд Лиллах'**
-  String get fikr_ishq_ex;
-
-  /// No description provided for @fikr_shafee_in.
-  ///
-  /// In ru, this message translates to:
-  /// **'Йа Шафи'**
-  String get fikr_shafee_in;
-
-  /// No description provided for @fikr_shafee_ex.
-  ///
-  /// In ru, this message translates to:
-  /// **'Йа Кафи'**
-  String get fikr_shafee_ex;
-
-  /// No description provided for @fikr_allah_in.
-  ///
-  /// In ru, this message translates to:
-  /// **'…'**
-  String get fikr_allah_in;
-
-  /// No description provided for @fikr_allah_ex.
-  ///
-  /// In ru, this message translates to:
-  /// **'Аллах'**
-  String get fikr_allah_ex;
 
   /// No description provided for @safety_low.
   ///
@@ -1219,6 +1267,54 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Установлена последняя версия'**
   String get upToDateNote;
+
+  /// No description provided for @soundSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Звук'**
+  String get soundSection;
+
+  /// No description provided for @soundSetFlow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поток'**
+  String get soundSetFlow;
+
+  /// No description provided for @soundSetFlowNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поющий тон дышит вместе с вами'**
+  String get soundSetFlowNote;
+
+  /// No description provided for @soundSetBowls.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чаши'**
+  String get soundSetBowls;
+
+  /// No description provided for @soundSetBowlsNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поющие чаши и колокольчики'**
+  String get soundSetBowlsNote;
+
+  /// No description provided for @languageSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык'**
+  String get languageSection;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как в системе'**
+  String get languageSystem;
+
+  /// No description provided for @favoriteTooltip.
+  ///
+  /// In ru, this message translates to:
+  /// **'В избранное'**
+  String get favoriteTooltip;
 
   /// No description provided for @difficultySection.
   ///

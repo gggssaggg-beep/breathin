@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_box_desc =>
-      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.\n\nAlso known as tactical (combat) breathing: military and special units (Navy SEALs, snipers, police) use this exact technique to dump adrenaline and regain clarity under stress within a minute or two.';
+      'A classic four-phase technique: inhale, hold, exhale, and hold again — each phase of equal length, defaulting to 4 seconds. Visualise tracing the sides of a square as you move through each phase. Suitable for beginners and regular practice in any setting. Breathe through the nose on both the inhale and the exhale.';
 
   @override
   String get tech_box_benefit =>
@@ -60,7 +60,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_two_eight_desc =>
-      'Extended-exhale technique with a 1:4 ratio — a short 2-second inhale and a long 8-second exhale. The phase ratio can be maintained or adjusted independently. Inhale through the nose; exhale smoothly through the mouth with lips slightly pursed. No breath holds required, making it easy to learn.';
+      'Extended-exhale technique with a 1:4 ratio — a short 2-second inhale and a long 8-second exhale. The phase ratio can be maintained or adjusted independently. Inhale through the nose; exhale smoothly through the mouth with lips slightly pursed. No breath holds required, making it easy to learn.\n\nThis is also a rapid release valve for any arousal: anger, desire, anxiety, agitation. The extended exhale activates the parasympathetic system and returns control within 1–3 minutes — discreetly, in any setting. The 4/8 variant: inhale through the nose for 4 counts without effort, exhale through the nose or slightly parted lips (as through a straw) for 8 — adjust the phases with the sliders. Attention: neutral on the inhale; on the exhale, follow the sensation downward — from the chest to the belly and into your support (feet, seat). 10–20 cycles.\n\nMarker: shoulders drop, the \"rising wave\" in the chest and head flows down, thoughts slow. If dizzy, shorten the count (3/6).';
 
   @override
   String get tech_two_eight_benefit =>
@@ -115,7 +115,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_nadi_shodhana_desc =>
-      'Alternate-nostril breathing from the yoga tradition: alternately closing the right and left nostril, you synchronise the two brain hemispheres. Practised by timer; optional audio cues for nostril alternation are available with a configurable interval, or a completely free mode. Breathe through the nose only — alternating nostrils.';
+      'Alternate-nostril breathing from the yoga tradition: alternately closing the right and left nostril, you synchronise the two brain hemispheres. Practised by timer; optional audio cues for nostril alternation are available with a configurable interval, or a completely free mode. Breathe through the nose only — alternating nostrils.\n\nA balancing practice after emotional swings: when your state jumps between arousal and slump, irritation and apathy — it evens things out without switching the energy off. Good after a conflict, a hard conversation or an emotionally charged day; before sleep and before meditation.\n\nCounted variant: right hand — thumb closes the right nostril, ring finger the left. Close the right → inhale left for 4 counts; close the left, open the right → exhale right for 6–8; inhale right for 4 → close, exhale left for 6–8 — that is one cycle, 9–12 in total. Breathing smooth and silent; attention on the coolness of the air on the inhale and its warmth on the exhale. No holds in the basic variant.\n\nMarker: both nostrils breathe more evenly; the state is even, clear, calm. If your nose is blocked — clear it first or postpone.';
 
   @override
   String get tech_nadi_shodhana_benefit =>
@@ -170,20 +170,68 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_fikr_desc =>
-      'A remembrance practice from the Sufi Movement (the teaching of Hazrat Inayat Khan). Calm nasal breathing: inhale for 4 counts, exhale for 6. A phrase is silently repeated with each phase — one on the inhale, another on the exhale; the screen shows it in rhythm with your breath.\n\nPick the set that suits you in the session settings: neutral affirmations or traditional wazifas. The point is not the words themselves — the phrase gives attention a gentle anchor, and the breath settles deeper on its own.';
+      'A remembrance practice from the Sufi Movement (the teaching of Hazrat Inayat Khan). Calm nasal breathing: inhale for 4 counts, exhale for 6. A phrase is silently repeated with each phase — one on the inhale, another on the exhale; the screen shows it in rhythm with your breath.\n\nPick the phrase that suits you in the session settings. The point is not the words themselves — the phrase gives attention a gentle anchor, and the breath settles deeper on its own.';
 
   @override
   String get tech_fikr_benefit =>
       'Quiets mental chatter, trains steady attention and ties breath to intention. A good anchor under stress and before sleep.';
 
   @override
+  String get tech_vessel_name => 'Vessel Breathing';
+
+  @override
+  String get tech_vessel_desc =>
+      'Gathers scattered or upward-surging energy (arousal, emotional flare-ups) into a stable centre below the navel. A soft, safe variant of the Tibetan \"vase breathing\".\n\nWhen to use: when there is energy but it is chaotic — you cannot sit still, you are being \"carried away\", strong desire or anger with no outlet. Not for an acute panic attack (use the extended exhale 2-8 for that).\n\nHow to practise: sitting, spine straight, hands on the knees or palms on the lower belly. Inhale through the nose, calmly, directing it \"downward\" — the belly gently expands. At the end of the inhale, softly (no throat tension!) hold the breath for 3–5 seconds, slightly lowering the diaphragm and drawing the lower belly gently towards it — as if the air \"sits in a vessel\" below the navel. Attention stays on a point four fingers below the navel; you may picture a warm sphere there. Exhale through the nose, slowly, leaving attention at the same point. 7–15 cycles, no more.\n\nMarker: warmth or density in the lower belly, a sense of \"axis\": the energy has not gone anywhere, but it has stopped jerking upward and outward. The intensity remains — the vector is gone.\n\nContraindications: hypertension, heart disease, pregnancy, recent abdominal surgery, proneness to panic attacks, epilepsy. The hold must always be comfortable: no pressure in the head or throat. At any pressure in the head — stop and switch to the extended exhale.';
+
+  @override
+  String get tech_vessel_benefit =>
+      'Gathers chaotic energy into a stable centre below the navel: the intensity remains, but stops jerking upward and outward.';
+
+  @override
+  String get tech_axis_name => 'Central Axis Breathing';
+
+  @override
+  String get tech_axis_desc =>
+      'Shifts attention from an object (a person, a situation, a picture in your head) to your own vertical. The classic principle: energy follows attention — return attention to your body, and energy stops leaking to the object.\n\nWhen to use: obsessive thoughts about someone or something, \"sticking\", when attention keeps going back to the object.\n\nHow to practise: sitting or standing, the crown reaching upward. Nasal breathing, natural, no counting. On the inhale, attention glides along an imagined axis inside the body from bottom to top — from the perineum along the spine to the crown. On the exhale — top to bottom along the same axis. If attention has run off to the object — calmly note it (\"gone\") and return it to the axis on the next inhale: the returning itself is the exercise. Eyes best closed or defocused.\n\nMarker: the axis is felt as a real line of warmth or tingling; the image of the object fades by itself, without fighting it. If slightly dizzy, breathe a little shallower.';
+
+  @override
+  String get tech_axis_benefit =>
+      'Returns attention from the object to your own vertical — obsessive thoughts and \"sticking\" fade by themselves, without a fight.';
+
+  @override
+  String get tech_nine_breaths_name => 'Nine Purifying Breaths';
+
+  @override
+  String get tech_nine_breaths_desc =>
+      'A short \"reset\" of stagnant states: irritation, sluggishness, murkiness. Traditionally performed before meditation as a cleansing of the channels.\n\nWhen to use: before any practice or meditation; when you need to quickly \"switch\" your state.\n\nHow to practise: sitting, spine straight — exactly 9 breaths; the screen shows the current set of three. First 3: close the right nostril with a finger, inhale through the left; close the left — a brisk but not forceful exhale through the right; on the exhale, picture grey smoke of irritation and anger leaving. Next 3 — the other way round: inhale right, exhale left; the murk of attachment and \"sticking\" leaves. Last 3: inhale and exhale through both nostrils, with slight effort; dullness and sluggishness leave. Inhales soft and full, exhales accented, \"expelling\". Attention on the image of what leaves with the exhale.\n\nMarker: a feeling of freshness and emptiness in the head, like after airing a room.\n\nContraindications: hypertension, pregnancy, recent head injuries — replace brisk exhales with ordinary smooth ones. If dizzy — pause and breathe normally.';
+
+  @override
+  String get tech_nine_breaths_benefit =>
+      'Nine breaths flush out irritation, \"sticking\" and sluggishness — freshness, like after airing a room.';
+
+  @override
+  String get segNineLeft => 'Inhale left · exhale right';
+
+  @override
+  String get segNineRight => 'Inhale right · exhale left';
+
+  @override
+  String get segNineBoth => 'Both nostrils';
+
+  @override
   String get fikrPhrasesLabel => 'Phrases';
 
   @override
-  String get fikrSetAffirmations => 'Affirmations';
+  String get fikrCustomLabel => 'My own phrase';
 
   @override
-  String get fikrSetWazifa => 'Wazifas';
+  String get fikrCustomHint => 'Tap to write your own';
+
+  @override
+  String get fikrCustomInLabel => 'Inhale phrase';
+
+  @override
+  String get fikrCustomExLabel => 'Exhale phrase';
 
   @override
   String get fikr_calm_in => 'Breathing in calm';
@@ -244,24 +292,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fikr_sky_mind_ex => 'Thoughts are clouds passing by';
-
-  @override
-  String get fikr_ishq_in => 'Ishq Allah';
-
-  @override
-  String get fikr_ishq_ex => 'Mabud Lillah';
-
-  @override
-  String get fikr_shafee_in => 'Ya Shafee';
-
-  @override
-  String get fikr_shafee_ex => 'Ya Kafee';
-
-  @override
-  String get fikr_allah_in => '…';
-
-  @override
-  String get fikr_allah_ex => 'Allah';
 
   @override
   String get safety_low =>
@@ -663,6 +693,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get upToDateNote => 'You\'re on the latest version';
+
+  @override
+  String get soundSection => 'Sound';
+
+  @override
+  String get soundSetFlow => 'Flow';
+
+  @override
+  String get soundSetFlowNote => 'A singing tone that breathes with you';
+
+  @override
+  String get soundSetBowls => 'Bowls';
+
+  @override
+  String get soundSetBowlsNote => 'Singing bowls and chimes';
+
+  @override
+  String get languageSection => 'Language';
+
+  @override
+  String get languageSystem => 'System default';
+
+  @override
+  String get favoriteTooltip => 'Favourite';
 
   @override
   String get difficultySection => 'Difficulty';

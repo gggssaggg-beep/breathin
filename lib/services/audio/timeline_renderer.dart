@@ -2,14 +2,16 @@ import 'dart:typed_data';
 
 import '../../domain/engine/session_plan.dart';
 import '../../domain/models/technique.dart';
-import 'surf_synth.dart';
+import 'pad_synth.dart';
 
-/// Логический клип-событие. Фазы дыхания клипами НЕ являются — их звук
-/// («прибой») синтезируется на всю длительность фазы (surf_synth.dart);
-/// inhale/exhale остались для one-shot'ов Вима Хофа (фиксированные волны).
+/// Логический звук: клипы-события всегда, фазовые клипы — только у наборов
+/// с [SoundBank.synthPhases] == false («Чаши»); у «Потока» фазы синтезируются
+/// рендерером на всю длительность (pad_synth.dart).
 enum ClipId {
   inhale,
+  holdIn,
   exhale,
+  holdOut,
   prepBeep,
   gong,
   tick,
@@ -17,10 +19,17 @@ enum ClipId {
 }
 
 /// Набор декодированных PCM-клипов одного sample rate (ПЛАН §10.2).
+/// [synthPhases] == true — фазы озвучивает синтез «Потока», фазовые клипы
+/// в [clips] отсутствуют (иначе звучали бы дважды).
 class SoundBank {
   final int sampleRate;
   final Map<ClipId, Int16List> clips;
-  const SoundBank({required this.sampleRate, required this.clips});
+  final bool synthPhases;
+  const SoundBank({
+    required this.sampleRate,
+    required this.clips,
+    this.synthPhases = false,
+  });
 }
 
 /// Рендерер таймлайна: раскладывает события [SessionPlan] на единый PCM-буфер,
@@ -36,8 +45,8 @@ class TimelineRenderer {
   /// Позиция сэмпла для момента [ms]. Публичный — проверяется тестом.
   int sampleOffsetForMs(int ms) => (ms * sampleRate / 1000).round();
 
-  /// Сопоставить событие клипу. Возвращает null для событий без клипа
-  /// (фазы звучат синтезом прибоя, не клипом — см. [_phaseSpans]).
+  /// Сопоставить событие клипу. phaseStart маппится на фазовый клип — но у
+  /// «Потока» таких клипов в банке нет (synthPhases), событие просто молчит.
   static ClipId? clipForEvent(EngineEvent e) {
     switch (e.type) {
       case EngineEventType.prepCountdown:
@@ -47,32 +56,60 @@ class TimelineRenderer {
       case EngineEventType.metronomeTick:
         return e.accent ? ClipId.tickAccent : ClipId.tick;
       case EngineEventType.sessionEnd:
-      case EngineEventType.phaseStart:
         return null;
+      case EngineEventType.phaseStart:
+        switch (e.phase!) {
+          case PhaseKind.inhale:
+            return ClipId.inhale;
+          case PhaseKind.holdIn:
+            return ClipId.holdIn;
+          case PhaseKind.exhale:
+            return ClipId.exhale;
+          case PhaseKind.holdOut:
+            return ClipId.holdOut;
+        }
     }
   }
 
-  /// Интервалы фаз плана: (kind, старт, длительность, стартовый уровень).
-  /// Длительность — до следующего phaseStart, иначе до конца плана; стартовый
-  /// уровень прибоя — уровень конца предыдущей фазы (без щелчков на стыках).
-  static List<({PhaseKind kind, int tMs, int durMs, double startLevel})>
-      _phaseSpans(SessionPlan plan) {
+  /// Интервалы фаз плана для синтеза «Потока»: (kind, старт, длительность,
+  /// стартовый уровень, стартовые углы гармоник). Длительность — до
+  /// следующего phaseStart, иначе до конца плана; уровень и углы стартуют
+  /// с конца предыдущей фазы — стыки непрерывны и по громкости, и по волне.
+  List<
+      ({
+        PhaseKind kind,
+        int tMs,
+        int durMs,
+        double startLevel,
+        PadAngles startAngles,
+      })> _phaseSpans(SessionPlan plan) {
     final starts = plan.phaseStarts.toList(growable: false);
-    return [
-      for (var i = 0; i < starts.length; i++)
-        (
-          kind: starts[i].phase!,
-          tMs: starts[i].tMs,
-          durMs: (i + 1 < starts.length
-                  ? starts[i + 1].tMs
-                  : plan.totalDurationMs) -
-              starts[i].tMs,
-          startLevel: surfStartLevel(
-            starts[i].phase!,
-            i > 0 ? starts[i - 1].phase : null,
-          ),
-        ),
-    ];
+    var angles = padInitialAngles();
+    final spans = <({
+      PhaseKind kind,
+      int tMs,
+      int durMs,
+      double startLevel,
+      PadAngles startAngles,
+    })>[];
+    for (var i = 0; i < starts.length; i++) {
+      final kind = starts[i].phase!;
+      final tMs = starts[i].tMs;
+      final durMs =
+          (i + 1 < starts.length ? starts[i + 1].tMs : plan.totalDurationMs) -
+              tMs;
+      final samples =
+          sampleOffsetForMs(tMs + durMs) - sampleOffsetForMs(tMs);
+      spans.add((
+        kind: kind,
+        tMs: tMs,
+        durMs: durMs,
+        startLevel: padStartLevel(kind, i > 0 ? starts[i - 1].phase : null),
+        startAngles: angles,
+      ));
+      angles = padEndAngles(angles, kind, samples, sampleRate);
+    }
+    return spans;
   }
 
   /// Полная длина сессии в сэмплах: конец плана либо хвост последнего клипа
@@ -80,6 +117,9 @@ class TimelineRenderer {
   int totalSamplesFor(SessionPlan plan, SoundBank bank) {
     var totalSamples = sampleOffsetForMs(plan.totalDurationMs);
     for (final e in plan.events) {
+      // «Поток»: фазы поёт синтез — фазовый клип не кладём, даже если
+      // тестовый банк его содержит (иначе звучало бы дважды).
+      if (bank.synthPhases && e.type == EngineEventType.phaseStart) continue;
       final id = clipForEvent(e);
       if (id == null) continue;
       final clip = bank.clips[id];
@@ -108,6 +148,7 @@ class TimelineRenderer {
     final end = startSample + out.length;
     final acc = Int32List(out.length);
     for (final e in plan.events) {
+      if (bank.synthPhases && e.type == EngineEventType.phaseStart) continue;
       final id = clipForEvent(e);
       if (id == null) continue;
       final clip = bank.clips[id];
@@ -121,19 +162,23 @@ class TimelineRenderer {
         acc[clipStart + i - startSample] += clip[i];
       }
     }
-    // Прибой фаз: волна тянется ВСЮ фазу (вдох накатывает, выдох отступает,
-    // задержки — тихий фон). Чанковость сохраняется: синтез детерминирован.
-    for (final span in _phaseSpans(plan)) {
-      mixSurfPhase(
-        acc: acc,
-        kind: span.kind,
-        startLevel: span.startLevel,
-        phaseStartSample: sampleOffsetForMs(span.tMs),
-        phaseSamples: sampleOffsetForMs(span.tMs + span.durMs) -
-            sampleOffsetForMs(span.tMs),
-        chunkStartSample: startSample,
-        sampleRate: sampleRate,
-      );
+    // «Поток»: тон тянется ВСЮ фазу (вдох — вверх и ярче, выдох — зеркально,
+    // задержки — тихий звон). Чанковость сохраняется: синтез детерминирован,
+    // углы гармоник аккумулируются по спанам аналитически.
+    if (bank.synthPhases) {
+      for (final span in _phaseSpans(plan)) {
+        mixPadPhase(
+          acc: acc,
+          kind: span.kind,
+          startLevel: span.startLevel,
+          startAngles: span.startAngles,
+          phaseStartSample: sampleOffsetForMs(span.tMs),
+          phaseSamples: sampleOffsetForMs(span.tMs + span.durMs) -
+              sampleOffsetForMs(span.tMs),
+          chunkStartSample: startSample,
+          sampleRate: sampleRate,
+        );
+      }
     }
     for (var i = 0; i < out.length; i++) {
       final v = acc[i];

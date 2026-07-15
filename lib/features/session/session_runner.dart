@@ -7,7 +7,6 @@ import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../data/session_log_repository.dart';
-import '../../domain/catalog/fikr_phrases.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../l10n/system_l10n.dart';
 import '../../domain/engine/session_plan.dart';
@@ -16,6 +15,7 @@ import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
 import '../../services/audio/audio_bootstrap.dart';
 import '../../services/audio/sound_bank_loader.dart';
+import '../../services/audio/sound_preferences.dart';
 import '../../services/audio/wav_target/session_wav_target.dart';
 import '../../services/haptics/vibration_pattern.dart';
 import '../../services/sync/session_sync_service.dart';
@@ -50,9 +50,9 @@ class SessionRunner extends StatefulWidget {
   /// Паттерн фаз сессии («4-8-8») для записи истории (влад. §15).
   final String? variant;
 
-  /// Пара фраз фикра (№10): показывается на экране синхронно фазе;
+  /// Тексты фраз фикра (№10): показываются на экране синхронно фазе;
   /// null — техника без фраз.
-  final FikrPhrase? phrase;
+  final ({String inhale, String exhale})? phraseTexts;
 
   const SessionRunner({
     super.key,
@@ -62,7 +62,7 @@ class SessionRunner extends StatefulWidget {
     this.log,
     this.mediaTitle,
     this.variant,
-    this.phrase,
+    this.phraseTexts,
   });
 
   @override
@@ -136,7 +136,8 @@ class _SessionRunnerState extends State<SessionRunner>
     if (handler != null &&
         (widget.feedback.sound || widget.feedback.metronome)) {
       try {
-        final bank = await loadSoundBank();
+        // Вариант звука — по выбору пользователя (настройки, дефолт «Поток»).
+        final bank = await loadSoundBank(await SoundSetStore().load());
         final target =
             await prepareSessionWav(widget.plan, bank, widget.feedback);
         if (target != null) {
@@ -360,6 +361,6 @@ class _SessionRunnerState extends State<SessionRunner>
         onPauseResume: _togglePause,
         onStop: _stop,
         segment: widget.technique.segmentForCycle(_state.cycleIndex),
-        phrase: widget.phrase,
+        phraseTexts: widget.phraseTexts,
       );
 }

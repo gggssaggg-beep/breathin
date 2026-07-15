@@ -6,6 +6,8 @@ import '../../data/difficulty_store.dart';
 import '../../domain/difficulty/difficulty.dart';
 import '../../features/onboarding/coach_controller.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../services/audio/sound_preferences.dart';
+import '../../services/locale/locale_store.dart';
 import '../../services/update/update_preferences.dart';
 import 'difficulty_section.dart';
 import '../../services/update/update_runtime.dart';
@@ -29,7 +31,9 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   UpdatePreferences _prefs = const UpdatePreferences();
   UpdateCheckResult _update = UpdateCheckResult.upToDate;
+  SoundSet _soundSet = SoundSet.flow;
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
+  AppLanguage _language = AppLanguage.system;
   bool _hasBoltResult = false;
   String? _version;
 
@@ -40,8 +44,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     UpdatePreferencesStore().load().then((p) {
       if (mounted) setState(() => _prefs = p);
     });
+    SoundSetStore().load().then((s) {
+      if (mounted) setState(() => _soundSet = s);
+    });
     DifficultyStore().load().then((p) {
       if (mounted) setState(() => _difficulty = p);
+    });
+    LocaleStore().load().then((lang) {
+      if (mounted) setState(() => _language = lang);
     });
     BoltRepository().all().then((r) {
       if (mounted) setState(() => _hasBoltResult = r.isNotEmpty);
@@ -69,9 +79,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     UpdatePreferencesStore().save(_prefs);
   }
 
+  void _onSoundSetChanged(SoundSet s) {
+    setState(() => _soundSet = s);
+    // Fire-and-forget, как и остальные настройки экрана.
+    SoundSetStore().save(s);
+  }
+
   void _onDifficultyChanged(DifficultyPreset p) {
     setState(() => _difficulty = p);
     DifficultyStore().save(p);
+  }
+
+  void _onLanguageChanged(AppLanguage lang) {
+    setState(() => _language = lang);
+    LocaleStore().save(lang);
+    localeNotifier.value = localeFor(lang);
   }
 
   /// Открывает внешнюю ссылку (Telegram) в браузере/приложении.
@@ -116,6 +138,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
             autoUpdate: _prefs.autoUpdate,
             onAutoUpdateChanged: _onAutoUpdateChanged,
             onUpdateNow: _downloadUpdate,
+          ),
+          const SizedBox(height: 24),
+          // --- Звук: «Поток» (синтез на всю фазу) или «Чаши» (клипы) ---
+          Text(l.soundSection, style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              _soundSet == SoundSet.flow ? l.soundSetFlow : l.soundSetBowls,
+            ),
+            subtitle: Text(
+              _soundSet == SoundSet.flow
+                  ? l.soundSetFlowNote
+                  : l.soundSetBowlsNote,
+            ),
+          ),
+          SegmentedButton<SoundSet>(
+            segments: [
+              ButtonSegment(
+                value: SoundSet.flow,
+                label: Text(l.soundSetFlow),
+              ),
+              ButtonSegment(
+                value: SoundSet.bowls,
+                label: Text(l.soundSetBowls),
+              ),
+            ],
+            selected: {_soundSet},
+            onSelectionChanged: (s) => _onSoundSetChanged(s.first),
+          ),
+          const SizedBox(height: 24),
+          // --- Язык ---
+          Text(l.languageSection,
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          SegmentedButton<AppLanguage>(
+            segments: [
+              ButtonSegment(
+                value: AppLanguage.system,
+                label: Text(l.languageSystem),
+              ),
+              const ButtonSegment(
+                value: AppLanguage.ru,
+                label: Text('Русский'),
+              ),
+              const ButtonSegment(
+                value: AppLanguage.en,
+                label: Text('English'),
+              ),
+            ],
+            selected: {_language},
+            onSelectionChanged: (v) => _onLanguageChanged(v.first),
           ),
           const SizedBox(height: 24),
           // --- Сложность: глобальный пресет длительностей (эпик §4–5) ---

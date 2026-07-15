@@ -248,11 +248,36 @@ abstract final class BreathinIcons {
     'M19 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5',
   ]);
 
+  /// Колба-сосуд — мягкое дыхание сосуда (энергия внизу живота).
+  static const flask = BreathinIconData([
+    'M9 3l6 0',
+    'M10 9l4 0',
+    'M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6',
+  ]);
+
+  /// Вертикальные стрелки — дыхание по центральной оси.
+  static const arrowsVertical = BreathinIconData([
+    'M8 7l4 -4l4 4',
+    'M8 17l4 4l4 -4',
+    'M12 3l0 18',
+  ]);
+
+  /// Искры — девять очищающих дыханий (свежесть после «проветривания»).
+  static const sparkles = BreathinIconData([
+    'M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6',
+  ]);
+
+  /// Звезда — избранные техники.
+  static const star = BreathinIconData([
+    'M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245',
+  ]);
+
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
     arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
     trophy, copy, send, sun, stretch, circles, quote,
+    flask, arrowsVertical, sparkles, star,
   ];
 }
