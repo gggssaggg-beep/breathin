@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:breathin/app/theme.dart';
 import 'package:breathin/l10n/generated/app_localizations.dart';
 import 'package:breathin/services/update/app_version.dart';
 import 'package:breathin/services/update/update_manifest.dart';
@@ -12,10 +13,12 @@ Widget wrap({
   bool autoUpdate = true,
   ValueChanged<bool>? onChanged,
   VoidCallback? onUpdateNow,
+  ThemeData? theme,
 }) =>
     MaterialApp(
       // UpdateSection теперь локализован — подаём делегаты (en по умолчанию).
       locale: const Locale('en'),
+      theme: theme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
@@ -48,6 +51,21 @@ void main() {
     expect(find.text('≈ 24.2 MB'), findsOneWidget);
     await tester.tap(find.text('Update'));
     expect(tapped, isTrue);
+  });
+
+  testWidgets(
+      'регресс: с темой приложения заголовок не сжимается кнопкой в столбик',
+      (tester) async {
+    // Раньше minimumSize=Size.fromHeight(52) в теме давал кнопке «Обновить»
+    // minWidth=infinity: в Row карточки она отжимала всю ширину, и заголовок
+    // рисовался по одной букве на строку (баг из отзыва 2026-07-15).
+    await tester.pumpWidget(wrap(result: available, theme: AppTheme.light()));
+    expect(tester.takeException(), isNull);
+    final title = tester.getSize(find.text('Update 1.3.0 available'));
+    // При сжатии в столбик ширина ≈ одной буквы (~15 px).
+    expect(title.width, greaterThan(100));
+    final button = tester.getSize(find.widgetWithText(FilledButton, 'Update'));
+    expect(button.width, lessThan(400));
   });
 
   testWidgets('актуальная версия: карточки обновления нет', (tester) async {

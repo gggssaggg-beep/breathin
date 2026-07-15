@@ -32,7 +32,10 @@ class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(52),
+          // НЕ Size.fromHeight: он задаёт minWidth=infinity, и кнопка в Row
+          // отжимает всю ширину (текст соседей ложится по букве в строку).
+          // Полноширинные CTA оборачиваются в SizedBox(width: double.infinity).
+          minimumSize: const Size(64, 52),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
