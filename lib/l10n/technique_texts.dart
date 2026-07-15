@@ -40,6 +40,12 @@ extension TechniqueTexts on AppLocalizations {
         return tech_fikr_name;
       case 'wim_hof':
         return tech_wim_hof_name;
+      case 'vessel':
+        return tech_vessel_name;
+      case 'axis':
+        return tech_axis_name;
+      case 'nine_breaths':
+        return tech_nine_breaths_name;
       default:
         throw StateError('Неизвестный id техники: ${t.id}');
     }
@@ -78,6 +84,12 @@ extension TechniqueTexts on AppLocalizations {
         return tech_fikr_desc;
       case 'wim_hof':
         return tech_wim_hof_desc;
+      case 'vessel':
+        return tech_vessel_desc;
+      case 'axis':
+        return tech_axis_desc;
+      case 'nine_breaths':
+        return tech_nine_breaths_desc;
       default:
         throw StateError('Неизвестный id техники: ${t.id}');
     }
@@ -116,6 +128,12 @@ extension TechniqueTexts on AppLocalizations {
         return tech_fikr_benefit;
       case 'wim_hof':
         return tech_wim_hof_benefit;
+      case 'vessel':
+        return tech_vessel_benefit;
+      case 'axis':
+        return tech_axis_benefit;
+      case 'nine_breaths':
+        return tech_nine_breaths_benefit;
       default:
         throw StateError('Неизвестный id техники: ${t.id}');
     }
