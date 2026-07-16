@@ -325,15 +325,14 @@ class _SafetySection extends StatelessWidget {
     }
 
     if (technique.safetyLevel == SafetyLevel.medium) {
-      final b = theme.brightness;
       return Card(
-        color: AppTheme.warningContainer(b),
+        color: AppTheme.warningContainerOf(context),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Text(
             text,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: AppTheme.onWarningContainer(b),
+              color: AppTheme.onWarningContainerOf(context),
             ),
           ),
         ),
