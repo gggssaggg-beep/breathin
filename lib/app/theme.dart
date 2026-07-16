@@ -35,6 +35,13 @@ class AppTheme {
     return onWarningContainer(Theme.of(context).brightness);
   }
 
+  /// Акцент «солнышко/звезда/пламя» для бодрящих техник и избранного:
+  /// в HANT — HantTheme.amber (`source`); в классике — прежний тёплый янтарь.
+  static Color accentSunColor(BuildContext context) {
+    return Theme.of(context).extension<HantStyle>()?.source ??
+        const Color(0xFFF9A825);
+  }
+
   static ThemeData _base(Brightness brightness) {
     final scheme = ColorScheme.fromSeed(
       seedColor: _seed,

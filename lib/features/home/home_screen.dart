@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme.dart';
 import '../../data/favorites_store.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/catalog/technique_groups.dart';
@@ -454,10 +455,10 @@ class _TechniqueGridCard extends StatelessWidget {
                   ),
                   if (t.energizing) ...[
                     const SizedBox(width: 4),
-                    const BreathinIcon(
+                    BreathinIcon(
                       BreathinIcons.sun,
                       size: 18,
-                      color: Color(0xFFF9A825),
+                      color: AppTheme.accentSunColor(context),
                     ),
                   ],
                 ],
@@ -501,7 +502,7 @@ class _TechniqueGridCard extends StatelessWidget {
                 BreathinIcons.star,
                 size: 20,
                 color: isFavorite
-                    ? const Color(0xFFF9A825)
+                    ? AppTheme.accentSunColor(context)
                     : theme.colorScheme.outlineVariant,
               ),
               tooltip: l.favoriteTooltip,

@@ -17,8 +17,6 @@ import '../wim_hof/wim_hof_setup_screen.dart';
 import 'technique_icons.dart';
 import 'technique_subtitle.dart';
 
-/// Цвет метки-солнышка бодрящих техник (влад. §10) — мягкий амбер.
-const _energizingSun = Color(0xFFF9A825);
 
 /// Экран «Описание техники» (ТЗ §6.3).
 ///
@@ -78,10 +76,10 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
             // Солнышко бодрящих техник рядом с названием (влад. §10).
             if (t.energizing) ...[
               const SizedBox(width: 8),
-              const BreathinIcon(
+              BreathinIcon(
                 BreathinIcons.sun,
                 size: 18,
-                color: _energizingSun,
+                color: AppTheme.accentSunColor(context),
               ),
             ],
           ],

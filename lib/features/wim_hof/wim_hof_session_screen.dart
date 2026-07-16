@@ -4,6 +4,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../app/theme.dart';
+
 import '../../data/challenges_repository.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/engine/wim_hof_machine.dart';
@@ -480,7 +482,7 @@ class _FinishedView extends StatelessWidget {
   /// Строка сравнения: «Новый рекорд!» с огоньком, если лучшая задержка этой
   /// сессии побила прежний рекорд (или это первая сессия с данными); иначе —
   /// «Лучшая за сегодня: N с · Рекорд: M с». null — задержек нет вовсе.
-  Widget? _recordLine() {
+  Widget? _recordLine(BuildContext context) {
     if (retentions.isEmpty) return null;
     final currentBest = retentions.reduce((a, b) => a > b ? a : b);
     final isRecord = prevBestEver == null || currentBest > prevBestEver!;
@@ -488,8 +490,8 @@ class _FinishedView extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const BreathinIcon(BreathinIcons.flame,
-              size: 20, color: Color(0xFFF9A825)),
+          BreathinIcon(BreathinIcons.flame,
+              size: 20, color: AppTheme.accentSunColor(context)),
           const SizedBox(width: 8),
           Text(
             l.whNewRecord,
@@ -561,7 +563,7 @@ class _FinishedView extends StatelessWidget {
                   ],
                 ),
               ),
-            if (_recordLine() case final line?) ...[
+            if (_recordLine(context) case final line?) ...[
               const SizedBox(height: 20),
               line,
             ],
