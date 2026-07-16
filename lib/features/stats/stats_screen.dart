@@ -10,6 +10,7 @@ import '../../domain/stats/practice_stats.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../services/auth/auth_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../bolt/bolt_test_screen.dart';
@@ -86,50 +87,53 @@ class _StatsScreenState extends State<StatsScreen> {
     final records = _records;
     return Scaffold(
       appBar: AppBar(title: Text(l.statsTitle)),
-      body: records == null
-          ? const Center(child: CircularProgressIndicator())
-          : records.isEmpty
-              ? ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    const _BoltEntryCard(),
-                    const SizedBox(height: 24),
-                    _Empty(text: l.statsEmpty),
-                  ],
-                )
-              : ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    if (_isGuest &&
-                        records.length >= 10 &&
-                        !_guestHintDismissed) ...[
-                      _GuestHintCard(onDismiss: _dismissGuestHint),
-                      const SizedBox(height: 16),
+      // В HANT под статистикой — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: records == null
+            ? const Center(child: CircularProgressIndicator())
+            : records.isEmpty
+                ? ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      const _BoltEntryCard(),
+                      const SizedBox(height: 24),
+                      _Empty(text: l.statsEmpty),
                     ],
-                    _SummaryRow(records: records, today: _today),
-                    const SizedBox(height: 24),
-                    _MonthHeader(
-                      year: _year,
-                      month: _month,
-                      canGoNext: !_atCurrentMonth,
-                      onPrev: () => _shiftMonth(-1),
-                      onNext: () => _shiftMonth(1),
-                    ),
-                    const SizedBox(height: 12),
-                    _MonthCalendar(
-                      records: records,
-                      year: _year,
-                      month: _month,
-                      today: _today,
-                    ),
-                    const SizedBox(height: 16),
-                    _MonthTotals(records: records, year: _year, month: _month),
-                    const SizedBox(height: 16),
-                    const _BoltEntryCard(),
-                    const SizedBox(height: 16),
-                    _ByTechnique(records: records, year: _year, month: _month),
-                  ],
-                ),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      if (_isGuest &&
+                          records.length >= 10 &&
+                          !_guestHintDismissed) ...[
+                        _GuestHintCard(onDismiss: _dismissGuestHint),
+                        const SizedBox(height: 16),
+                      ],
+                      _SummaryRow(records: records, today: _today),
+                      const SizedBox(height: 24),
+                      _MonthHeader(
+                        year: _year,
+                        month: _month,
+                        canGoNext: !_atCurrentMonth,
+                        onPrev: () => _shiftMonth(-1),
+                        onNext: () => _shiftMonth(1),
+                      ),
+                      const SizedBox(height: 12),
+                      _MonthCalendar(
+                        records: records,
+                        year: _year,
+                        month: _month,
+                        today: _today,
+                      ),
+                      const SizedBox(height: 16),
+                      _MonthTotals(records: records, year: _year, month: _month),
+                      const SizedBox(height: 16),
+                      const _BoltEntryCard(),
+                      const SizedBox(height: 16),
+                      _ByTechnique(records: records, year: _year, month: _month),
+                    ],
+                  ),
+      ),
     );
   }
 }

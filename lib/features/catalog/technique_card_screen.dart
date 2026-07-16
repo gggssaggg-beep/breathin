@@ -8,6 +8,7 @@ import '../../features/onboarding/coach_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../ui/charts/sparkline_chart.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../session_setup/session_setup_screen.dart';
@@ -86,12 +87,14 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Прокручиваемое тело
-            Expanded(
-              child: ListView(
+      // В HANT под карточкой техники — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Прокручиваемое тело
+              Expanded(
+                child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                 children: [
                   // Крупная иконка
@@ -212,6 +215,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 

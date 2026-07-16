@@ -5,6 +5,7 @@ import '../../domain/engine/timer_session.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import 'timer_session_screen.dart';
 
 /// Настройка таймер-сессии (ПЛАН §10, партия T2): длительность практики,
@@ -69,7 +70,9 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
     if (s == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l.setupTitle)),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const HantBackdrop(
+          child: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
     final minMin = _t.minTimerMin!;
@@ -90,9 +93,11 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        children: [
+      // В HANT под настройкой таймера — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          children: [
           _SliderTile(
             label: l.timerDurationLabel,
             value: l.minutesShort(s.minutes),
@@ -160,6 +165,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
             contentPadding: EdgeInsets.zero,
           ),
         ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(

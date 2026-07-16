@@ -17,6 +17,7 @@ import '../../services/audio/sound_bank_loader.dart';
 import '../../services/audio/timeline_renderer.dart';
 import '../../services/haptics/vibration_pattern.dart';
 import '../../services/sync/session_sync_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../session/tap_pause_hint.dart';
@@ -340,20 +341,23 @@ class _TimerSessionScreenState extends State<TimerSessionScreen>
     final l = AppLocalizations.of(context);
     final m = _machine;
     return Scaffold(
-      body: SafeArea(
-        child: switch (m.stage) {
-          TimerStage.prep => _PrepView(l: l, seconds: m.prepRemainingSec),
-          TimerStage.practice => _PracticeView(
-              l: l,
-              technique: widget.technique,
-              machine: m,
-              glow: _glow,
-              paused: _paused,
-              onPauseResume: _togglePause,
-              onStop: _stop,
-            ),
-          TimerStage.finished => _FinishedView(l: l, onClose: _closeFinished),
-        },
+      // В HANT под таймер-сессией — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: switch (m.stage) {
+            TimerStage.prep => _PrepView(l: l, seconds: m.prepRemainingSec),
+            TimerStage.practice => _PracticeView(
+                l: l,
+                technique: widget.technique,
+                machine: m,
+                glow: _glow,
+                paused: _paused,
+                onPauseResume: _togglePause,
+                onStop: _stop,
+              ),
+            TimerStage.finished => _FinishedView(l: l, onClose: _closeFinished),
+          },
+        ),
       ),
     );
   }

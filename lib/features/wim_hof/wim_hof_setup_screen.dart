@@ -5,6 +5,7 @@ import '../../domain/engine/wim_hof_machine.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import 'wim_hof_session_screen.dart';
 
 /// Настройка метода Вима Хофа (ПЛАН §3.4, этап 2): дыханий в раунде,
@@ -70,7 +71,9 @@ class _WimHofSetupScreenState extends State<WimHofSetupScreen> {
     if (c == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l.setupTitle)),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const HantBackdrop(
+          child: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
     return Scaffold(
@@ -88,9 +91,11 @@ class _WimHofSetupScreenState extends State<WimHofSetupScreen> {
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        children: [
+      // В HANT под настройкой Вим Хофа — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          children: [
           _SliderTile(
             label: l.whBreathsLabel,
             value: '${c.breaths}',
@@ -141,6 +146,7 @@ class _WimHofSetupScreenState extends State<WimHofSetupScreen> {
             ),
           ),
         ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -209,46 +215,49 @@ class _WimHofWarningScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l.whWarningTitle)),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  Card(
-                    color: theme.colorScheme.errorContainer,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        l.safetyText(technique),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onErrorContainer,
+      // В HANT под экраном предупреждения — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    Card(
+                      color: theme.colorScheme.errorContainer,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          l.safetyText(technique),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onErrorContainer,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  FilledButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(l.whAcceptStart),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text(l.whBackAction),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    FilledButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text(l.whAcceptStart),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(l.whBackAction),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

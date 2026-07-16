@@ -17,6 +17,7 @@ import '../../services/update/update_preferences.dart';
 import 'difficulty_section.dart';
 import '../../services/update/update_runtime.dart';
 import '../../services/update/update_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import 'account_section.dart';
@@ -160,9 +161,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l.settingsTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
+      // В HANT под настройками — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
           Text(l.accountSection, style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           const AccountSection(),
@@ -307,7 +310,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ],
-        ],
+          ],
+        ),
       ),
     );
   }

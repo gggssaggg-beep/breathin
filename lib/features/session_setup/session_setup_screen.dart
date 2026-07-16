@@ -18,6 +18,7 @@ import '../../domain/models/technique.dart';
 import '../../domain/models/technique_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../session/phase_labels.dart';
@@ -170,7 +171,9 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     if (s == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l.setupTitle)),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const HantBackdrop(
+          child: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
 
@@ -202,9 +205,11 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
             ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        children: [
+      // В HANT под настройкой сессии — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          children: [
           // --- Скриптовая техника: фиксированный рисунок дыхания ---
           if (isScripted) ...[
             _SectionHeader(title: l.stretchPatternTitle),
@@ -263,6 +268,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           _buildFeedbackSection(l, s),
           const SizedBox(height: 16),
         ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(

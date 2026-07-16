@@ -8,6 +8,7 @@ import '../../data/challenges_repository.dart';
 import '../../domain/stats/challenge_progress.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/auth/auth_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 
@@ -83,7 +84,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l.challengesTitle)),
-      body: _body(l),
+      // В HANT под челленджами — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(child: _body(l)),
     );
   }
 

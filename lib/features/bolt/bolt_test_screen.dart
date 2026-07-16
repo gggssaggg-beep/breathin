@@ -6,6 +6,7 @@ import '../../data/bolt_repository.dart';
 import '../../domain/bolt/bolt_interpretation.dart';
 import '../../domain/models/bolt_result.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import 'bolt_chart.dart';
@@ -99,20 +100,23 @@ class _BoltTestScreenState extends State<BoltTestScreen> {
       appBar: _stage == _Stage.holding
           ? null
           : AppBar(title: Text(l.boltTitle)),
-      body: SafeArea(
-        child: switch (_stage) {
-          _Stage.intro => _IntroView(history: _history, onStart: _startHold),
-          _Stage.holding => _HoldingView(
-              elapsed: _elapsed,
-              onStop: _stopHold,
-            ),
-          _Stage.result => _ResultView(
-              seconds: _seconds,
-              saved: _saved,
-              onSave: _save,
-              onRetry: _retry,
-            ),
-        },
+      // В HANT под экраном BOLT — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: switch (_stage) {
+            _Stage.intro => _IntroView(history: _history, onStart: _startHold),
+            _Stage.holding => _HoldingView(
+                elapsed: _elapsed,
+                onStop: _stopHold,
+              ),
+            _Stage.result => _ResultView(
+                seconds: _seconds,
+                saved: _saved,
+                onSave: _save,
+                onRetry: _retry,
+              ),
+          },
+        ),
       ),
     );
   }

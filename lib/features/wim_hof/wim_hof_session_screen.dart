@@ -14,6 +14,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_bank_loader.dart';
 import '../../services/audio/timeline_renderer.dart';
 import '../../services/sync/session_sync_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 
@@ -238,41 +239,44 @@ class _WimHofSessionScreenState extends State<WimHofSessionScreen>
     final theme = Theme.of(context);
     final m = _machine;
     return Scaffold(
-      body: SafeArea(
-        child: switch (m.stage) {
-          WimHofStage.prep => _CenterPrompt(
-              title: l.prepGetReady,
-              huge: '${m.prepRemainingSec}',
-            ),
-          WimHofStage.breathing => _BreathingView(
-              l: l,
-              machine: m,
-              onStop: _stop,
-            ),
-          WimHofStage.retention => _RetentionView(
-              l: l,
-              machine: m,
-              onTap: () {
-                m.endRetention();
-                _vibrate(60);
-              },
-            ),
-          WimHofStage.recovery => _CenterPrompt(
-              title: l.whRecoveryPrompt,
-              huge: '${m.recoveryRemainingSec}',
-            ),
-          WimHofStage.finished => _FinishedView(
-              l: l,
-              theme: theme,
-              retentions: m.retentionsSec,
-              prevBestEver: _prevBestEver,
-              prevBestToday: _prevBestToday,
-              onClose: () {
-                _record(completed: true);
-                Navigator.of(context).pop();
-              },
-            ),
-        },
+      // В HANT под сессией Вима Хофа — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: switch (m.stage) {
+            WimHofStage.prep => _CenterPrompt(
+                title: l.prepGetReady,
+                huge: '${m.prepRemainingSec}',
+              ),
+            WimHofStage.breathing => _BreathingView(
+                l: l,
+                machine: m,
+                onStop: _stop,
+              ),
+            WimHofStage.retention => _RetentionView(
+                l: l,
+                machine: m,
+                onTap: () {
+                  m.endRetention();
+                  _vibrate(60);
+                },
+              ),
+            WimHofStage.recovery => _CenterPrompt(
+                title: l.whRecoveryPrompt,
+                huge: '${m.recoveryRemainingSec}',
+              ),
+            WimHofStage.finished => _FinishedView(
+                l: l,
+                theme: theme,
+                retentions: m.retentionsSec,
+                prevBestEver: _prevBestEver,
+                prevBestToday: _prevBestToday,
+                onClose: () {
+                  _record(completed: true);
+                  Navigator.of(context).pop();
+                },
+              ),
+          },
+        ),
       ),
     );
   }
