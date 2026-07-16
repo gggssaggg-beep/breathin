@@ -8,10 +8,13 @@ import '../../data/session_log_repository.dart';
 import '../../domain/engine/wim_hof_machine.dart';
 import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
+import '../../domain/stats/wim_hof_stats.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_bank_loader.dart';
 import '../../services/audio/timeline_renderer.dart';
 import '../../services/sync/session_sync_service.dart';
+import '../../ui/icons/breathin_icon.dart';
+import '../../ui/icons/breathin_icons.dart';
 
 /// Экран сессии Вима Хофа (ПЛАН §3.4): машина раундов [WimHofMachine].
 ///
@@ -57,14 +60,31 @@ class _WimHofSessionScreenState extends State<WimHofSessionScreen>
   bool _recorded = false;
   late final DateTime _startedAt = DateTime.now();
 
+  // Рекорды ДО этой сессии (журнал на старте) — для строки сравнения на финише
+  // (ПЛАН П19 §2.4). Загружаются один раз; null пока не прочитан журнал.
+  int? _prevBestEver;
+  int? _prevBestToday;
+
   @override
   void initState() {
     super.initState();
     try {
       WakelockPlus.enable().ignore();
     } catch (_) {}
+    _loadRecords();
     _initAudio();
     _ticker = createTicker(_onTick)..start();
+  }
+
+  Future<void> _loadRecords() async {
+    try {
+      final history = await (widget.log ?? SessionLogRepository()).all();
+      if (!mounted) return;
+      setState(() {
+        _prevBestEver = WimHofStats.bestEver(history);
+        _prevBestToday = WimHofStats.bestOnDay(history, _startedAt);
+      });
+    } catch (_) {}
   }
 
   Future<void> _initAudio() async {
@@ -243,6 +263,8 @@ class _WimHofSessionScreenState extends State<WimHofSessionScreen>
               l: l,
               theme: theme,
               retentions: m.retentionsSec,
+              prevBestEver: _prevBestEver,
+              prevBestToday: _prevBestToday,
               onClose: () {
                 _record(completed: true);
                 Navigator.of(context).pop();
@@ -434,14 +456,58 @@ class _FinishedView extends StatelessWidget {
   final AppLocalizations l;
   final ThemeData theme;
   final List<int> retentions;
+
+  /// Рекорды ДО этой сессии (для мотивирующей строки, ПЛАН П19 §2.4).
+  final int? prevBestEver;
+  final int? prevBestToday;
   final VoidCallback onClose;
 
   const _FinishedView({
     required this.l,
     required this.theme,
     required this.retentions,
+    required this.prevBestEver,
+    required this.prevBestToday,
     required this.onClose,
   });
+
+  /// Строка сравнения: «Новый рекорд!» с огоньком, если лучшая задержка этой
+  /// сессии побила прежний рекорд (или это первая сессия с данными); иначе —
+  /// «Лучшая за сегодня: N с · Рекорд: M с». null — задержек нет вовсе.
+  Widget? _recordLine() {
+    if (retentions.isEmpty) return null;
+    final currentBest = retentions.reduce((a, b) => a > b ? a : b);
+    final isRecord = prevBestEver == null || currentBest > prevBestEver!;
+    if (isRecord) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const BreathinIcon(BreathinIcons.flame,
+              size: 20, color: Color(0xFFF9A825)),
+          const SizedBox(width: 8),
+          Text(
+            l.whNewRecord,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        ],
+      );
+    }
+    // Не рекорд ⇒ prevBestEver != null и не меньше текущей лучшей.
+    final bestEver = prevBestEver!;
+    final bestToday = prevBestToday == null || currentBest > prevBestToday!
+        ? currentBest
+        : prevBestToday!;
+    return Text(
+      l.whRecordCompare('$bestToday', '$bestEver'),
+      style: theme.textTheme.bodyMedium?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -489,6 +555,10 @@ class _FinishedView extends StatelessWidget {
                   ],
                 ),
               ),
+            if (_recordLine() case final line?) ...[
+              const SizedBox(height: 20),
+              line,
+            ],
             const SizedBox(height: 24),
             Text(
               l.sessionDoneTapHint,

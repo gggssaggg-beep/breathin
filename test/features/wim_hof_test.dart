@@ -126,6 +126,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 2100)); // recovery 2 c
     expect(find.text('Retentions by round'), findsOneWidget);
     expect(find.text('33 s'), findsOneWidget);
+    // Пустая история → первая сессия с данными = рекорд.
+    expect(find.text('New record!'), findsOneWidget);
 
     // Запись в историю: 1 раунд, retentions зафиксированы.
     final records = await repo.all();
@@ -135,6 +137,41 @@ void main() {
     expect(records.single.cyclesCompleted, 1);
     expect(records.single.retentionsSec, [33]);
     expect(records.single.variant, '2×1');
+  });
+
+  testWidgets('финиш ВХ: строка сравнения показывает рекорд, если не побит',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final repo = SessionLogRepository();
+    // Прежняя сессия сегодня с лучшей задержкой 50 с — выше, чем будет сейчас.
+    await repo.add(SessionRecord(
+      id: 'prev',
+      techniqueId: 'wim_hof',
+      startedAt: DateTime.now(),
+      durationSec: 200,
+      cyclesCompleted: 1,
+      completed: true,
+      retentionsSec: const [50],
+    ));
+    await tester.pumpWidget(wrap(WimHofSessionScreen(
+      technique: wimHof,
+      config: const WimHofConfig(
+        breaths: 2,
+        paceSec: 1.0,
+        rounds: 1,
+        recoveryHoldSec: 2,
+        prepSeconds: 1,
+      ),
+      log: repo,
+    )));
+    await tester.pump(const Duration(milliseconds: 1100)); // prep
+    await tester.pump(const Duration(milliseconds: 2100)); // 2 дыхания
+    await tester.pump(const Duration(seconds: 33)); // задержка 33 c (< 50)
+    await tester.tap(find.text('Breathe in'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 2100)); // recovery → финиш
+    expect(find.text('Best today: 50 s · Record: 50 s'), findsOneWidget);
+    expect(find.text('New record!'), findsNothing);
   });
 
   testWidgets('стоп во время дыханий БЕЗ завершённой задержки — без записи',
