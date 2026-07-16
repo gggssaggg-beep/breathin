@@ -1292,17 +1292,17 @@ abstract class AppLocalizations {
   /// **'Звук'**
   String get soundSection;
 
-  /// No description provided for @soundSetFlow.
+  /// No description provided for @soundSetHarp.
   ///
   /// In ru, this message translates to:
-  /// **'Поток'**
-  String get soundSetFlow;
+  /// **'Арфа'**
+  String get soundSetHarp;
 
-  /// No description provided for @soundSetFlowNote.
+  /// No description provided for @soundSetHarpNote.
   ///
   /// In ru, this message translates to:
-  /// **'Поющий тон дышит вместе с вами'**
-  String get soundSetFlowNote;
+  /// **'Живая арфа и фоновая музыка'**
+  String get soundSetHarpNote;
 
   /// No description provided for @soundSetBowls.
   ///

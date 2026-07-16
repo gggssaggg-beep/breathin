@@ -2,11 +2,11 @@ import 'dart:typed_data';
 
 import '../../domain/engine/session_plan.dart';
 import '../../domain/models/technique.dart';
-import 'pad_synth.dart';
+import 'harp_melody.dart';
 
 /// Логический звук: клипы-события всегда, фазовые клипы — только у наборов
-/// с [SoundBank.synthPhases] == false («Чаши»); у «Потока» фазы синтезируются
-/// рендерером на всю длительность (pad_synth.dart).
+/// без лесенки ([SoundBank.scale] == null, «Чаши»); у «Арфы» фазы озвучивает
+/// мелодия из нот лесенки (harp_melody.dart).
 enum ClipId {
   inhale,
   holdIn,
@@ -19,16 +19,16 @@ enum ClipId {
 }
 
 /// Набор декодированных PCM-клипов одного sample rate (ПЛАН §10.2).
-/// [synthPhases] == true — фазы озвучивает синтез «Потока», фазовые клипы
-/// в [clips] отсутствуют (иначе звучали бы дважды).
+/// [scale] — лесенка нот мелодии фаз (пентатоника, [harpScaleSize] нот);
+/// если задана, фазовые клипы из [clips] не кладутся (звучали бы дважды).
 class SoundBank {
   final int sampleRate;
   final Map<ClipId, Int16List> clips;
-  final bool synthPhases;
+  final List<Int16List>? scale;
   const SoundBank({
     required this.sampleRate,
     required this.clips,
-    this.synthPhases = false,
+    this.scale,
   });
 }
 
@@ -45,8 +45,8 @@ class TimelineRenderer {
   /// Позиция сэмпла для момента [ms]. Публичный — проверяется тестом.
   int sampleOffsetForMs(int ms) => (ms * sampleRate / 1000).round();
 
-  /// Сопоставить событие клипу. phaseStart маппится на фазовый клип — но у
-  /// «Потока» таких клипов в банке нет (synthPhases), событие просто молчит.
+  /// Сопоставить событие клипу. phaseStart маппится на фазовый клип — режим
+  /// «Чаш»; у «Арфы» (bank.scale != null) фазы озвучивает мелодия.
   static ClipId? clipForEvent(EngineEvent e) {
     switch (e.type) {
       case EngineEventType.prepCountdown:
@@ -71,45 +71,25 @@ class TimelineRenderer {
     }
   }
 
-  /// Интервалы фаз плана для синтеза «Потока»: (kind, старт, длительность,
-  /// стартовый уровень, стартовые углы гармоник). Длительность — до
-  /// следующего phaseStart, иначе до конца плана; уровень и углы стартуют
-  /// с конца предыдущей фазы — стыки непрерывны и по громкости, и по волне.
-  List<
-      ({
-        PhaseKind kind,
-        int tMs,
-        int durMs,
-        double startLevel,
-        PadAngles startAngles,
-      })> _phaseSpans(SessionPlan plan) {
+  /// Ноты мелодии всего плана: (сэмпл старта, нота лесенки, громкость).
+  /// Длительность фазы — до следующего phaseStart, иначе до конца плана;
+  /// раскладка нот по фазе — notesForPhase (harp_melody.dart).
+  List<({int atSample, int scaleIndex, double gain})> _melodyNotes(
+      SessionPlan plan) {
     final starts = plan.phaseStarts.toList(growable: false);
-    var angles = padInitialAngles();
-    final spans = <({
-      PhaseKind kind,
-      int tMs,
-      int durMs,
-      double startLevel,
-      PadAngles startAngles,
-    })>[];
-    for (var i = 0; i < starts.length; i++) {
-      final kind = starts[i].phase!;
-      final tMs = starts[i].tMs;
-      final durMs =
+    return [
+      for (var i = 0; i < starts.length; i++)
+        for (final note in notesForPhase(
+          starts[i].phase!,
           (i + 1 < starts.length ? starts[i + 1].tMs : plan.totalDurationMs) -
-              tMs;
-      final samples =
-          sampleOffsetForMs(tMs + durMs) - sampleOffsetForMs(tMs);
-      spans.add((
-        kind: kind,
-        tMs: tMs,
-        durMs: durMs,
-        startLevel: padStartLevel(kind, i > 0 ? starts[i - 1].phase : null),
-        startAngles: angles,
-      ));
-      angles = padEndAngles(angles, kind, samples, sampleRate);
-    }
-    return spans;
+              starts[i].tMs,
+        ))
+          (
+            atSample: sampleOffsetForMs(starts[i].tMs + note.offsetMs),
+            scaleIndex: note.scaleIndex,
+            gain: note.gain,
+          ),
+    ];
   }
 
   /// Полная длина сессии в сэмплах: конец плана либо хвост последнего клипа
@@ -117,9 +97,9 @@ class TimelineRenderer {
   int totalSamplesFor(SessionPlan plan, SoundBank bank) {
     var totalSamples = sampleOffsetForMs(plan.totalDurationMs);
     for (final e in plan.events) {
-      // «Поток»: фазы поёт синтез — фазовый клип не кладём, даже если
+      // «Арфа»: фазы озвучивает мелодия — фазовый клип не кладём, даже если
       // тестовый банк его содержит (иначе звучало бы дважды).
-      if (bank.synthPhases && e.type == EngineEventType.phaseStart) continue;
+      if (bank.scale != null && e.type == EngineEventType.phaseStart) continue;
       final id = clipForEvent(e);
       if (id == null) continue;
       final clip = bank.clips[id];
@@ -148,7 +128,7 @@ class TimelineRenderer {
     final end = startSample + out.length;
     final acc = Int32List(out.length);
     for (final e in plan.events) {
-      if (bank.synthPhases && e.type == EngineEventType.phaseStart) continue;
+      if (bank.scale != null && e.type == EngineEventType.phaseStart) continue;
       final id = clipForEvent(e);
       if (id == null) continue;
       final clip = bank.clips[id];
@@ -162,22 +142,22 @@ class TimelineRenderer {
         acc[clipStart + i - startSample] += clip[i];
       }
     }
-    // «Поток»: тон тянется ВСЮ фазу (вдох — вверх и ярче, выдох — зеркально,
-    // задержки — тихий звон). Чанковость сохраняется: синтез детерминирован,
-    // углы гармоник аккумулируются по спанам аналитически.
-    if (bank.synthPhases) {
-      for (final span in _phaseSpans(plan)) {
-        mixPadPhase(
-          acc: acc,
-          kind: span.kind,
-          startLevel: span.startLevel,
-          startAngles: span.startAngles,
-          phaseStartSample: sampleOffsetForMs(span.tMs),
-          phaseSamples: sampleOffsetForMs(span.tMs + span.durMs) -
-              sampleOffsetForMs(span.tMs),
-          chunkStartSample: startSample,
-          sampleRate: sampleRate,
-        );
+    // «Арфа»: мелодия фаз — живые ноты лесенки на точных сэмплах (вдох —
+    // лесенка вверх, выдох — вниз, задержки — тихая нота). Хвост ноты
+    // свободно звенит поверх следующей фазы — арфа затухает естественно.
+    final scale = bank.scale;
+    if (scale != null) {
+      for (final m in _melodyNotes(plan)) {
+        final note = scale[m.scaleIndex.clamp(0, scale.length - 1)];
+        if (m.atSample >= end || m.atSample + note.length <= startSample) {
+          continue;
+        }
+        final from = m.atSample < startSample ? startSample - m.atSample : 0;
+        final toEnd = end - m.atSample;
+        final to = toEnd < note.length ? toEnd : note.length;
+        for (var i = from; i < to; i++) {
+          acc[m.atSample + i - startSample] += (note[i] * m.gain).round();
+        }
       }
     }
     for (var i = 0; i < out.length; i++) {

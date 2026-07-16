@@ -718,10 +718,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get soundSection => 'Звук';
 
   @override
-  String get soundSetFlow => 'Поток';
+  String get soundSetHarp => 'Арфа';
 
   @override
-  String get soundSetFlowNote => 'Поющий тон дышит вместе с вами';
+  String get soundSetHarpNote => 'Живая арфа и фоновая музыка';
 
   @override
   String get soundSetBowls => 'Чаши';

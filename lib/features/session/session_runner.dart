@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:just_audio/just_audio.dart' show ProcessingState;
+import 'package:just_audio/just_audio.dart'
+    show AudioPlayer, LoopMode, ProcessingState;
 import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -107,6 +108,10 @@ class _SessionRunnerState extends State<SessionRunner>
   bool _canVibrate = false;
   StreamSubscription<ProcessingState>? _playerSub;
 
+  /// Фоновый медитативный трек (луп, отдельный слой just_audio): часть
+  /// варианта «Арфа». В строгий таймлайн не входит — синхронизация не нужна.
+  AudioPlayer? _bgPlayer;
+
   @override
   void initState() {
     super.initState();
@@ -136,8 +141,13 @@ class _SessionRunnerState extends State<SessionRunner>
     if (handler != null &&
         (widget.feedback.sound || widget.feedback.metronome)) {
       try {
-        // Вариант звука — по выбору пользователя (настройки, дефолт «Поток»).
-        final bank = await loadSoundBank(await SoundSetStore().load());
+        // Вариант звука — по выбору пользователя (настройки, дефолт «Арфа»).
+        final set = await SoundSetStore().load();
+        final bank = await loadSoundBank(set);
+        // Фон — только у «Арфы» и только при включённом звуке фаз.
+        if (set == SoundSet.harp && widget.feedback.sound) {
+          unawaited(_startBackground());
+        }
         final target =
             await prepareSessionWav(widget.plan, bank, widget.feedback);
         if (target != null) {
@@ -170,6 +180,23 @@ class _SessionRunnerState extends State<SessionRunner>
     if (!mounted) return;
     if (!_audioMode) _clock.start();
     _ticker.start();
+  }
+
+  /// Поднимает фоновый луп. Отдельно от основного пути: сбой фона не должен
+  /// валить сессию (и наоборот, тесты без плагина — тишина).
+  Future<void> _startBackground() async {
+    try {
+      final p = AudioPlayer();
+      await p.setAsset(backgroundLoopAsset);
+      await p.setLoopMode(LoopMode.all);
+      await p.setVolume(0.45);
+      if (!mounted) {
+        p.dispose();
+        return;
+      }
+      _bgPlayer = p;
+      unawaited(p.play().catchError((_) {}));
+    } catch (_) {}
   }
 
   void _onProcessingState(ProcessingState ps) {
@@ -251,6 +278,9 @@ class _SessionRunnerState extends State<SessionRunner>
     if (_state.isFinished || _closing) return;
     final handler = sessionAudioHandler;
     if (!_paused) {
+      try {
+        _bgPlayer?.pause();
+      } catch (_) {}
       if (_audioMode && handler != null) {
         await handler.pause();
       } else {
@@ -276,6 +306,9 @@ class _SessionRunnerState extends State<SessionRunner>
           ..reset()
           ..start();
       }
+      try {
+        _bgPlayer?.play().catchError((_) {});
+      } catch (_) {}
       if (mounted) setState(() => _paused = false);
     }
   }
@@ -283,6 +316,9 @@ class _SessionRunnerState extends State<SessionRunner>
   void _stopClocks() {
     _ticker.stop();
     _clock.stop();
+    try {
+      _bgPlayer?.stop();
+    } catch (_) {}
     // Глушим по _audioLoaded, не по _audioMode: файл в плеере — значит
     // стоп обязан его остановить в любом состоянии (Ж1).
     if (_audioLoaded) {
@@ -340,6 +376,8 @@ class _SessionRunnerState extends State<SessionRunner>
   @override
   void dispose() {
     _playerSub?.cancel();
+    _bgPlayer?.dispose();
+    _bgPlayer = null;
     if (_audioLoaded) sessionAudioHandler?.stop().ignore();
     _audioLoaded = false;
     // Источник сессии больше не нужен (плеер остановлен строкой выше):

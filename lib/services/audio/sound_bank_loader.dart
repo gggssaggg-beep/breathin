@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show AssetBundle, rootBundle;
 
+import 'harp_melody.dart';
 import 'sound_preferences.dart';
 import 'timeline_renderer.dart';
 import 'wav_io.dart';
@@ -18,12 +19,22 @@ const Map<ClipId, String> soundAssetPaths = {
   ClipId.tickAccent: 'assets/audio/common/tick_accent.wav',
 };
 
-/// Пути клипов набора [set]. «Поток» фазовых клипов НЕ имеет (фазы поёт
-/// синтез — включать клипы нельзя, звучали бы дважды); «Чаши» кладут чашу/
-/// колокольчики на старты фаз. Покрыто тестом полноты.
+/// Фоновый медитативный трек (бесшовный луп): дрон живой виолончели +
+/// «светлячки» арфы (tools/prepare_live_audio.py). Играется just_audio
+/// отдельным слоем, в строгий таймлайн не входит (ПЛАН §10).
+const String backgroundLoopAsset = 'assets/audio/common/background_loop.ogg';
+
+/// Пути нот лесенки «Арфы» (пентатоника C4..E5, live-семплы VSCO CC0).
+List<String> harpScalePaths() => [
+      for (var i = 0; i < harpScaleSize; i++)
+        'assets/audio/sets/harp/note_$i.wav',
+    ];
+
+/// Пути клипов набора [set]. «Арфа» фазовых клипов НЕ имеет (фазы поёт
+/// мелодия из лесенки); «Чаши» кладут чашу/колокольчики на старты фаз.
 Map<ClipId, String> assetsForSet(SoundSet set) {
   switch (set) {
-    case SoundSet.flow:
+    case SoundSet.harp:
       return {
         ClipId.prepBeep: soundAssetPaths[ClipId.prepBeep]!,
         ClipId.gong: soundAssetPaths[ClipId.gong]!,
@@ -44,10 +55,10 @@ Map<ClipId, String> assetsForSet(SoundSet set) {
   }
 }
 
-/// Загружает и декодирует клипы варианта [set] из ассетов приложения.
+/// Загружает и декодирует звук варианта [set] из ассетов приложения.
 ///
 /// [bundle] внедряется для тестов (rootBundle требует биндинга/ассетов).
-/// Все клипы обязаны иметь один sample rate (гарантия generate_audio.py);
+/// Все клипы обязаны иметь один sample rate (гарантия пайплайна ассетов);
 /// расхождение — [FormatException]: лучше упасть громко на старте сессии,
 /// чем тихо рассинхронизировать таймлайн.
 Future<SoundBank> loadSoundBank(
@@ -56,21 +67,25 @@ Future<SoundBank> loadSoundBank(
 }) async {
   final b = bundle ?? rootBundle;
   int? sampleRate;
-  final clips = <ClipId, Int16List>{};
-  for (final entry in assetsForSet(set).entries) {
-    final data = await b.load(entry.value);
+
+  Future<Int16List> loadWav(String path) async {
+    final data = await b.load(path);
     final wav = WavIo.decode(data.buffer.asUint8List());
     sampleRate ??= wav.sampleRate;
     if (wav.sampleRate != sampleRate) {
       throw FormatException(
-        '${entry.value}: sample rate ${wav.sampleRate} != $sampleRate',
+        '$path: sample rate ${wav.sampleRate} != $sampleRate',
       );
     }
-    clips[entry.key] = wav.samples;
+    return wav.samples;
   }
-  return SoundBank(
-    sampleRate: sampleRate!,
-    clips: clips,
-    synthPhases: set == SoundSet.flow,
-  );
+
+  final clips = <ClipId, Int16List>{};
+  for (final entry in assetsForSet(set).entries) {
+    clips[entry.key] = await loadWav(entry.value);
+  }
+  final scale = set == SoundSet.harp
+      ? [for (final p in harpScalePaths()) await loadWav(p)]
+      : null;
+  return SoundBank(sampleRate: sampleRate!, clips: clips, scale: scale);
 }
