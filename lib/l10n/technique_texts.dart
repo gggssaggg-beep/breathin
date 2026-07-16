@@ -42,6 +42,12 @@ extension TechniqueTexts on AppLocalizations {
         return tech_wim_hof_name;
       case 'vessel':
         return tech_vessel_name;
+      case 'bandha':
+        return tech_bandha_name;
+      case 'orbit':
+        return tech_orbit_name;
+      case 'mindful':
+        return tech_mindful_name;
       case 'axis':
         return tech_axis_name;
       case 'nine_breaths':
@@ -88,6 +94,12 @@ extension TechniqueTexts on AppLocalizations {
         return tech_wim_hof_desc;
       case 'vessel':
         return tech_vessel_desc;
+      case 'bandha':
+        return tech_bandha_desc;
+      case 'orbit':
+        return tech_orbit_desc;
+      case 'mindful':
+        return tech_mindful_desc;
       case 'axis':
         return tech_axis_desc;
       case 'nine_breaths':
@@ -134,6 +146,12 @@ extension TechniqueTexts on AppLocalizations {
         return tech_wim_hof_benefit;
       case 'vessel':
         return tech_vessel_benefit;
+      case 'bandha':
+        return tech_bandha_benefit;
+      case 'orbit':
+        return tech_orbit_benefit;
+      case 'mindful':
+        return tech_mindful_benefit;
       case 'axis':
         return tech_axis_benefit;
       case 'nine_breaths':
@@ -212,6 +230,8 @@ extension TechniqueTexts on AppLocalizations {
         return safety_holds_generic;
       case 'safety_intense':
         return safety_intense;
+      case 'safety_bandha':
+        return safety_bandha;
       default:
         throw StateError('Неизвестный safetyKey: ${t.safetyKey}');
     }

@@ -283,6 +283,57 @@ const vesselBreath = Technique(
   defaultCycles: 10, // 7–15 по контенту
 );
 
+/// Дыхание с бандхами (запрос владельца 2026-07-16): ознакомительная форма
+/// работы с мышечными «замками» хатха-йоги — вдох 4 → задержка 4 с мягкой
+/// мула-бандхой (треть силы, без натуживания) → выдох 8 с расслаблением.
+/// Традиционно связывается с сублимацией (перенаправлением витальной энергии
+/// вверх). Описание ЧЕСТНО помечает упрощённость: полные бандхи — только с
+/// наставником традиции (решение после разбора «ВХ ≠ туммо»: не приписывать
+/// технике то, чего в ней нет).
+const bandhaBreath = Technique(
+  id: 'bandha',
+  type: TechniqueType.counted,
+  safetyLevel: SafetyLevel.medium,
+  safetyKey: 'safety_bandha',
+  icon: TechniqueIcon.lock,
+  phases: [
+    PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4.0, maxSec: 6.0),
+    PhaseSpec(kind: PhaseKind.holdIn, defaultSec: 4.0, maxSec: 8.0),
+    PhaseSpec(kind: PhaseKind.exhale, defaultSec: 8.0, minSec: 4.0, maxSec: 12.0),
+  ],
+  scaling: ScalingMode.perPhase,
+  defaultCycles: 8,
+  recommendedMaxCyclesNovice: 6,
+);
+
+/// Малая (микрокосмическая) орбита — даосская внутренняя работа в светской
+/// форме (запрос владельца 2026-07-16, «трансформация энергии»): свободное
+/// дыхание, внимание кругом «вдох — вверх по спине, выдох — вниз по передней
+/// линии в живот». Движку ничего нового не нужно — чистая timer-техника.
+const orbitBreath = Technique(
+  id: 'orbit',
+  type: TechniqueType.timer,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.orbit,
+  defaultTimerMin: 10,
+  minTimerMin: 5,
+  maxTimerMin: 20,
+);
+
+/// Осознанное дыхание (анапанасати / дзенский счёт дыханий): наблюдение
+/// без управления. Старейшая медитативная техника; чистый таймер.
+const mindfulBreath = Technique(
+  id: 'mindful',
+  type: TechniqueType.timer,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.eye,
+  defaultTimerMin: 10,
+  minTimerMin: 5,
+  maxTimerMin: 30,
+);
+
 /// Дыхание по центральной оси (контент владельца): естественное дыхание без
 /// счёта, внимание скользит по вертикали тела — timer-техника.
 const axisBreath = Technique(
@@ -402,7 +453,10 @@ final List<Technique> catalog = [
   nineBreaths,
   fikr,
   vesselBreath,
+  bandhaBreath,
+  orbitBreath,
   diaphragmatic,
+  mindfulBreath,
   nadiShodhana,
   axisBreath,
   soundBreath,

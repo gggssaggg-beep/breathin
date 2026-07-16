@@ -278,12 +278,30 @@ abstract final class BreathinIcons {
     'M21 10l0 7l-7 0',
   ]);
 
+  /// Замок — дыхание с бандхами (бандха и есть «замок»).
+  static const lock = BreathinIconData([
+    'M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6',
+    'M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0',
+    'M8 11v-4a4 4 0 1 1 8 0v4',
+  ]);
+
+  /// Круговая стрелка — малая (микрокосмическая) орбита.
+  static const rotate = BreathinIconData([
+    'M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5',
+  ]);
+
+  /// Глаз — осознанное дыхание (наблюдение без управления).
+  static const eye = BreathinIconData([
+    'M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0',
+    'M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6',
+  ]);
+
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
     arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
     trophy, copy, send, sun, stretch, circles, quote,
-    flask, arrowsVertical, sparkles, star, trendingDown,
+    flask, arrowsVertical, sparkles, star, trendingDown, lock, rotate, eye,
   ];
 }

@@ -199,6 +199,39 @@ class AppLocalizationsEn extends AppLocalizations {
       'Gathers chaotic energy into a stable centre below the navel: the intensity remains, but stops jerking upward and outward.';
 
   @override
+  String get tech_bandha_name => 'Bandha breath';
+
+  @override
+  String get tech_bandha_desc =>
+      'An introduction to bandhas — the muscular \'locks\' of hatha yoga (bandha literally means \'lock\'). These gentle seals are used by the tradition to direct energy upward along the spine; classically they are linked with sublimation — redirecting vital energy, including sexual energy, into a subtler channel. This is an introductory form with one lock, mula bandha.\n\nWhen to use: when there is plenty of energy pressing \'down and out\' — and you want to turn it into clarity, warmth and composure.\n\nHow to practise: sit with a straight back. Inhale through the nose, down into the belly. During the hold, gently draw up the pelvic floor muscles — as if delicately holding back an urge — at about a third of full strength, with no straining at all; lead your attention from the base up along the spine. With a slow exhale, smoothly release the lock and let your attention settle into the lower belly — the cycle always ends low; energy is never \'stored\' in the head.\n\nMarker: even warmth in the lower belly and a sense of a gathered vertical. Signs of incorrect work — pressure or heat in the head, overstimulation: stop, lengthen the exhales, bring attention to your feet.\n\nThis is a simplified version. There are three full locks — mula, uddiyana and jalandhara — and their combinations with longer holds are learned only under the guidance of a teacher of the tradition.';
+
+  @override
+  String get tech_bandha_benefit =>
+      'Introduces the key tool of pranayama — the locks; tones the pelvic floor; teaches guiding energy along the vertical: desire loses its obsessive pull while vitality remains.';
+
+  @override
+  String get tech_orbit_name => 'Small orbit';
+
+  @override
+  String get tech_orbit_desc =>
+      'The microcosmic orbit — the foundation of Taoist inner work, in a gentle secular form. Breathing stays free; the work is done by attention: on the inhale it rises from the perineum up along the spine to the crown, on the exhale it descends along the front line of the body to a point below the navel. The tip of the tongue rests lightly on the palate — the traditional \'bridge\' between the channels.\n\nWhen to use: when there is energy or arousal but no channel for it. The tradition links the orbit with the transformation of sexual energy: arousal is not suppressed — it is circulated around the loop until it becomes even warmth in the belly. Work at moderate intensity, not at the peak.\n\nHow to practise: sit with a straight back, tongue on the palate. Breathe naturally and lead your attention around the circle: inhale — up the back, exhale — down the front line into the belly. Loop after loop, without force — where attention \'won\'t go\', just slip through gently.\n\nImportant: energy is never left in the head — every loop ends low, in the belly. To finish, take a few exhales \'into the belly\' and sit quietly for a while.\n\nMarker: even warmth in the lower belly, clarity. Signs of incorrect work — pressure in the head, overstimulation, insomnia: finish downward, lengthen the exhales, bring attention to the feet, take a walk.';
+
+  @override
+  String get tech_orbit_benefit =>
+      'Turns restless energy into even warmth and clarity: 15 minutes of daily circling gives more than heroic sessions on inspiration.';
+
+  @override
+  String get tech_mindful_name => 'Mindful breathing';
+
+  @override
+  String get tech_mindful_desc =>
+      'Anapanasati — mindfulness of breathing, the world\'s oldest meditative technique (Buddhist tradition; known in Zen as breath counting). Here the breath is not controlled — it is observed.\n\nWhen to use: to calm the mind, train attention, or as a daily meditative foundation.\n\nHow to practise: sit with a straight back, eyes closed or half-closed. Breathe completely naturally. Choose a point of observation — the coolness of air at the nostrils or the movement of the belly — and simply notice every inhale and exhale. A beginner\'s variant is counting: count the exhales from one to ten and start over; if you lose count, calmly return to one. Losing count is normal: noticing that the mind has wandered and coming back IS the practice. When the mind grows quieter, let go of counting and keep bare observation.\n\nMarker: the gaps of silence between thoughts grow longer; the breath refines itself.';
+
+  @override
+  String get tech_mindful_benefit =>
+      'Trains steady attention and calm of mind — the foundation on which all meditative traditions stand.';
+
+  @override
   String get tech_axis_name => 'Central Axis Breathing';
 
   @override
@@ -315,6 +348,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get safety_intense =>
       'IMPORTANT: never perform this technique in water, while driving, while standing, or while operating machinery — loss of consciousness is possible.\n\nContraindications: pregnancy, epilepsy, cardiovascular disease, high blood pressure, panic disorders, recent surgery, glaucoma. If any of these apply to you, consult a doctor before practising.\n\nStart with 3–4 cycles and increase gradually.';
+
+  @override
+  String get safety_bandha =>
+      'This technique includes breath holds and muscular locks. Do not practise during pregnancy, with high blood pressure, heart conditions, elevated intracranial or eye pressure, or after recent abdominal or pelvic surgery.\n\nKeep the lock soft, at a third of full strength, without straining; breathe through the nose only. If you notice pressure in the head, insomnia or irritability after practice — shorten the holds or pause for a few days.\n\nThis is an introductory form: learn the full bandha practice with a teacher of the tradition.';
 
   @override
   String get startSession => 'Start';
