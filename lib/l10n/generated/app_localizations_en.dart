@@ -1069,4 +1069,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get boltProgressHint =>
       'Compare results under the same conditions: day-to-day variation is normal, watch the trend.';
+
+  @override
+  String get statsGuestHint =>
+      'Your history is stored only on this device. Sign in from Settings to keep it safe across reinstalls and new phones.';
+
+  @override
+  String get commonDismiss => 'Dismiss';
 }
