@@ -871,6 +871,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get timerDurationLabel => 'Duration, min';
+
+  @override
+  String get timerCueLabel => 'Nostril switch cues';
+
+  @override
+  String get timerCueOff => 'Off';
+
+  @override
+  String get timerLeftNostril => 'Left nostril';
+
+  @override
+  String get timerRightNostril => 'Right nostril';
+
+  @override
   String get whProgressTitle => 'Your progress';
 
   @override
