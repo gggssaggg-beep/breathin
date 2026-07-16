@@ -60,6 +60,25 @@ class SessionAudioHandler extends BaseAudioHandler {
     }
   }
 
+  /// Загружает зацикленный ассет (фоновый трек таймер-режима, ПЛАН §10) —
+  /// якорь foreground-сервиса вместо пре-рендеренного WAV. Время сессии
+  /// считают Dart-часы экрана (луп короче сессии), поэтому [sessionDuration]
+  /// задаёт длительность MediaItem, а не длину лупа.
+  Future<void> loadLoopingAsset(
+    String asset, {
+    required String title,
+    Duration? sessionDuration,
+  }) async {
+    mediaItem.add(MediaItem(
+      id: asset,
+      title: title,
+      album: systemL10n().appTitle,
+      duration: sessionDuration,
+    ));
+    await player.setAsset(asset);
+    await player.setLoopMode(LoopMode.all);
+  }
+
   @override
   Future<void> play() => player.play();
 
