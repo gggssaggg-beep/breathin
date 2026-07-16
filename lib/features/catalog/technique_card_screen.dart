@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../data/session_log_repository.dart';
 import '../../domain/models/technique.dart';
+import '../../domain/stats/wim_hof_stats.dart';
 import '../../features/onboarding/coach_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../ui/charts/sparkline_chart.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../session_setup/session_setup_screen.dart';
@@ -22,16 +25,40 @@ const _energizingSun = Color(0xFFF9A825);
 /// «ряби» иконки приложения (влад. §5). Для counted-техник кнопка активна
 /// и запускает [SessionRunner]; для timer, wimHof и stage2-техник — disabled
 /// с подписью comingSoonStage2. У бодрящих техник рядом с названием — солнышко.
-class TechniqueCardScreen extends StatelessWidget {
+class TechniqueCardScreen extends StatefulWidget {
   final Technique technique;
 
-  const TechniqueCardScreen({super.key, required this.technique});
+  /// Журнал сессий для секции прогресса ВХ (инъекция в тестах); в бою — общий.
+  final SessionLogRepository? log;
+
+  const TechniqueCardScreen({super.key, required this.technique, this.log});
+
+  @override
+  State<TechniqueCardScreen> createState() => _TechniqueCardScreenState();
+}
+
+class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
+  /// Прогресс задержек ВХ: грузится один раз в initState (только для ВХ —
+  /// прочие 18 карточек журнал не читают). null пока не загружен/не ВХ.
+  List<WimHofSessionStat>? _whProgress;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.technique.type == TechniqueType.wimHof) {
+      (widget.log ?? SessionLogRepository()).all().then((records) {
+        if (mounted) {
+          setState(() => _whProgress = WimHofStats.progress(records));
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final t = technique;
+    final t = widget.technique;
 
     final bool canStart = !t.stage2 &&
         ((t.type == TechniqueType.counted && t.phases != null) ||
@@ -121,6 +148,10 @@ class TechniqueCardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
+                  // Секция: Ваш прогресс (только ВХ, только при наличии данных)
+                  if (t.type == TechniqueType.wimHof)
+                    _WimHofProgressSection(progress: _whProgress),
+
                   // Секция: Безопасность
                   _SectionHeader(title: l.sectionSafety),
                   const SizedBox(height: 8),
@@ -184,11 +215,56 @@ class TechniqueCardScreen extends StatelessWidget {
   void _startSession(BuildContext context) {
     // Вим Хоф — свой setup (машина раундов + safety-гейт, ПЛАН §3.4);
     // counted/scripted — общий экран настройки сессии.
-    final Widget setup = technique.type == TechniqueType.wimHof
-        ? WimHofSetupScreen(technique: technique)
-        : SessionSetupScreen(technique: technique);
+    final t = widget.technique;
+    final Widget setup = t.type == TechniqueType.wimHof
+        ? WimHofSetupScreen(technique: t)
+        : SessionSetupScreen(technique: t);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => setup),
+    );
+  }
+}
+
+/// Секция «Ваш прогресс» на карточке Вима Хофа (ПЛАН П19): спарклайн лучших
+/// задержек по сессиям + строка рекорда + раунды последней сессии. Данные
+/// грузит родитель (один раз); пустое состояние (нет данных / ещё грузится)
+/// не рисуется вовсе — новичку не мозолит глаз.
+class _WimHofProgressSection extends StatelessWidget {
+  final List<WimHofSessionStat>? progress;
+  const _WimHofProgressSection({required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = this.progress;
+    if (progress == null || progress.isEmpty) return const SizedBox.shrink();
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final best =
+        progress.map((s) => s.bestSec).reduce((a, b) => a > b ? a : b);
+    final last = progress.last;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeader(title: l.whProgressTitle),
+        const SizedBox(height: 8),
+        SparklineChart(values: [for (final s in progress) s.bestSec]),
+        const SizedBox(height: 8),
+        Text(
+          l.whBestLabel('$best'),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          l.whLastRounds(last.rounds.join(' / ')),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
