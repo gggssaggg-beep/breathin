@@ -4,6 +4,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../data/challenges_repository.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/engine/wim_hof_machine.dart';
 import '../../domain/models/session_record.dart';
@@ -215,6 +216,7 @@ class _WimHofSessionScreenState extends State<WimHofSessionScreen>
     log
         .add(record)
         .then((_) => SessionSyncService().syncNow())
+        .then((_) => ChallengesRepository.syncProgressIfSignedIn())
         .catchError((_) {});
   }
 

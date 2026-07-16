@@ -7,6 +7,7 @@ import 'package:just_audio/just_audio.dart'
 import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../data/challenges_repository.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../l10n/system_l10n.dart';
@@ -348,7 +349,12 @@ class _SessionRunnerState extends State<SessionRunner>
     // fire-and-forget: экран не ждёт ни диска, ни сети. Синк подхватывает
     // свежую запись сразу (ревью С8); без входа/сети он тихий no-op.
     final repo = widget.log ?? SessionLogRepository();
-    unawaited(repo.add(record).then((_) => SessionSyncService().syncNow()));
+    unawaited(
+      repo
+          .add(record)
+          .then((_) => SessionSyncService().syncNow())
+          .then((_) => ChallengesRepository.syncProgressIfSignedIn()),
+    );
   }
 
   /// «Стоп» кнопкой или с локскрина; на финише — тап по галочке.
