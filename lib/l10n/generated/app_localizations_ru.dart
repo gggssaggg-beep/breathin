@@ -925,6 +925,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get quickStartTitle => 'Продолжить';
 
   @override
+  String get streakReminderToggle => 'Вечернее напоминание о серии';
+
+  @override
+  String get streakReminderHint =>
+      'Около 20:00, если сегодня ещё не было практики';
+
+  @override
+  String get streakReminderTitle => 'Огонёк ждёт';
+
+  @override
+  String streakReminderBody(int n) {
+    return '$n дн. подряд — подышите пару минут, и серия сохранится';
+  }
+
+  @override
   String get groupFavorites => 'Избранное';
 
   @override

@@ -10,6 +10,8 @@ import '../../domain/stats/practice_stats.dart';
 import '../../features/onboarding/coach_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../services/reminders/reminder_preferences.dart';
+import '../../services/reminders/streak_reminder.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../catalog/technique_card_screen.dart';
@@ -53,8 +55,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _reload() {
     widget.log.all().then((r) {
-      if (mounted) setState(() => _records = r);
+      if (!mounted) return;
+      setState(() => _records = r);
+      _rescheduleReminder(r);
     });
+  }
+
+  /// Перепланирует вечернее напоминание о серии (С1) при каждом выходе на
+  /// главный: самообновляющаяся схема без фоновых задач. Выключенный
+  /// тумблер — no-op (снятие в настройках делает сам тумблер).
+  Future<void> _rescheduleReminder(List<SessionRecord> records) async {
+    try {
+      if (!await ReminderPreferencesStore().load() || !mounted) return;
+      final l = AppLocalizations.of(context);
+      final streak =
+          PracticeStats.streakDays(records, today: widget.today);
+      await StreakReminder.reschedule(
+        records,
+        enabled: true,
+        title: l.streakReminderTitle,
+        body: l.streakReminderBody(streak),
+      );
+    } catch (_) {
+      // Платформа без плагина/prefs (тесты) — без напоминаний.
+    }
   }
 
   void _reloadFavorites() {

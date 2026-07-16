@@ -47,7 +47,7 @@ class StreakReminder {
       final info = await FlutterTimezone.getLocalTimezone();
       tz.setLocalLocation(tz.getLocation(info.identifier));
       await _plugin.initialize(
-        const InitializationSettings(
+        settings: const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
           iOS: DarwinInitializationSettings(),
         ),
@@ -70,16 +70,17 @@ class StreakReminder {
   }) async {
     if (!await _ensureInit()) return;
     try {
-      await _plugin.cancel(_id);
+      await _plugin.cancel(id: _id);
       if (!enabled) return;
       final at = nextStreakReminderAt(records, now ?? DateTime.now());
       if (at == null) return;
       await _plugin.zonedSchedule(
-        _id,
-        title,
-        body,
-        tz.TZDateTime.local(at.year, at.month, at.day, at.hour, at.minute),
-        const NotificationDetails(
+        id: _id,
+        title: title,
+        body: body,
+        scheduledDate:
+            tz.TZDateTime.local(at.year, at.month, at.day, at.hour, at.minute),
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             _channelId,
             'Streak reminder',

@@ -917,6 +917,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickStartTitle => 'Continue';
 
   @override
+  String get streakReminderToggle => 'Evening streak reminder';
+
+  @override
+  String get streakReminderHint =>
+      'Around 8 pm if you haven\'t practised today yet';
+
+  @override
+  String get streakReminderTitle => 'Your streak is waiting';
+
+  @override
+  String streakReminderBody(int n) {
+    return '$n days in a row — breathe for a couple of minutes to keep it';
+  }
+
+  @override
   String get groupFavorites => 'Favorites';
 
   @override

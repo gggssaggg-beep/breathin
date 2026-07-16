@@ -1670,6 +1670,30 @@ abstract class AppLocalizations {
   /// **'Продолжить'**
   String get quickStartTitle;
 
+  /// No description provided for @streakReminderToggle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вечернее напоминание о серии'**
+  String get streakReminderToggle;
+
+  /// No description provided for @streakReminderHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Около 20:00, если сегодня ещё не было практики'**
+  String get streakReminderHint;
+
+  /// No description provided for @streakReminderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Огонёк ждёт'**
+  String get streakReminderTitle;
+
+  /// No description provided for @streakReminderBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} дн. подряд — подышите пару минут, и серия сохранится'**
+  String streakReminderBody(int n);
+
   /// No description provided for @groupFavorites.
   ///
   /// In ru, this message translates to:
