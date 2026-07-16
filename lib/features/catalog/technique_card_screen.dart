@@ -11,6 +11,7 @@ import '../../ui/charts/sparkline_chart.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/section_header.dart';
 import '../session_setup/session_setup_screen.dart';
 import '../timer_session/timer_setup_screen.dart';
 import '../wim_hof/wim_hof_setup_screen.dart';
@@ -135,7 +136,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
                   const SizedBox(height: 24),
 
                   // Секция: Описание
-                  _SectionHeader(title: l.sectionDescription),
+                  SectionHeader(l.sectionDescription),
                   const SizedBox(height: 8),
                   Text(
                     l.techniqueDescription(t),
@@ -144,7 +145,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
                   const SizedBox(height: 20),
 
                   // Секция: Польза
-                  _SectionHeader(title: l.sectionBenefit),
+                  SectionHeader(l.sectionBenefit),
                   const SizedBox(height: 8),
                   Text(
                     l.techniqueBenefit(t),
@@ -157,7 +158,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
                     _WimHofProgressSection(progress: _whProgress),
 
                   // Секция: Безопасность
-                  _SectionHeader(title: l.sectionSafety),
+                  SectionHeader(l.sectionSafety),
                   const SizedBox(height: 8),
                   _SafetySection(technique: t),
                   const SizedBox(height: 20),
@@ -253,7 +254,7 @@ class _WimHofProgressSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: l.whProgressTitle),
+        SectionHeader(l.whProgressTitle),
         const SizedBox(height: 8),
         SparklineChart(values: [for (final s in progress) s.bestSec]),
         const SizedBox(height: 8),
@@ -277,22 +278,6 @@ class _WimHofProgressSection extends StatelessWidget {
   }
 }
 
-/// Заголовок секции.
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  const _SectionHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Text(
-      title,
-      style: theme.textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-}
 
 /// Секция безопасности: high — Card с красным errorContainer, medium — Card
 /// с мягким амбером (красный слишком ярок; корректировка владельца), low —

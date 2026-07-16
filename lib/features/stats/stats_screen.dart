@@ -13,6 +13,7 @@ import '../../services/auth/auth_service.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/section_header.dart';
 import '../bolt/bolt_test_screen.dart';
 import '../catalog/technique_icons.dart';
 
@@ -474,7 +475,6 @@ class _ByTechnique extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     final rows = PracticeStats.byTechnique(records, year, month);
     if (rows.isEmpty) return const SizedBox.shrink();
 
@@ -486,8 +486,7 @@ class _ByTechnique extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 4, bottom: 4),
-              child: Text(l.byTechniqueLabel,
-                  style: theme.textTheme.titleSmall),
+              child: SectionHeader(l.byTechniqueLabel),
             ),
             for (final (id, agg) in rows) _row(context, id, agg),
           ],
