@@ -19,6 +19,7 @@ import '../../services/sync/session_sync_service.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/session_finish.dart';
 
 /// Экран сессии Вима Хофа (ПЛАН §3.4): машина раундов [WimHofMachine].
 ///
@@ -519,21 +520,17 @@ class _FinishedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onClose,
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    // Единый финиш (аудит §3 High): круг-галочка общий, результаты раундов —
+    // телом под заголовком.
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: SessionFinish(
+        title: l.sessionDone,
+        tapHint: l.sessionDoneTapHint,
+        onClose: onClose,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              l.sessionDone,
-              style: theme.textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
             Text(
               l.whResultsTitle,
               style: theme.textTheme.titleSmall?.copyWith(
@@ -546,6 +543,7 @@ class _FinishedView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -564,17 +562,9 @@ class _FinishedView extends StatelessWidget {
                 ),
               ),
             if (_recordLine(context) case final line?) ...[
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               line,
             ],
-            const SizedBox(height: 24),
-            Text(
-              l.sessionDoneTapHint,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
           ],
         ),
       ),

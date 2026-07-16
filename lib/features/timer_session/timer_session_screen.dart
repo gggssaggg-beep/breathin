@@ -18,8 +18,7 @@ import '../../services/audio/timeline_renderer.dart';
 import '../../services/haptics/vibration_pattern.dart';
 import '../../services/sync/session_sync_service.dart';
 import '../../ui/hant/hant_backdrop.dart';
-import '../../ui/icons/breathin_icon.dart';
-import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/session_finish.dart';
 import '../session/tap_pause_hint.dart';
 
 /// Экран таймер-сессии: свободное дыхание заданной длительности (ПЛАН §10).
@@ -355,7 +354,11 @@ class _TimerSessionScreenState extends State<TimerSessionScreen>
                 onPauseResume: _togglePause,
                 onStop: _stop,
               ),
-            TimerStage.finished => _FinishedView(l: l, onClose: _closeFinished),
+            TimerStage.finished => SessionFinish(
+                title: l.sessionDone,
+                tapHint: l.sessionDoneTapHint,
+                onClose: _closeFinished,
+              ),
           },
         ),
       ),
@@ -509,40 +512,3 @@ class _PracticeView extends StatelessWidget {
   }
 }
 
-class _FinishedView extends StatelessWidget {
-  final AppLocalizations l;
-  final VoidCallback onClose;
-
-  const _FinishedView({required this.l, required this.onClose});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onClose,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BreathinIcon(
-              BreathinIcons.circleCheck,
-              size: 96,
-              color: theme.colorScheme.primary,
-            ),
-            const SizedBox(height: 24),
-            Text(l.sessionDone, style: theme.textTheme.headlineMedium),
-            const SizedBox(height: 12),
-            Text(
-              l.sessionDoneTapHint,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/session_finish.dart';
 import 'breathing_painter.dart';
 import 'phase_labels.dart';
 import 'segment_labels.dart';
@@ -185,41 +186,10 @@ class SessionView extends StatelessWidget {
     );
   }
 
-  /// Финиш (влад. §14): круг приятного цвета с галочкой; тап — закрыть.
-  /// Дофаминовая точка: сессия завершена, никаких кнопок.
+  /// Финиш (влад. §14): единый [SessionFinish]; подсказку тапа рисует сам
+  /// экран в слоте кнопок, поэтому tapHint здесь не передаётся.
   Widget _finishedFigure(ThemeData theme, AppLocalizations l) {
-    return Semantics(
-      button: true,
-      label: l.sessionDoneTapHint,
-      child: GestureDetector(
-        onTap: onStop,
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 240,
-              height: 240,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: theme.colorScheme.primaryContainer,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                // Текстовый глиф, не эмодзи: эмодзи ОС-зависимы (RESOURCES_ICONS).
-                '✓',
-                style: theme.textTheme.displayLarge?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-            ),
-            const SizedBox(height: 28),
-            Text(l.sessionDone, style: theme.textTheme.headlineSmall),
-          ],
-        ),
-      ),
-    );
+    return SessionFinish(title: l.sessionDone, onClose: onStop);
   }
 
   Widget _breathingFigure(ThemeData theme, AppLocalizations l) {
