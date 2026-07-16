@@ -879,6 +879,27 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get whProgressTitle => 'Ваш прогресс';
+
+  @override
+  String whBestLabel(String sec) {
+    return 'Лучшая задержка: $sec с';
+  }
+
+  @override
+  String whLastRounds(String list) {
+    return 'Последняя сессия: $list';
+  }
+
+  @override
+  String get whNewRecord => 'Новый рекорд!';
+
+  @override
+  String whRecordCompare(String today, String best) {
+    return 'Лучшая за сегодня: $today с · Рекорд: $best с';
+  }
+
+  @override
   String get sessionMediaTitle => 'Дыхательная сессия';
 
   @override

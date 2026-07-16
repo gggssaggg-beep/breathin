@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:breathin/data/session_log_repository.dart';
 import 'package:breathin/domain/catalog/techniques.dart';
 import 'package:breathin/domain/engine/wim_hof_machine.dart';
+import 'package:breathin/domain/models/session_record.dart';
 import 'package:breathin/features/catalog/technique_card_screen.dart';
 import 'package:breathin/features/wim_hof/wim_hof_session_screen.dart';
 import 'package:breathin/features/wim_hof/wim_hof_setup_screen.dart';
@@ -29,6 +30,43 @@ void main() {
     final ink =
         tester.widget<InkWell>(find.byKey(const ValueKey('start_button')));
     expect(ink.onTap, isNotNull);
+  });
+
+  testWidgets('карточка ВХ: секции прогресса нет без истории', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(wrap(
+      TechniqueCardScreen(technique: wimHof, log: SessionLogRepository()),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('Your progress'), findsNothing);
+  });
+
+  testWidgets('карточка ВХ: секция прогресса появляется при наличии задержек',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final repo = SessionLogRepository();
+    await repo.add(SessionRecord(
+      id: 's1',
+      techniqueId: 'wim_hof',
+      startedAt: DateTime(2026, 7, 15),
+      durationSec: 300,
+      cyclesCompleted: 3,
+      completed: true,
+      retentionsSec: const [40, 62, 58],
+    ));
+    await tester.pumpWidget(wrap(
+      TechniqueCardScreen(technique: wimHof, log: repo),
+    ));
+    await tester.pumpAndSettle(); // грузит журнал (initState)
+    // Секция ниже сгиба ленивого ListView — проматываем к её нижней строке.
+    await tester.scrollUntilVisible(
+      find.text('Last session: 40 / 62 / 58'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Your progress'), findsOneWidget);
+    expect(find.text('Best hold: 62 s'), findsOneWidget);
+    expect(find.text('Last session: 40 / 62 / 58'), findsOneWidget);
   });
 
   testWidgets('setup: три слайдера и путь через предупреждение к сессии',

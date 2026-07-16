@@ -871,6 +871,27 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get whProgressTitle => 'Your progress';
+
+  @override
+  String whBestLabel(String sec) {
+    return 'Best hold: $sec s';
+  }
+
+  @override
+  String whLastRounds(String list) {
+    return 'Last session: $list';
+  }
+
+  @override
+  String get whNewRecord => 'New record!';
+
+  @override
+  String whRecordCompare(String today, String best) {
+    return 'Best today: $today s · Record: $best s';
+  }
+
+  @override
   String get sessionMediaTitle => 'Breathing session';
 
   @override

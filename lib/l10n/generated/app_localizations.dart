@@ -1592,6 +1592,36 @@ abstract class AppLocalizations {
   /// **'Раунд {r}'**
   String whRoundShort(int r);
 
+  /// No description provided for @whProgressTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш прогресс'**
+  String get whProgressTitle;
+
+  /// No description provided for @whBestLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Лучшая задержка: {sec} с'**
+  String whBestLabel(String sec);
+
+  /// No description provided for @whLastRounds.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последняя сессия: {list}'**
+  String whLastRounds(String list);
+
+  /// No description provided for @whNewRecord.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый рекорд!'**
+  String get whNewRecord;
+
+  /// No description provided for @whRecordCompare.
+  ///
+  /// In ru, this message translates to:
+  /// **'Лучшая за сегодня: {today} с · Рекорд: {best} с'**
+  String whRecordCompare(String today, String best);
+
   /// No description provided for @sessionMediaTitle.
   ///
   /// In ru, this message translates to:
