@@ -141,6 +141,10 @@ Future<bool> applyPrefsSnapshot(
 /// пуш) и вход/старт с сессией (pull + решение LWW). Без входа и при любой
 /// сетевой ошибке — тихий no-op, как у [SessionSyncService]. Отсутствие
 /// таблицы в облаке отключает синк до конца жизни процесса.
+///
+/// Известное ограничение LWW (ревью PR #70, №5): времена — клиентские, при
+/// рассинхроне часов устройство «из будущего» побеждает, пока часы не
+/// выровняются. Для одного пользователя с 1–2 устройствами приемлемо.
 class PrefsSyncService {
   /// Момент последнего локального изменения настроек (ISO-8601 UTC).
   /// Ставится при изменении ДО попытки пуша: упавший пуш не должен дать
@@ -151,7 +155,7 @@ class PrefsSyncService {
 
   PrefsSyncService({this.auth = const AuthService()});
 
-  static PrefsSyncService instance = PrefsSyncService();
+  static final PrefsSyncService instance = PrefsSyncService();
 
   static bool _cloudHasTable = true;
 
@@ -160,8 +164,15 @@ class PrefsSyncService {
 
   Timer? _debounce;
 
-  /// Хук для PrefsChanges: настройки изменились локально. Гость не пушит —
-  /// его правки при входе проиграют облаку (маркер не трогаем).
+  /// Сброс маркера при выходе, который ещё не дописался: пуш/синк нового
+  /// входа обязан дождаться его, иначе прочтёт маркер прежнего аккаунта и
+  /// зальёт его настройки в чужое облако (ревью PR #70, №2).
+  Future<void>? _signOutFlush;
+
+  /// Хук для PrefsChanges: настройки изменились локально. Гость не пушит и
+  /// маркер не трогает — его правки при входе осознанно проигрывают облаку:
+  /// снапшот гостя неполон, и «победа» гостя удалила бы в облаке настройки,
+  /// которых у гостя просто нет (ревью PR #70, №3 — отклонено).
   void onLocalChange() {
     if (auth.currentUser == null) return;
     unawaited(_touchMarker());
@@ -171,8 +182,14 @@ class PrefsSyncService {
 
   /// Выход из аккаунта: маркер сбрасывается, чтобы правки под прежним
   /// аккаунтом не перезаписали облако следующего.
-  Future<void> onSignedOut() async {
+  Future<void> onSignedOut() {
     _debounce?.cancel();
+    final flush = _removeMarker();
+    _signOutFlush = flush;
+    return flush;
+  }
+
+  Future<void> _removeMarker() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(markerKey);
@@ -195,6 +212,7 @@ class PrefsSyncService {
     final user = auth.currentUser;
     if (user == null || !_cloudHasTable) return;
     try {
+      await _signOutFlush;
       final prefs = await SharedPreferences.getInstance();
       final snapshot = buildPrefsSnapshot(
         {for (final k in prefs.getKeys()) k: prefs.get(k)},
@@ -221,7 +239,12 @@ class PrefsSyncService {
   Future<void> syncNow() async {
     final user = auth.currentUser;
     if (user == null || !_cloudHasTable) return;
+    // Взведённый дебаунс-пуш гасим: он собрал бы снапшот ПОСЕРЕДИНЕ
+    // pull-а и залил в облако устаревший документ (ревью PR #70, №1).
+    // Локальные правки не теряются: их маркер новее → решение pushLocal.
+    _debounce?.cancel();
     try {
+      await _signOutFlush;
       final prefs = await SharedPreferences.getInstance();
       final row = await Supabase.instance.client
           .from('user_prefs')
