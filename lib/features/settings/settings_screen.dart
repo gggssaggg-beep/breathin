@@ -3,11 +3,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/bolt_repository.dart';
 import '../../data/difficulty_store.dart';
+import '../../data/session_log_repository.dart';
 import '../../domain/difficulty/difficulty.dart';
+import '../../domain/stats/practice_stats.dart';
 import '../../features/onboarding/coach_controller.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_preferences.dart';
 import '../../services/locale/locale_store.dart';
+import '../../services/reminders/reminder_preferences.dart';
+import '../../services/reminders/streak_reminder.dart';
 import '../../services/update/update_preferences.dart';
 import 'difficulty_section.dart';
 import '../../services/update/update_runtime.dart';
@@ -35,6 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
   AppLanguage _language = AppLanguage.system;
   bool _hasBoltResult = false;
+  bool _streakReminder = false;
   String? _version;
 
   @override
@@ -55,6 +60,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     BoltRepository().all().then((r) {
       if (mounted) setState(() => _hasBoltResult = r.isNotEmpty);
+    });
+    ReminderPreferencesStore().load().then((v) {
+      if (mounted) setState(() => _streakReminder = v);
     });
     currentAppVersion().then((v) {
       if (mounted && v != null) setState(() => _version = v.toString());
@@ -94,6 +102,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _language = lang);
     LocaleStore().save(lang);
     localeNotifier.value = localeFor(lang);
+  }
+
+  void _onStreakReminderChanged(bool v) {
+    final l = AppLocalizations.of(context);
+    setState(() => _streakReminder = v);
+    ReminderPreferencesStore().save(v);
+    // Включили — сразу планируем ближайший вечер по журналу; выключили —
+    // снимаем отложенное уведомление. Fire-and-forget.
+    SessionLogRepository().all().then((records) {
+      final streak = PracticeStats.streakDays(records);
+      return StreakReminder.reschedule(
+        records,
+        enabled: v,
+        title: l.streakReminderTitle,
+        body: l.streakReminderBody(streak),
+      );
+    }).catchError((_) {});
   }
 
   /// Открывает внешнюю ссылку (Telegram) в браузере/приложении.
@@ -190,6 +215,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
             selected: {_language},
             onSelectionChanged: (v) => _onLanguageChanged(v.first),
+          ),
+          const SizedBox(height: 24),
+          // --- Напоминание о серии (С1): дефолт выкл, включение планирует
+          // ближайший вечер по журналу ---
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l.streakReminderToggle),
+            subtitle: Text(l.streakReminderHint),
+            value: _streakReminder,
+            onChanged: _onStreakReminderChanged,
           ),
           const SizedBox(height: 24),
           // --- Сложность: глобальный пресет длительностей (эпик §4–5) ---
