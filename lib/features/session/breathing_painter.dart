@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
+import '../../app/hant_theme.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/models/technique.dart';
 
@@ -192,15 +195,22 @@ class BreathingPainter extends CustomPainter {
   final Color primary;
   final Color outline;
 
+  /// Токены HANT: не null → фигура рисуется как калибровочный прицел
+  /// (орбитальное кольцо с делениями, уголки-скобки, янтарное ядро-«источник»).
+  final HantStyle? hant;
+
   const BreathingPainter({
     required this.shape,
     required this.state,
     required this.primary,
     required this.outline,
+    this.hant,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    final h = hant;
+    if (h != null) _paintReticle(canvas, size, h);
     switch (shape) {
       case VisualShape.circle:
         _paintCircle(canvas, size);
@@ -211,12 +221,81 @@ class BreathingPainter extends CustomPainter {
     }
   }
 
+  /// Статичная HUD-обвязка HANT (не зависит от фазы — visualSignature
+  /// не меняется): уголки-скобки по углам поля, для круга — орбитальное
+  /// кольцо с делениями шкалы, как рамки калибровки на референсах.
+  void _paintReticle(Canvas canvas, Size size, HantStyle h) {
+    final bracket = Paint()
+      ..color = h.wire.withValues(alpha: 0.85)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..strokeCap = StrokeCap.round;
+    const len = 16.0;
+    final w = size.width;
+    final hgt = size.height;
+    // Четыре уголка-скобки [ ] по углам поля фигуры.
+    for (final (corner, dx, dy) in [
+      (Offset.zero, 1.0, 1.0),
+      (Offset(w, 0), -1.0, 1.0),
+      (Offset(0, hgt), 1.0, -1.0),
+      (Offset(w, hgt), -1.0, -1.0),
+    ]) {
+      canvas.drawLine(corner, corner + Offset(dx * len, 0), bracket);
+      canvas.drawLine(corner, corner + Offset(0, dy * len), bracket);
+    }
+
+    if (shape != VisualShape.circle) return;
+    final center = Offset(w / 2, hgt / 2);
+    final orbitR = size.shortestSide * 0.47;
+    final orbit = Paint()
+      ..color = h.wireDim.withValues(alpha: 0.7)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    canvas.drawCircle(center, orbitR, orbit);
+    // Деления шкалы: 36 коротких, каждое девятое (кардинальное) — длиннее
+    // и ярче.
+    for (var i = 0; i < 36; i++) {
+      final a = i * pi / 18;
+      final cardinal = i % 9 == 0;
+      final tick = Paint()
+        ..color = cardinal ? h.wire : h.wireDim
+        ..strokeWidth = 1;
+      final from = center + Offset(cos(a), sin(a)) * orbitR;
+      final to =
+          center + Offset(cos(a), sin(a)) * (orbitR - (cardinal ? 7 : 4));
+      canvas.drawLine(from, to, tick);
+    }
+  }
+
   void _paintCircle(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final minR = size.shortestSide * 0.25;
     final maxR = size.shortestSide * 0.45;
     final fraction = breathFraction(state);
     final r = minR + (maxR - minR) * fraction;
+
+    final h = hant;
+    if (h != null) {
+      // HANT: дышащий круг — «источник»: янтарное ядро-свечение внутри
+      // тонкого проволочного контура (по референсу «ИСТОЧНИК» с орбитами).
+      final glow = Paint()
+        ..shader = RadialGradient(
+          colors: [
+            h.sourceGlow.withValues(alpha: 0.55),
+            h.source.withValues(alpha: 0.18),
+            h.source.withValues(alpha: 0.0),
+          ],
+          stops: const [0.0, 0.55, 1.0],
+        ).createShader(Rect.fromCircle(center: center, radius: r));
+      canvas.drawCircle(center, r, glow);
+      final wire = Paint()
+        ..color = h.wire
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5;
+      canvas.drawCircle(center, r, wire);
+      canvas.drawCircle(center, 5, Paint()..color = h.source);
+      return;
+    }
 
     // Мягкая заливка
     final fillPaint = Paint()
@@ -320,6 +399,7 @@ class BreathingPainter extends CustomPainter {
     return oldDelegate.state != state ||
         oldDelegate.shape != shape ||
         oldDelegate.primary != primary ||
-        oldDelegate.outline != outline;
+        oldDelegate.outline != outline ||
+        oldDelegate.hant != hant;
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../app/hant_theme.dart';
 import '../../domain/engine/phase_engine.dart';
 import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import 'breathing_painter.dart';
@@ -150,7 +152,9 @@ class SessionView extends StatelessWidget {
           ),
         );
     return Scaffold(
-      body: SafeArea(
+      // В HANT под сессией — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+          child: SafeArea(
         // Пауза — тапом по любому месту экрана (кнопка «Стоп» перехватывает
         // свой тап сама); на финише внешний детектор не нужен — там свой
         // тап-закрыть на круге.
@@ -177,7 +181,7 @@ class SessionView extends StatelessWidget {
                   ],
                 ),
               ),
-      ),
+      )),
     );
   }
 
@@ -239,6 +243,8 @@ class SessionView extends StatelessWidget {
                       ? elementColor(segment!.id)
                       : theme.colorScheme.primary,
                   outline: theme.colorScheme.outline,
+                  // HANT: фигура — калибровочный прицел с ядром-«источником».
+                  hant: theme.extension<HantStyle>(),
                 ),
               ),
               // Число секунд поверх фигуры

@@ -12,6 +12,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../services/reminders/reminder_preferences.dart';
 import '../../services/reminders/streak_reminder.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../catalog/technique_card_screen.dart';
@@ -158,7 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Builder(builder: (context) {
+      // В HANT под каталогом — фон-«чертёж» (в классике прозрачен).
+      body: HantBackdrop(child: Builder(builder: (context) {
         // Секции: «Избранное» (дубли, порядок каталога) + три группы.
         final favList =
             catalog.where((t) => _favorites.contains(t.id)).toList();
@@ -245,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverPadding(padding: EdgeInsets.only(bottom: 12)),
           ],
         );
-      }),
+      })),
     );
   }
 }
