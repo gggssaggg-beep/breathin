@@ -46,6 +46,11 @@ void main() {
     expect(find.text('Preparation, s'), findsOneWidget);
     expect(find.text('Sound'), findsOneWidget);
     expect(find.text('Vibration'), findsOneWidget);
+    // П4: подпись семантики нот подсказки
+    expect(
+      find.textContaining('lower note'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('setup диафрагмального: секции подсказок нет', (tester) async {

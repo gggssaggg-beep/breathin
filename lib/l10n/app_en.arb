@@ -344,6 +344,8 @@
 
   "pauseAction": "Pause",
   "resumeAction": "Resume",
+  "tapPauseHint": "Tap the screen to pause",
+  "pausedTapHint": "Paused · tap to resume",
   "stopAction": "Stop",
   "prepGetReady": "Get ready",
   "cycleLabel": "Cycle",
@@ -369,6 +371,17 @@
   "whResultsTitle": "Retentions by round",
   "whRoundShort": "Round {r}",
   "@whRoundShort": { "placeholders": { "r": { "type": "int" } } },
+  "quickStartTitle": "Continue",
+  "streakReminderToggle": "Evening streak reminder",
+  "streakReminderHint": "Around 8 pm if you haven't practised today yet",
+  "streakReminderTitle": "Your streak is waiting",
+  "streakReminderBody": "{n} days in a row — breathe for a couple of minutes to keep it",
+  "@streakReminderBody": { "placeholders": { "n": { "type": "int" } } },
+  "groupFavorites": "Favorites",
+  "groupCalm": "Calm & sleep",
+  "groupEnergy": "Energy & transformation",
+  "groupTraditions": "Traditions",
+
   "timerDurationLabel": "Duration, min",
   "timerCueLabel": "Nostril switch cues",
   "timerCueOff": "Off",
@@ -417,5 +430,10 @@
   "boltHistoryTitle": "Progress",
   "boltLatestLabel": "Latest result",
   "boltHistoryEmpty": "No results yet — take the test to track your progress.",
-  "boltProgressHint": "Compare results under the same conditions: day-to-day variation is normal, watch the trend."
+  "boltProgressHint": "Compare results under the same conditions: day-to-day variation is normal, watch the trend.",
+
+  "statsGuestHint": "Your history is stored only on this device. Sign in from Settings to keep it safe across reinstalls and new phones.",
+  "commonDismiss": "Dismiss",
+
+  "timerCueSoundHint": "Cue sound: lower note — left nostril, higher note — right."
 }

@@ -30,15 +30,48 @@ class SessionSyncService {
     SessionLogRepository? log,
   }) : log = log ?? SessionLogRepository();
 
-  /// Колонка sessions.variant может отсутствовать в облаке (миграция из
-  /// schema.sql применяется владельцем при появлении PAT): при ошибке
-  /// «нет колонки» откатываемся на старую форму до конца жизни процесса,
-  /// со следующего запуска пробуем снова.
+  /// Опциональные колонки облака: variant («4-8-8», влад. §15) и retentions
+  /// (задержки ВХ, system review Д1). Миграции из schema.sql применяет
+  /// владелец — до этого при ошибке «нет колонки» перестаём слать/читать её
+  /// до конца жизни процесса; со следующего запуска пробуем снова.
   static bool _cloudHasVariant = true;
+  static bool _cloudHasRetentions = true;
 
-  static bool _isMissingVariantColumn(PostgrestException e) =>
+  static bool _isMissingColumn(PostgrestException e) =>
       e.code == 'PGRST204' || // upsert: колонка не найдена в схеме
       e.code == '42703'; // select: undefined_column
+
+  /// Помечает отсутствующую колонку по тексту ошибки PostgREST
+  /// («Could not find the 'retentions' column …»). Возвращает true, если
+  /// ошибка — про отсутствующую колонку (можно повторить без неё).
+  static bool _markMissing(PostgrestException e) {
+    if (!_isMissingColumn(e)) return false;
+    final msg = e.message;
+    var recognized = false;
+    if (_cloudHasRetentions && msg.contains('retentions')) {
+      _cloudHasRetentions = false;
+      recognized = true;
+    }
+    if (_cloudHasVariant && msg.contains('variant')) {
+      _cloudHasVariant = false;
+      recognized = true;
+    }
+    // Имя не распознали — консервативно отключаем обе опциональные.
+    if (!recognized) {
+      _cloudHasVariant = false;
+      _cloudHasRetentions = false;
+    }
+    return true;
+  }
+
+  static const _baseColumns =
+      'id, technique_id, started_at, duration_sec, cycles, completed';
+
+  String get _selectColumns => [
+        _baseColumns,
+        if (_cloudHasVariant) 'variant',
+        if (_cloudHasRetentions) 'retentions',
+      ].join(', ');
 
   Future<void> syncNow() async {
     final user = auth.currentUser;
@@ -47,22 +80,16 @@ class SessionSyncService {
       final client = Supabase.instance.client;
       final local = await log.all();
 
-      const baseColumns =
-          'id, technique_id, started_at, duration_sec, cycles, completed';
-      List<Map<String, dynamic>> rows;
-      if (_cloudHasVariant) {
+      // До трёх попыток: каждая неудача помечает отсутствующую колонку.
+      List<Map<String, dynamic>>? rows;
+      for (var attempt = 0; rows == null && attempt < 3; attempt++) {
         try {
-          rows = await client
-              .from('sessions')
-              .select('$baseColumns, variant');
+          rows = await client.from('sessions').select(_selectColumns);
         } on PostgrestException catch (e) {
-          if (!_isMissingVariantColumn(e)) rethrow;
-          _cloudHasVariant = false;
-          rows = await client.from('sessions').select(baseColumns);
+          if (!_markMissing(e)) rethrow;
         }
-      } else {
-        rows = await client.from('sessions').select(baseColumns);
       }
+      rows ??= await client.from('sessions').select(_baseColumns);
 
       final remote = [
         for (final row in rows)
@@ -75,13 +102,16 @@ class SessionSyncService {
             cyclesCompleted: (row['cycles'] as num).toInt(),
             completed: row['completed'] as bool? ?? true,
             variant: row['variant'] as String?,
+            retentionsSec: (row['retentions'] as List?)
+                ?.map((e) => (e as num).toInt())
+                .toList(),
           ),
       ];
       final remoteIds = remote.map((r) => r.id).toSet();
 
       final upload = computeUpload(local, remoteIds);
       if (upload.isNotEmpty) {
-        List<Map<String, dynamic>> payload({required bool withVariant}) => [
+        List<Map<String, dynamic>> payload() => [
               for (final r in upload)
                 {
                   'user_id': user.id,
@@ -91,23 +121,20 @@ class SessionSyncService {
                   'duration_sec': r.durationSec,
                   'cycles': r.cyclesCompleted,
                   'completed': r.completed,
-                  if (withVariant && r.variant != null) 'variant': r.variant,
+                  if (_cloudHasVariant && r.variant != null)
+                    'variant': r.variant,
+                  if (_cloudHasRetentions && r.retentionsSec != null)
+                    'retentions': r.retentionsSec,
                 },
             ];
-        if (_cloudHasVariant) {
+        var uploaded = false;
+        for (var attempt = 0; !uploaded && attempt < 3; attempt++) {
           try {
-            await client
-                .from('sessions')
-                .upsert(payload(withVariant: true));
+            await client.from('sessions').upsert(payload());
+            uploaded = true;
           } on PostgrestException catch (e) {
-            if (!_isMissingVariantColumn(e)) rethrow;
-            _cloudHasVariant = false;
-            await client
-                .from('sessions')
-                .upsert(payload(withVariant: false));
+            if (!_markMissing(e)) rethrow;
           }
-        } else {
-          await client.from('sessions').upsert(payload(withVariant: false));
         }
       }
 

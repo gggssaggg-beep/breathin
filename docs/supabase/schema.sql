@@ -69,6 +69,11 @@ alter table public.sessions enable row level security;
 -- (fallback в SessionSyncService) — применить при доступном PAT.
 alter table public.sessions add column if not exists variant text;
 
+-- Задержки Вима Хофа по раундам, секунды (system review 2026-07-16, Д1):
+-- без колонки график прогресса ВХ терялся при переустановке. Клиент
+-- переживает отсутствие колонки (fallback в SessionSyncService).
+alter table public.sessions add column if not exists retentions int[];
+
 -- Дата последней практики — для уведомлений «друг сегодня подышал»
 -- (запрос владельца 2026-07-12): профили читаемы всем вошедшим, sessions
 -- закрыты RLS-ом на владельца, поэтому факт «дышал сегодня» публикуем

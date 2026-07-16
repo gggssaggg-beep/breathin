@@ -106,12 +106,15 @@ void main() {
     await tester.pump(const Duration(seconds: 5));
     expect(find.text('4:55'), findsOneWidget);
 
-    await tester.tap(find.text('Pause'));
+    // Пауза — тапом по экрану (влад. 2026-07-16); кнопки паузы больше нет.
+    expect(find.text('Pause'), findsNothing);
+    await tester.tap(find.text('4:55'));
     await tester.pump();
+    expect(find.text('Paused · tap to resume'), findsOneWidget);
     await tester.pump(const Duration(seconds: 30)); // на паузе время стоит
     expect(find.text('4:55'), findsOneWidget);
 
-    await tester.tap(find.text('Resume'));
+    await tester.tap(find.text('4:55')); // повторный тап — резюм
     await tester.pump();
     await tester.pump(const Duration(seconds: 5));
     expect(find.text('4:50'), findsOneWidget);

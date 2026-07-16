@@ -850,6 +850,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get stopAction => 'Стоп';
 
   @override
+  String get tapPauseHint => 'Тап по экрану — пауза';
+
+  @override
+  String get pausedTapHint => 'Пауза · тап — продолжить';
+
+  @override
   String get prepGetReady => 'Приготовьтесь';
 
   @override
@@ -914,6 +920,36 @@ class AppLocalizationsRu extends AppLocalizations {
   String whRoundShort(int r) {
     return 'Раунд $r';
   }
+
+  @override
+  String get quickStartTitle => 'Продолжить';
+
+  @override
+  String get streakReminderToggle => 'Вечернее напоминание о серии';
+
+  @override
+  String get streakReminderHint =>
+      'Около 20:00, если сегодня ещё не было практики';
+
+  @override
+  String get streakReminderTitle => 'Огонёк ждёт';
+
+  @override
+  String streakReminderBody(int n) {
+    return '$n дн. подряд — подышите пару минут, и серия сохранится';
+  }
+
+  @override
+  String get groupFavorites => 'Избранное';
+
+  @override
+  String get groupCalm => 'Спокойствие и сон';
+
+  @override
+  String get groupEnergy => 'Энергия и трансформация';
+
+  @override
+  String get groupTraditions => 'Традиции';
 
   @override
   String get timerDurationLabel => 'Длительность, мин';
@@ -1056,4 +1092,15 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get boltProgressHint =>
       'Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд.';
+
+  @override
+  String get statsGuestHint =>
+      'История хранится только на этом устройстве. Войдите в настройках — и она сохранится при переустановке и смене телефона.';
+
+  @override
+  String get commonDismiss => 'Скрыть';
+
+  @override
+  String get timerCueSoundHint =>
+      'Звук подсказки: нота ниже — левая ноздря, выше — правая.';
 }

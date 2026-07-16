@@ -841,6 +841,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stopAction => 'Stop';
 
   @override
+  String get tapPauseHint => 'Tap the screen to pause';
+
+  @override
+  String get pausedTapHint => 'Paused · tap to resume';
+
+  @override
   String get prepGetReady => 'Get ready';
 
   @override
@@ -906,6 +912,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String whRoundShort(int r) {
     return 'Round $r';
   }
+
+  @override
+  String get quickStartTitle => 'Continue';
+
+  @override
+  String get streakReminderToggle => 'Evening streak reminder';
+
+  @override
+  String get streakReminderHint =>
+      'Around 8 pm if you haven\'t practised today yet';
+
+  @override
+  String get streakReminderTitle => 'Your streak is waiting';
+
+  @override
+  String streakReminderBody(int n) {
+    return '$n days in a row — breathe for a couple of minutes to keep it';
+  }
+
+  @override
+  String get groupFavorites => 'Favorites';
+
+  @override
+  String get groupCalm => 'Calm & sleep';
+
+  @override
+  String get groupEnergy => 'Energy & transformation';
+
+  @override
+  String get groupTraditions => 'Traditions';
 
   @override
   String get timerDurationLabel => 'Duration, min';
@@ -1048,4 +1084,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get boltProgressHint =>
       'Compare results under the same conditions: day-to-day variation is normal, watch the trend.';
+
+  @override
+  String get statsGuestHint =>
+      'Your history is stored only on this device. Sign in from Settings to keep it safe across reinstalls and new phones.';
+
+  @override
+  String get commonDismiss => 'Dismiss';
+
+  @override
+  String get timerCueSoundHint =>
+      'Cue sound: lower note — left nostril, higher note — right.';
 }

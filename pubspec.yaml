@@ -56,6 +56,9 @@ dependencies:
   wakelock_plus: ^1.2.0
   # Web/PWA: Blob-URL аудио сессии (файловой системы в браузере нет).
   web: ^1.1.0
+  flutter_local_notifications: ^22.0.1
+  timezone: ^0.11.1
+  flutter_timezone: ^5.1.0
 
 dev_dependencies:
   flutter_test:

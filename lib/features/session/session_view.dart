@@ -8,6 +8,7 @@ import '../../ui/icons/breathin_icons.dart';
 import 'breathing_painter.dart';
 import 'phase_labels.dart';
 import 'segment_labels.dart';
+import 'tap_pause_hint.dart';
 
 /// Презентационный экран сессии: чистая функция от [SessionState]. Не знает про
 /// аудио, плеер и таймеры — состояние подаёт контроллер. Поэтому тестируется
@@ -16,9 +17,11 @@ import 'segment_labels.dart';
 /// Дыхательная фигура — CustomPainter [BreathingPainter] (партия П9):
 /// круг, квадрат или треугольник по [shape].
 ///
-/// Управление (ТЗ §6.5, корректировки владельца №9 и №14): во время сессии —
-/// отдельные «Пауза/Продолжить» и «Стоп»; на финише кнопки исчезают, круг
-/// заливается приятным цветом, тап по нему закрывает экран.
+/// Управление (ТЗ §6.5, корректировки владельца №9, №14 и 2026-07-16):
+/// пауза/продолжение — тапом по любому месту экрана (в начале сессии —
+/// растворяющаяся подсказка, на паузе — пилюля «тап — продолжить»); кнопка
+/// одна — «Стоп». На финише кнопки исчезают, круг заливается приятным
+/// цветом, тап по нему закрывает экран.
 class SessionView extends StatelessWidget {
   final SessionState state;
   final VisualShape shape;
@@ -65,9 +68,7 @@ class SessionView extends StatelessWidget {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
     final finished = state.isFinished;
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
+    final body = Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
@@ -134,37 +135,48 @@ class SessionView extends StatelessWidget {
                   ),
                 )
               else
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton.tonalIcon(
-                        onPressed: onPauseResume,
-                        icon: BreathinIcon(
-                          paused
-                              ? BreathinIcons.playerPlay
-                              : BreathinIcons.playerPause,
-                          size: 20,
-                        ),
-                        label:
-                            Text(paused ? l.resumeAction : l.pauseAction),
-                      ),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.tonalIcon(
+                    onPressed: onStop,
+                    icon: const BreathinIcon(
+                      BreathinIcons.playerStop,
+                      size: 20,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: FilledButton.tonalIcon(
-                        onPressed: onStop,
-                        icon: const BreathinIcon(
-                          BreathinIcons.playerStop,
-                          size: 20,
-                        ),
-                        label: Text(l.stopAction),
+                    label: Text(l.stopAction),
+                  ),
+                ),
+            ],
+          ),
+        );
+    return Scaffold(
+      body: SafeArea(
+        // Пауза — тапом по любому месту экрана (кнопка «Стоп» перехватывает
+        // свой тап сама); на финише внешний детектор не нужен — там свой
+        // тап-закрыть на круге.
+        child: finished
+            ? body
+            : GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: onPauseResume,
+                child: Stack(
+                  children: [
+                    body,
+                    // Подсказки поверх, без сдвига макета: сначала
+                    // растворяющаяся «тап — пауза», на паузе — постоянная.
+                    Positioned(
+                      top: 40,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: paused
+                            ? SessionHintPill(text: l.pausedTapHint)
+                            : const TapPauseHint(),
                       ),
                     ),
                   ],
                 ),
-            ],
-          ),
-        ),
+              ),
       ),
     );
   }

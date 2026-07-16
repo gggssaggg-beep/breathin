@@ -180,15 +180,15 @@ class _AccountSectionState extends State<AccountSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(l.accountGuestNote, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.tonalIcon(
-                icon: const BreathinIcon(BreathinIcons.user, size: 20),
-                label: Text(l.createGuestProfile),
-                onPressed: () => _guard(widget.auth.signInAnonymously),
+            // 1. E-mail — первый (постоянный способ входа)
+            if (emailAuthEnabled) ...[
+              const SizedBox(height: 12),
+              EmailAuthForm(
+                actionLabel: l.emailSignInAction,
+                onSubmit: (email) => _guard(() => widget.auth.signInWithEmail(email)),
               ),
-            ),
+            ],
+            // 2. Google — второй (если включён)
             if (googleAuthEnabled) ...[
               const SizedBox(height: 8),
               SizedBox(
@@ -200,13 +200,16 @@ class _AccountSectionState extends State<AccountSection> {
                 ),
               ),
             ],
-            if (emailAuthEnabled) ...[
-              const SizedBox(height: 12),
-              EmailAuthForm(
-                actionLabel: l.emailSignInAction,
-                onSubmit: (email) => _guard(() => widget.auth.signInWithEmail(email)),
+            // 3. Гость — последним и второстепенной кнопкой
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                icon: const BreathinIcon(BreathinIcons.user, size: 20),
+                label: Text(l.createGuestProfile),
+                onPressed: () => _guard(widget.auth.signInAnonymously),
               ),
-            ],
+            ),
           ],
         ),
       ),

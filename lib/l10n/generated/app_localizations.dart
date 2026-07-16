@@ -1532,6 +1532,18 @@ abstract class AppLocalizations {
   /// **'Стоп'**
   String get stopAction;
 
+  /// No description provided for @tapPauseHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тап по экрану — пауза'**
+  String get tapPauseHint;
+
+  /// No description provided for @pausedTapHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пауза · тап — продолжить'**
+  String get pausedTapHint;
+
   /// No description provided for @prepGetReady.
   ///
   /// In ru, this message translates to:
@@ -1651,6 +1663,60 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Раунд {r}'**
   String whRoundShort(int r);
+
+  /// No description provided for @quickStartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить'**
+  String get quickStartTitle;
+
+  /// No description provided for @streakReminderToggle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вечернее напоминание о серии'**
+  String get streakReminderToggle;
+
+  /// No description provided for @streakReminderHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Около 20:00, если сегодня ещё не было практики'**
+  String get streakReminderHint;
+
+  /// No description provided for @streakReminderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Огонёк ждёт'**
+  String get streakReminderTitle;
+
+  /// No description provided for @streakReminderBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} дн. подряд — подышите пару минут, и серия сохранится'**
+  String streakReminderBody(int n);
+
+  /// No description provided for @groupFavorites.
+  ///
+  /// In ru, this message translates to:
+  /// **'Избранное'**
+  String get groupFavorites;
+
+  /// No description provided for @groupCalm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спокойствие и сон'**
+  String get groupCalm;
+
+  /// No description provided for @groupEnergy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Энергия и трансформация'**
+  String get groupEnergy;
+
+  /// No description provided for @groupTraditions.
+  ///
+  /// In ru, this message translates to:
+  /// **'Традиции'**
+  String get groupTraditions;
 
   /// No description provided for @timerDurationLabel.
   ///
@@ -1897,6 +1963,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд.'**
   String get boltProgressHint;
+
+  /// No description provided for @statsGuestHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'История хранится только на этом устройстве. Войдите в настройках — и она сохранится при переустановке и смене телефона.'**
+  String get statsGuestHint;
+
+  /// No description provided for @commonDismiss.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скрыть'**
+  String get commonDismiss;
+
+  /// No description provided for @timerCueSoundHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Звук подсказки: нота ниже — левая ноздря, выше — правая.'**
+  String get timerCueSoundHint;
 }
 
 class _AppLocalizationsDelegate

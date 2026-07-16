@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../core/invite_code.dart';
 import '../domain/models/session_record.dart';
 import '../domain/stats/challenge_progress.dart';
+import '../services/auth/auth_service.dart';
 import 'session_log_repository.dart';
 
 /// Представление челленджа для UI: сам челлендж + участники с прогрессом.
@@ -180,6 +181,25 @@ class ChallengesRepository {
     final records = await log.all();
     for (final v in views) {
       await _syncOne(v, records);
+    }
+  }
+
+  /// Лёгкий вариант: только пересчёт и upsert прогресса, без возврата вью-моделей.
+  /// Используется после каждой сессии (fire-and-forget через [syncProgressIfSignedIn]).
+  Future<void> syncProgressOnly() async {
+    await syncProgress();
+  }
+
+  /// Гейт для вызова из session_runner / wim_hof / timer_session: no-op, если
+  /// Supabase не инициализирован или пользователь не вошёл. Любые ошибки глотает.
+  static Future<void> syncProgressIfSignedIn() async {
+    const auth = AuthService();
+    if (!auth.isReady) return;
+    if (auth.currentUser == null) return;
+    try {
+      await ChallengesRepository().syncProgressOnly();
+    } catch (_) {
+      // fire-and-forget: ошибки не прерывают сессионный поток
     }
   }
 

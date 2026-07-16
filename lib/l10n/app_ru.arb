@@ -345,6 +345,8 @@
   "pauseAction": "Пауза",
   "resumeAction": "Продолжить",
   "stopAction": "Стоп",
+  "tapPauseHint": "Тап по экрану — пауза",
+  "pausedTapHint": "Пауза · тап — продолжить",
   "prepGetReady": "Приготовьтесь",
   "cycleLabel": "Цикл",
   "sessionDone": "Готово",
@@ -369,6 +371,17 @@
   "whResultsTitle": "Задержки по раундам",
   "whRoundShort": "Раунд {r}",
   "@whRoundShort": { "placeholders": { "r": { "type": "int" } } },
+  "quickStartTitle": "Продолжить",
+  "streakReminderToggle": "Вечернее напоминание о серии",
+  "streakReminderHint": "Около 20:00, если сегодня ещё не было практики",
+  "streakReminderTitle": "Огонёк ждёт",
+  "streakReminderBody": "{n} дн. подряд — подышите пару минут, и серия сохранится",
+  "@streakReminderBody": { "placeholders": { "n": { "type": "int" } } },
+  "groupFavorites": "Избранное",
+  "groupCalm": "Спокойствие и сон",
+  "groupEnergy": "Энергия и трансформация",
+  "groupTraditions": "Традиции",
+
   "timerDurationLabel": "Длительность, мин",
   "timerCueLabel": "Подсказки смены ноздри",
   "timerCueOff": "Выкл",
@@ -417,5 +430,10 @@
   "boltHistoryTitle": "Динамика",
   "boltLatestLabel": "Последний результат",
   "boltHistoryEmpty": "Пока нет результатов — пройдите тест, чтобы отслеживать динамику.",
-  "boltProgressHint": "Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд."
+  "boltProgressHint": "Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд.",
+
+  "statsGuestHint": "История хранится только на этом устройстве. Войдите в настройках — и она сохранится при переустановке и смене телефона.",
+  "commonDismiss": "Скрыть",
+
+  "timerCueSoundHint": "Звук подсказки: нота ниже — левая ноздря, выше — правая."
 }

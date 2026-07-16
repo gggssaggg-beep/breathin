@@ -75,6 +75,67 @@ void main() {
     expect(find.text('2 sessions · 9 min'), findsOneWidget);
   });
 
+  // В1: гостевая подсказка о локальности истории
+
+  SessionRecord rec10(int i) => rec(
+        DateTime(2026, 7, i + 1, 8),
+      );
+
+  Future<SessionLogRepository> repoWith10() async {
+    final repo = SessionLogRepository();
+    for (var i = 0; i < 10; i++) {
+      await repo.add(rec10(i));
+    }
+    return repo;
+  }
+
+  testWidgets('В1: ≥10 записей + не закрывалась → карточка видна',
+      (tester) async {
+    final repo = await repoWith10();
+    await tester.pumpWidget(
+      wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 15))),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('only on this device'), findsOneWidget);
+    expect(find.text('Dismiss'), findsOneWidget);
+  });
+
+  testWidgets('В1: тап «Скрыть» — карточка исчезает', (tester) async {
+    final repo = await repoWith10();
+    await tester.pumpWidget(
+      wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 15))),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Dismiss'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('only on this device'), findsNothing);
+  });
+
+  testWidgets('В1: после закрытия пересоздание экрана → не появляется',
+      (tester) async {
+    SharedPreferences.setMockInitialValues(
+      {'stats.guest_hint_dismissed.v1': true},
+    );
+    final repo = await repoWith10();
+    await tester.pumpWidget(
+      wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 15))),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('only on this device'), findsNothing);
+  });
+
+  testWidgets('В1: 5 записей → карточка не показывается', (tester) async {
+    final repo = SessionLogRepository();
+    for (var i = 0; i < 5; i++) {
+      await repo.add(rec(DateTime(2026, 7, i + 1, 8)));
+    }
+    await tester.pumpWidget(
+      wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 15))),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('only on this device'), findsNothing);
+  });
+
   testWidgets('навигация к прошлому месяцу и запрет будущего', (tester) async {
     final repo = SessionLogRepository();
     await repo.add(rec(DateTime(2026, 7, 12, 9)));
