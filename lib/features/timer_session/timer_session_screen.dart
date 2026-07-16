@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart' show AudioPlayer, ProcessingState;
 import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../data/challenges_repository.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/engine/timer_session.dart';
 import '../../domain/models/session_record.dart';
@@ -290,7 +291,12 @@ class _TimerSessionScreenState extends State<TimerSessionScreen>
     );
     // fire-and-forget: экран не ждёт ни диска, ни сети (синк без сети — no-op).
     final log = widget.log ?? SessionLogRepository();
-    unawaited(log.add(record).then((_) => SessionSyncService().syncNow()));
+    unawaited(
+      log
+          .add(record)
+          .then((_) => SessionSyncService().syncNow())
+          .then((_) => ChallengesRepository.syncProgressIfSignedIn()),
+    );
   }
 
   void _stop() {

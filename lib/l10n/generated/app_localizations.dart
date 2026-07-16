@@ -1963,6 +1963,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд.'**
   String get boltProgressHint;
+
+  /// No description provided for @statsGuestHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'История хранится только на этом устройстве. Войдите в настройках — и она сохранится при переустановке и смене телефона.'**
+  String get statsGuestHint;
+
+  /// No description provided for @commonDismiss.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скрыть'**
+  String get commonDismiss;
+
+  /// No description provided for @timerCueSoundHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Звук подсказки: нота ниже — левая ноздря, выше — правая.'**
+  String get timerCueSoundHint;
 }
 
 class _AppLocalizationsDelegate

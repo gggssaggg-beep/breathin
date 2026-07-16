@@ -127,6 +127,13 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                   ),
               ],
             ),
+            const SizedBox(height: 6),
+            Text(
+              l.timerCueSoundHint,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
           _SliderTile(
             label: l.prepLabel,

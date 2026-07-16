@@ -1092,4 +1092,15 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get boltProgressHint =>
       'Сравнивайте результаты в одинаковых условиях: разброс день ото дня — это норма, смотрите на тренд.';
+
+  @override
+  String get statsGuestHint =>
+      'История хранится только на этом устройстве. Войдите в настройках — и она сохранится при переустановке и смене телефона.';
+
+  @override
+  String get commonDismiss => 'Скрыть';
+
+  @override
+  String get timerCueSoundHint =>
+      'Звук подсказки: нота ниже — левая ноздря, выше — правая.';
 }

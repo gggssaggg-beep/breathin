@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/session_log_repository.dart';
 import '../../domain/catalog/techniques.dart';
@@ -8,6 +9,7 @@ import '../../domain/models/technique.dart';
 import '../../domain/stats/practice_stats.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../services/auth/auth_service.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../bolt/bolt_test_screen.dart';
@@ -28,11 +30,14 @@ class StatsScreen extends StatefulWidget {
   State<StatsScreen> createState() => _StatsScreenState();
 }
 
+const _kGuestHintKey = 'stats.guest_hint_dismissed.v1';
+
 class _StatsScreenState extends State<StatsScreen> {
   List<SessionRecord>? _records;
   late DateTime _today;
   late int _year;
   late int _month;
+  bool _guestHintDismissed = false;
 
   @override
   void initState() {
@@ -43,6 +48,26 @@ class _StatsScreenState extends State<StatsScreen> {
     widget.log.all().then((r) {
       if (mounted) setState(() => _records = r);
     });
+    SharedPreferences.getInstance().then((prefs) {
+      if (mounted) {
+        setState(
+          () => _guestHintDismissed = prefs.getBool(_kGuestHintKey) ?? false,
+        );
+      }
+    });
+  }
+
+  void _dismissGuestHint() {
+    setState(() => _guestHintDismissed = true);
+    // fire-and-forget персист
+    SharedPreferences.getInstance().then(
+      (prefs) => prefs.setBool(_kGuestHintKey, true),
+    );
+  }
+
+  bool get _isGuest {
+    const auth = AuthService();
+    return !auth.isReady || auth.currentUser == null;
   }
 
   bool get _atCurrentMonth => _year == _today.year && _month == _today.month;
@@ -75,8 +100,12 @@ class _StatsScreenState extends State<StatsScreen> {
               : ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    const _BoltEntryCard(),
-                    const SizedBox(height: 16),
+                    if (_isGuest &&
+                        records.length >= 10 &&
+                        !_guestHintDismissed) ...[
+                      _GuestHintCard(onDismiss: _dismissGuestHint),
+                      const SizedBox(height: 16),
+                    ],
                     _SummaryRow(records: records, today: _today),
                     const SizedBox(height: 24),
                     _MonthHeader(
@@ -96,9 +125,55 @@ class _StatsScreenState extends State<StatsScreen> {
                     const SizedBox(height: 16),
                     _MonthTotals(records: records, year: _year, month: _month),
                     const SizedBox(height: 16),
+                    const _BoltEntryCard(),
+                    const SizedBox(height: 16),
                     _ByTechnique(records: records, year: _year, month: _month),
                   ],
                 ),
+    );
+  }
+}
+
+/// Закрываемая подсказка гостю о локальности истории (В1).
+/// Показывается, когда записей ≥ 10 и карточка ещё не закрывалась.
+class _GuestHintCard extends StatelessWidget {
+  final VoidCallback onDismiss;
+  const _GuestHintCard({required this.onDismiss});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BreathinIcon(
+              BreathinIcons.user,
+              size: 22,
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l.statsGuestHint,
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+            TextButton(
+              onPressed: onDismiss,
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(l.commonDismiss),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
