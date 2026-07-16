@@ -56,6 +56,7 @@ enum TechniqueIcon {
   lock,
   orbit,
   eye,
+  energyWave,
 }
 
 /// Маршрут дыхания: через нос или через рот.

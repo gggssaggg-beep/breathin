@@ -54,6 +54,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_nine_breaths_name;
       case 'sigh':
         return tech_sigh_name;
+      case 'energy_wave':
+        return tech_energy_wave_name;
       default:
         throw StateError('Неизвестный id техники: ${t.id}');
     }
@@ -106,6 +108,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_nine_breaths_desc;
       case 'sigh':
         return tech_sigh_desc;
+      case 'energy_wave':
+        return tech_energy_wave_desc;
       default:
         throw StateError('Неизвестный id техники: ${t.id}');
     }
@@ -158,6 +162,8 @@ extension TechniqueTexts on AppLocalizations {
         return tech_nine_breaths_benefit;
       case 'sigh':
         return tech_sigh_benefit;
+      case 'energy_wave':
+        return tech_energy_wave_benefit;
       default:
         throw StateError('Неизвестный id техники: ${t.id}');
     }

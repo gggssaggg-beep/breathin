@@ -51,5 +51,7 @@ BreathinIconData iconDataFor(TechniqueIcon icon) {
       return BreathinIcons.rotate;
     case TechniqueIcon.eye:
       return BreathinIcons.eye;
+    case TechniqueIcon.energyWave:
+      return BreathinIcons.energyWave;
   }
 }

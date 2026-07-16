@@ -8,11 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Каталог техник (ПЛАН §5.2)', () {
     test(
-        '22 записи: 12 counted + 6 timer + Вим Хоф + 3 скриптовые',
+        '23 записи: 13 counted + 6 timer + Вим Хоф + 3 скриптовые',
         () {
-      expect(catalog, hasLength(22));
+      expect(catalog, hasLength(23));
       expect(
-          catalog.where((t) => t.type == TechniqueType.counted), hasLength(12));
+          catalog.where((t) => t.type == TechniqueType.counted), hasLength(13));
       expect(catalog.where((t) => t.type == TechniqueType.timer), hasLength(6));
       expect(catalog.where((t) => t.type == TechniqueType.wimHof), hasLength(1));
       expect(

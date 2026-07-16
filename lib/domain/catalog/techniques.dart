@@ -334,6 +334,30 @@ const mindfulBreath = Technique(
   maxTimerMin: 30,
 );
 
+/// Энерговолна (даосская, запрос владельца 2026-07-16): ведомая волна 6-6 —
+/// ровное диафрагмальное дыхание, внимание поднимается от стоп до макушки на
+/// вдохе и опускается обратно к стопам на выдохе. Светская форма без
+/// религиозных акцентов; цель — заземление и целостное ощущение тела.
+/// Упрощённый вариант для новичков: 4-4.
+const energyWaveBreath = Technique(
+  id: 'energy_wave',
+  type: TechniqueType.counted,
+  safetyLevel: SafetyLevel.low,
+  safetyKey: 'safety_low',
+  icon: TechniqueIcon.energyWave,
+  phases: [
+    PhaseSpec(kind: PhaseKind.inhale, defaultSec: 6.0, minSec: 4.0, maxSec: 8.0),
+    PhaseSpec(kind: PhaseKind.exhale, defaultSec: 6.0, minSec: 4.0, maxSec: 8.0),
+  ],
+  simplifiedPhases: [
+    PhaseSpec(kind: PhaseKind.inhale, defaultSec: 4.0, minSec: 4.0, maxSec: 8.0),
+    PhaseSpec(kind: PhaseKind.exhale, defaultSec: 4.0, minSec: 4.0, maxSec: 8.0),
+  ],
+  scaling: ScalingMode.ratioOptional,
+  keepRatioDefault: true,
+  defaultCycles: 10,
+);
+
 /// Дыхание по центральной оси (контент владельца): естественное дыхание без
 /// счёта, внимание скользит по вертикали тела — timer-техника.
 const axisBreath = Technique(
@@ -455,6 +479,7 @@ final List<Technique> catalog = [
   vesselBreath,
   bandhaBreath,
   orbitBreath,
+  energyWaveBreath,
   diaphragmatic,
   mindfulBreath,
   nadiShodhana,

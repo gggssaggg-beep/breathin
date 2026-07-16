@@ -34,6 +34,7 @@ TechniqueGroup groupOf(Technique t) {
     case 'nine_breaths':
     case 'nadi_shodhana':
     case 'sound_breath':
+    case 'energy_wave':
       return TechniqueGroup.traditions;
     default:
       throw StateError('Техника без группы: ${t.id}');
