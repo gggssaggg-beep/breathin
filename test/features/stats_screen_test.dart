@@ -77,21 +77,21 @@ void main() {
 
   // В1: гостевая подсказка о локальности истории
 
-  SessionRecord _rec10(int i) => rec(
+  SessionRecord rec10(int i) => rec(
         DateTime(2026, 7, i + 1, 8),
       );
 
-  Future<SessionLogRepository> _repoWith10() async {
+  Future<SessionLogRepository> repoWith10() async {
     final repo = SessionLogRepository();
     for (var i = 0; i < 10; i++) {
-      await repo.add(_rec10(i));
+      await repo.add(rec10(i));
     }
     return repo;
   }
 
   testWidgets('В1: ≥10 записей + не закрывалась → карточка видна',
       (tester) async {
-    final repo = await _repoWith10();
+    final repo = await repoWith10();
     await tester.pumpWidget(
       wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 15))),
     );
@@ -101,7 +101,7 @@ void main() {
   });
 
   testWidgets('В1: тап «Скрыть» — карточка исчезает', (tester) async {
-    final repo = await _repoWith10();
+    final repo = await repoWith10();
     await tester.pumpWidget(
       wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 15))),
     );
@@ -116,7 +116,7 @@ void main() {
     SharedPreferences.setMockInitialValues(
       {'stats.guest_hint_dismissed.v1': true},
     );
-    final repo = await _repoWith10();
+    final repo = await repoWith10();
     await tester.pumpWidget(
       wrap(StatsScreen(log: repo, today: DateTime(2026, 7, 15))),
     );
