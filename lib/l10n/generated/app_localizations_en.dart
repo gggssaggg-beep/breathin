@@ -841,6 +841,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stopAction => 'Stop';
 
   @override
+  String get tapPauseHint => 'Tap the screen to pause';
+
+  @override
+  String get pausedTapHint => 'Paused · tap to resume';
+
+  @override
   String get prepGetReady => 'Get ready';
 
   @override

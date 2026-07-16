@@ -344,6 +344,8 @@
 
   "pauseAction": "Pause",
   "resumeAction": "Resume",
+  "tapPauseHint": "Tap the screen to pause",
+  "pausedTapHint": "Paused · tap to resume",
   "stopAction": "Stop",
   "prepGetReady": "Get ready",
   "cycleLabel": "Cycle",

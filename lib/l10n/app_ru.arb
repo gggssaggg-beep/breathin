@@ -345,6 +345,8 @@
   "pauseAction": "Пауза",
   "resumeAction": "Продолжить",
   "stopAction": "Стоп",
+  "tapPauseHint": "Тап по экрану — пауза",
+  "pausedTapHint": "Пауза · тап — продолжить",
   "prepGetReady": "Приготовьтесь",
   "cycleLabel": "Цикл",
   "sessionDone": "Готово",

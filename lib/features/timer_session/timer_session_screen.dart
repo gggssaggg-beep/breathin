@@ -18,6 +18,7 @@ import '../../services/haptics/vibration_pattern.dart';
 import '../../services/sync/session_sync_service.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../session/tap_pause_hint.dart';
 
 /// Экран таймер-сессии: свободное дыхание заданной длительности (ПЛАН §10).
 ///
@@ -411,7 +412,14 @@ class _PracticeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cue = machine.currentCue;
-    return Padding(
+    // Пауза — тапом по любому месту экрана (влад. 2026-07-16); «Стоп»
+    // перехватывает свой тап сам. Подсказки — поверх, без сдвига макета.
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onPauseResume,
+      child: Stack(
+        children: [
+          Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
@@ -465,22 +473,25 @@ class _PracticeView extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.tonal(
-                  onPressed: onPauseResume,
-                  child: Text(paused ? l.resumeAction : l.pauseAction),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton(
-                  onPressed: onStop,
-                  child: Text(l.stopAction),
-                ),
-              ),
-            ],
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.tonal(
+              onPressed: onStop,
+              child: Text(l.stopAction),
+            ),
+          ),
+        ],
+      ),
+          ),
+          Positioned(
+            top: 56,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: paused
+                  ? SessionHintPill(text: l.pausedTapHint)
+                  : const TapPauseHint(),
+            ),
           ),
         ],
       ),

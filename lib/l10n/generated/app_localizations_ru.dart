@@ -850,6 +850,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get stopAction => 'Стоп';
 
   @override
+  String get tapPauseHint => 'Тап по экрану — пауза';
+
+  @override
+  String get pausedTapHint => 'Пауза · тап — продолжить';
+
+  @override
   String get prepGetReady => 'Приготовьтесь';
 
   @override

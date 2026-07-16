@@ -123,7 +123,7 @@ void main() {
     expect(find.text('—'), findsOneWidget); // цикл не начался
   });
 
-  testWidgets('во время сессии — отдельные кнопки паузы и стопа',
+  testWidgets('пауза — тапом по экрану, «Стоп» — кнопкой (влад. 2026-07-16)',
       (tester) async {
     var paused = false;
     var stopped = false;
@@ -132,17 +132,30 @@ void main() {
       onPauseResume: () => paused = true,
       onStop: () => stopped = true,
     ));
-    await tester.tap(find.text('Pause'));
+    // Растворяющаяся подсказка видна на старте.
+    expect(find.text('Tap the screen to pause'), findsOneWidget);
+    // Тап по фигуре (любое место экрана) — пауза; кнопки паузы больше нет.
+    expect(find.text('Pause'), findsNothing);
+    await tester.tap(find.text('Inhale'));
     expect(paused, isTrue);
     expect(stopped, isFalse);
     await tester.tap(find.text('Stop'));
     expect(stopped, isTrue);
+    // Дожигаем таймер подсказки (4 c + fade), чтобы тест не ругался.
+    await tester.pump(const Duration(seconds: 6));
   });
 
-  testWidgets('на паузе кнопка меняется на «Resume»', (tester) async {
-    await tester.pumpWidget(wrap(breathing(), paused: true));
-    expect(find.text('Resume'), findsOneWidget);
-    expect(find.text('Pause'), findsNothing);
+  testWidgets('на паузе — пилюля «тап — продолжить», тап снимает паузу',
+      (tester) async {
+    var resumed = false;
+    await tester.pumpWidget(wrap(
+      breathing(),
+      paused: true,
+      onPauseResume: () => resumed = true,
+    ));
+    expect(find.text('Paused · tap to resume'), findsOneWidget);
+    await tester.tap(find.text('Inhale'));
+    expect(resumed, isTrue);
   });
 
   testWidgets('финиш: кнопок нет, тап по кругу закрывает', (tester) async {

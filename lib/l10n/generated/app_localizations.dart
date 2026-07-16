@@ -1532,6 +1532,18 @@ abstract class AppLocalizations {
   /// **'Стоп'**
   String get stopAction;
 
+  /// No description provided for @tapPauseHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тап по экрану — пауза'**
+  String get tapPauseHint;
+
+  /// No description provided for @pausedTapHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пауза · тап — продолжить'**
+  String get pausedTapHint;
+
   /// No description provided for @prepGetReady.
   ///
   /// In ru, this message translates to:
