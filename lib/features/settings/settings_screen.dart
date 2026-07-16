@@ -39,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
   AppLanguage _language = AppLanguage.system;
   bool _hasBoltResult = false;
-  bool _streakReminder = false;
+  bool _streakReminder = true; // дефолт ВКЛ (решение владельца)
   String? _version;
 
   @override
