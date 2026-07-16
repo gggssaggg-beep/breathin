@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/prefs_changes.dart';
 import '../domain/engine/phase_scaling.dart';
 import '../domain/models/technique.dart';
 
@@ -89,6 +90,7 @@ class TimerSettingsStore {
         'vibration': s.vibration,
       }),
     );
+    PrefsChanges.notify();
   }
 
   TimerSettings _defaults(Technique t) => TimerSettings(

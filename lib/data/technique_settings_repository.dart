@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/prefs_changes.dart';
 import '../domain/models/technique.dart';
 import '../domain/models/technique_settings.dart';
 
@@ -50,11 +51,13 @@ class TechniqueSettingsRepository {
   Future<void> save(TechniqueSettings s) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key(s.techniqueId), jsonEncode(s.toJson()));
+    PrefsChanges.notify();
   }
 
   /// Удаляет сохранённые настройки для техники с идентификатором [techniqueId].
   Future<void> reset(String techniqueId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key(techniqueId));
+    PrefsChanges.notify();
   }
 }

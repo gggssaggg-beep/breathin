@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/prefs_changes.dart';
 import '../domain/difficulty/difficulty.dart';
 
 /// Персист глобального пресета сложности (prefs 'difficulty.preset',
@@ -16,5 +17,6 @@ class DifficultyStore {
   Future<void> save(DifficultyPreset preset) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, preset.name);
+    PrefsChanges.notify();
   }
 }

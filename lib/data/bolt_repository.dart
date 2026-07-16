@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/prefs_changes.dart';
 import '../domain/models/bolt_result.dart';
 
 /// История результатов BOLT (append-only), формат-обёртка `{schema,results}`
@@ -49,5 +50,6 @@ class BoltRepository {
           _key,
           jsonEncode({'schema': 1, 'results': results}),
         );
+        PrefsChanges.notify();
       });
 }
