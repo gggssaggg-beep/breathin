@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Дыши — мир дыхательных практик</title>
+  <meta name="description" content="Листайте — и пролетите сквозь мир приложения «Дыши»: 22 техники, живая арфа, Вим Хоф, суфийские практики." />
+  <style>
+    /* Тема движка = палитра приложения (seed #3E7C86, фон сцен #EEF4F3). */
+    :root, .sw-root {
+      --sw-bg: #EEF4F3;          /* == фон сгенерированных сцен */
+      --sw-ink: #1E3237;
+      --sw-ink-soft: #5C7278;
+      --sw-accent: #3E7C86;      /* акценты секций переопределяют на лету */
+    }
+  </style>
+</head>
+<body>
+  <div id="top"></div>
+  <div id="world"></div>
+
+  <script src="scrub-engine.js"></script>
+  <script>
+    mountScrollWorld(document.getElementById('world'), {
+      brand: { name: 'Дыши', href: '#top' },
+      hint: 'листайте, чтобы влететь',
+      diveScroll: 1.3,
+      connScroll: 0.9,
+      sections: [
+        {
+          id: 'dawn', label: 'Долина',
+          still: 'assets/dawn.webp',
+          clip: 'assets/vid/dawn.mp4',
+          accent: '#F9A825',
+          scroll: 1.5,
+          eyebrow: 'Дыши',
+          title: 'Спокойствие — в одном вдохе.',
+          body: 'Приложение дыхательных практик: от минутной паузы среди дня до глубокой работы с дыханием.',
+          tags: ['Офлайн', 'Без рекламы'],
+        },
+        {
+          id: 'library', label: 'Каталог',
+          still: 'assets/library.webp',
+          clip: 'assets/vid/library.mp4',
+          accent: '#3E7C86',
+          eyebrow: 'Каталог',
+          title: '22 техники — на любой случай.',
+          body: 'Квадратное дыхание, 4-7-8, бандхи, малая орбита — у каждой инструкция, зачем она и меры безопасности.',
+          tags: ['Группы', 'Избранное', 'Быстрый старт'],
+        },
+        {
+          id: 'practice', label: 'Практика',
+          still: 'assets/practice.webp',
+          clip: 'assets/vid/practice.mp4',
+          accent: '#2E9E6B',
+          scroll: 1.6, linger: 0.35,
+          eyebrow: 'Сессия',
+          title: 'Визуальный проводник дыхания.',
+          body: 'Фигура и фазы ведут ритм, живая арфа и прибой не дают сбиться — глаза можно закрыть.',
+          tags: ['Живая арфа', 'Прибой', 'Тап — пауза'],
+        },
+        {
+          id: 'wimhof', label: 'Вим Хоф',
+          still: 'assets/wimhof.webp',
+          clip: 'assets/vid/wimhof.mp4',
+          accent: '#3F7FBF',
+          eyebrow: 'Вим Хоф',
+          title: 'Раунды, задержки, прогресс.',
+          body: 'Приложение ведёт по раундам, считает задержки за вас и хранит прогресс — плюс тест BOLT.',
+          tags: ['Раунды', 'BOLT'],
+        },
+        {
+          id: 'sufi', label: 'Фикр',
+          still: 'assets/sufi.webp',
+          clip: 'assets/vid/sufi.mp4',
+          accent: '#9C6BD6',
+          eyebrow: 'Фикр',
+          title: 'Дыхание с аффирмациями.',
+          body: 'Суфийские практики школы Инайят Хана: слова ложатся в такт вдоху и выдоху — можно и свои.',
+          tags: ['Суфийские практики', 'Свои вазифы'],
+        },
+        {
+          id: 'finale', label: 'Приложение',
+          still: 'assets/finale.webp',
+          clip: 'assets/vid/finale.mp4',
+          accent: '#3E7C86',
+          scroll: 1.8, linger: 0.45,
+          eyebrow: 'Всё это — в кармане',
+          title: 'Дыши. Каждый день.',
+          body: 'Напоминания, пресеты, тёмная тема и ваш прогресс — в одном спокойном приложении.',
+          tags: [],
+          cta: {
+            primary: { label: 'Скачать для Android', href: 'https://github.com/gggssaggg-beep/breathin/releases/latest' },
+            secondary: { label: 'Открыть веб-версию', href: 'https://gggssaggg-beep.github.io/breathin/' },
+          },
+        },
+      ],
+      // length = sections - 1; null допустим (шов закроется кросфейдом), если коннектор не пройдёт фильтр
+      connectors: [
+        'assets/vid/conn1.mp4',
+        'assets/vid/conn2.mp4',
+        'assets/vid/conn3.mp4',
+        'assets/vid/conn4.mp4',
+        'assets/vid/conn5.mp4',
+      ],
+    });
+  </script>
+</body>
+</html>
