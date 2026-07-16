@@ -100,14 +100,12 @@ class _StatsScreenState extends State<StatsScreen> {
               : ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    const _BoltEntryCard(),
                     if (_isGuest &&
                         records.length >= 10 &&
                         !_guestHintDismissed) ...[
-                      const SizedBox(height: 16),
                       _GuestHintCard(onDismiss: _dismissGuestHint),
+                      const SizedBox(height: 16),
                     ],
-                    const SizedBox(height: 16),
                     _SummaryRow(records: records, today: _today),
                     const SizedBox(height: 24),
                     _MonthHeader(
@@ -126,6 +124,8 @@ class _StatsScreenState extends State<StatsScreen> {
                     ),
                     const SizedBox(height: 16),
                     _MonthTotals(records: records, year: _year, month: _month),
+                    const SizedBox(height: 16),
+                    const _BoltEntryCard(),
                     const SizedBox(height: 16),
                     _ByTechnique(records: records, year: _year, month: _month),
                   ],
