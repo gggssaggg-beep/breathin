@@ -141,7 +141,16 @@ class HantTheme {
             ?.copyWith(fontWeight: FontWeight.w600),
         headlineSmall: base.textTheme.headlineSmall
             ?.copyWith(fontWeight: FontWeight.w600),
-        labelLarge: _mono(13.5, weight: FontWeight.w500, spacing: 1.2),
+        // labelLarge наследуют SegmentedButton/чипы с ДЛИННЫМИ русскими
+        // подписями («Как в системе») — моно с трекингом их переносит на
+        // 3 строки. Поэтому labelLarge — Golos; моно-капс задан явно в
+        // textStyle кнопок-CTA ниже.
+        labelLarge: const TextStyle(
+          fontFamily: 'GolosText',
+          fontSize: 13.5,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.4,
+        ),
         labelMedium: _mono(12, spacing: 2, color: textDim),
         labelSmall: _mono(11, spacing: 2.5, color: textDim),
       ),
@@ -173,6 +182,12 @@ class HantTheme {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+      ),
+      // Без галочки выбранного сегмента: она съедает ширину, и длинные
+      // русские подписи («Как в системе») переносятся на 2–3 строки.
+      // Выбранность показывает заливка secondaryContainer.
+      segmentedButtonTheme: const SegmentedButtonThemeData(
+        selectedIcon: SizedBox.shrink(),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
