@@ -297,9 +297,9 @@ abstract final class BreathinIcons {
   ]);
 
   /// Волна энергии — Энерговолна (даосская ведомая волна).
-  /// Tabler «current-ac»: форма сигнала AC — энергетическая волна.
+  /// Вертикальный серпантин: волна течёт вдоль тела снизу вверх.
   static const energyWave = BreathinIconData([
-    'M3 12h4l3 -9l4 18l3 -9h4',
+    'M12 21c-3 -1.5 -3 -4.5 0 -6s3 -4.5 0 -6s-3 -4.5 0 -6',
   ]);
 
   static const List<BreathinIconData> all = [
