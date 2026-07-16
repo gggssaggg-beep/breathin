@@ -1951,6 +1951,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Скрыть'**
   String get commonDismiss;
+
+  /// No description provided for @timerCueSoundHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Звук подсказки: нота ниже — левая ноздря, выше — правая.'**
+  String get timerCueSoundHint;
 }
 
 class _AppLocalizationsDelegate

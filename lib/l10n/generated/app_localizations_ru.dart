@@ -1084,4 +1084,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get commonDismiss => 'Скрыть';
+
+  @override
+  String get timerCueSoundHint =>
+      'Звук подсказки: нота ниже — левая ноздря, выше — правая.';
 }

@@ -1076,4 +1076,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonDismiss => 'Dismiss';
+
+  @override
+  String get timerCueSoundHint =>
+      'Cue sound: lower note — left nostril, higher note — right.';
 }
