@@ -87,10 +87,11 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Start'));
-    await tester.pumpAndSettle();
+    // НЕ pumpAndSettle: у сессии repeat-анимация свечения — не «устаканится».
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.byType(TimerSessionScreen), findsOneWidget);
-    // Заглушка T3 показывает «Get ready · <минуты>».
-    expect(find.text('Get ready · 5'), findsOneWidget);
+    expect(find.text('Get ready'), findsOneWidget);
   });
 }

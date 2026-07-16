@@ -62,11 +62,11 @@ class _TimerSessionScreenState extends State<TimerSessionScreen>
   Timer? _timer;
   int _lastTick = 0;
 
-  /// Медленное свечение фигуры (декорация, не часы).
-  late final AnimationController _glow = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 4),
-  )..repeat(reverse: true);
+  /// Медленное свечение фигуры (декорация, не часы). Инициализация — в
+  /// initState ЯВНО: ленивый late с побочным repeat() создавал бы контроллер
+  /// при первом касании в dispose (смерть экрана на prep) — тикер стартует
+  /// прямо в dispose и роняет teardown.
+  late final AnimationController _glow;
 
   Object? _signature;
   int _lastCueIndex = -1;
@@ -88,6 +88,10 @@ class _TimerSessionScreenState extends State<TimerSessionScreen>
   @override
   void initState() {
     super.initState();
+    _glow = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    )..repeat(reverse: true);
     try {
       WakelockPlus.enable().ignore();
     } catch (_) {}
