@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/prefs_changes.dart';
+
 /// Персист избранных техник (prefs ключ 'favorites.v1', список id).
 /// Операции редкие — конкурентная очередь не нужна.
 class FavoritesStore {
@@ -20,5 +22,6 @@ class FavoritesStore {
       current.add(id);
     }
     await prefs.setStringList(_key, current.toList());
+    PrefsChanges.notify();
   }
 }

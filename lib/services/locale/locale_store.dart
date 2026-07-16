@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/prefs_changes.dart';
+
 /// Язык приложения: системный (следует ОС), русский или английский.
 enum AppLanguage { system, ru, en }
 
@@ -17,6 +19,7 @@ class LocaleStore {
   Future<void> save(AppLanguage lang) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, lang.name);
+    PrefsChanges.notify();
   }
 }
 

@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/prefs_changes.dart';
+
 /// Персист «своей фразы» фикра (prefs ключи 'fikr.custom.in' / 'fikr.custom.ex').
 /// null — своя фраза не задана (оба ключа пусты/не заданы).
 class CustomFikrPhraseStore {
@@ -25,5 +27,6 @@ class CustomFikrPhraseStore {
       await prefs.setString(_keyIn, trimIn);
       await prefs.setString(_keyEx, trimEx);
     }
+    PrefsChanges.notify();
   }
 }

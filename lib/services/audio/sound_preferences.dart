@@ -5,6 +5,8 @@ library;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/prefs_changes.dart';
+
 /// Звуковые варианты. Порядок = порядок в настройках.
 enum SoundSet {
   /// Живая арфа: восходящая лесенка на вдох, нисходящая на выдох, тихая
@@ -29,5 +31,6 @@ class SoundSetStore {
   Future<void> save(SoundSet set) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, set.name);
+    PrefsChanges.notify();
   }
 }

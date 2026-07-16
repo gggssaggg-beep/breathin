@@ -86,6 +86,23 @@ create policy "sessions own all" on public.sessions
   for all to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+-- Настройки пользователя в облаке (одобрено владелицей 2026-07-16):
+-- избранное, настройки техник/таймера/ВХ, своя фраза фикра, BOLT-журнал,
+-- сложность/звук/язык/напоминание — один jsonb-документ на пользователя,
+-- конфликт решает last-write-wins по updated_at (PrefsSyncService).
+-- Клиент переживает отсутствие таблицы — применить в SQL Editor.
+create table if not exists public.user_prefs (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  prefs jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+alter table public.user_prefs enable row level security;
+
+drop policy if exists "user_prefs own all" on public.user_prefs;
+create policy "user_prefs own all" on public.user_prefs
+  for all to authenticated
+  using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 -- Челленджи: соревнование по коду-приглашению (без системы друзей в v1 —
 -- код случайный, ввод кода = согласие участвовать).
 create table if not exists public.challenges (

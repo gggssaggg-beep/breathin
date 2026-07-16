@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/prefs_changes.dart';
+
 /// Персист тумблера «вечернее напоминание о серии» (С1). Дефолт — ВКЛ
 /// (решение владельца 2026-07-16): системное разрешение на уведомления всё
 /// равно запрашивается отдельно, а выключить можно в настройках.
@@ -18,5 +20,6 @@ class ReminderPreferencesStore {
   Future<void> save(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_key, enabled);
+    PrefsChanges.notify();
   }
 }

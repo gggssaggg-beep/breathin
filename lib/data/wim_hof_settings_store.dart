@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/prefs_changes.dart';
 import '../domain/engine/wim_hof_machine.dart';
 import '../domain/models/technique.dart';
 
@@ -51,5 +52,6 @@ class WimHofSettingsStore {
         'rounds': c.rounds,
       }),
     );
+    PrefsChanges.notify();
   }
 }
