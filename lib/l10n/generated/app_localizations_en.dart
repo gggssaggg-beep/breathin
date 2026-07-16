@@ -914,6 +914,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get quickStartTitle => 'Continue';
+
+  @override
+  String get groupFavorites => 'Favorites';
+
+  @override
+  String get groupCalm => 'Calm & sleep';
+
+  @override
+  String get groupEnergy => 'Energy & transformation';
+
+  @override
+  String get groupTraditions => 'Traditions';
+
+  @override
   String get timerDurationLabel => 'Duration, min';
 
   @override

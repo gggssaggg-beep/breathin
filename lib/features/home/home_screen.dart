@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/favorites_store.dart';
 import '../../data/session_log_repository.dart';
+import '../../domain/catalog/technique_groups.dart';
 import '../../domain/catalog/techniques.dart';
 import '../../domain/models/session_record.dart';
 import '../../domain/models/technique.dart';
@@ -15,16 +16,17 @@ import '../catalog/technique_card_screen.dart';
 import '../catalog/technique_icons.dart';
 import '../catalog/technique_subtitle.dart';
 import '../challenges/challenges_screen.dart';
+import '../session_setup/session_launcher.dart';
 import '../settings/settings_screen.dart';
 import '../stats/stats_screen.dart';
 
-/// Главный экран: сетка техник (ТЗ §6.2).
+/// Главный экран: каталог техник по группам (ТЗ §6.2; У1/У2 2026-07-16).
 ///
-/// Отображает все 12 техник из [catalog] в GridView 2 колонки.
-/// Для stage2-техник (Вим Хоф) — визуальная пометка «скоро» и приглушённый вид,
-/// но карточка тапабельна и ведёт на [TechniqueCardScreen].
-/// Над сеткой — «дуолинго»-стрик (огонёк «N дней подряд») при активной серии
-/// и коучмарк 'home.pick' (показывается один раз).
+/// Сверху — стрик-баннер, карточка быстрого старта «Продолжить» (последняя
+/// практикованная техника, запуск с сохранёнными настройками в один тап) и
+/// коучмарк. Ниже — секции: «Избранное» (избранная техника дублируется и
+/// остаётся в своей группе — решение владельца), «Спокойствие и сон»,
+/// «Энергия и трансформация», «Традиции».
 class HomeScreen extends StatefulWidget {
   final SessionLogRepository log;
 
@@ -77,6 +79,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  /// Запуск последней практики в один тап (У1): экран сессии с сохранёнными
+  /// настройками, минуя карточку и setup.
+  Future<void> _quickStart(Technique t) async {
+    final l = AppLocalizations.of(context);
+    final screen = await quickStartScreen(l, t);
+    if (screen == null || !mounted) return;
+    _openThenReload(screen);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -84,6 +95,18 @@ class _HomeScreenState extends State<HomeScreen> {
     final streak = records == null
         ? 0
         : PracticeStats.streakDays(records, today: widget.today);
+    // Последняя практикованная техника — для карточки «Продолжить»;
+    // техника могла уйти из каталога — тогда карточку не показываем.
+    Technique? lastTechnique;
+    if (records != null && records.isNotEmpty) {
+      final id = records.last.techniqueId;
+      for (final t in catalog) {
+        if (t.id == id) {
+          lastTechnique = t;
+          break;
+        }
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(l.appTitle),
@@ -111,62 +134,162 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Стрик-баннер (огонёк «N дней подряд») — только при активной серии.
-          // Тап ведёт в «Практику» с календарём и деталями прогресса.
-          if (streak > 0)
-            Padding(
+      body: Builder(builder: (context) {
+        // Секции: «Избранное» (дубли, порядок каталога) + три группы.
+        final favList =
+            catalog.where((t) => _favorites.contains(t.id)).toList();
+        final sections = <(String, List<Technique>)>[
+          if (favList.isNotEmpty) (l.groupFavorites, favList),
+          for (final (title, group) in [
+            (l.groupCalm, TechniqueGroup.calm),
+            (l.groupEnergy, TechniqueGroup.energy),
+            (l.groupTraditions, TechniqueGroup.traditions),
+          ])
+            (title, catalog.where((t) => groupOf(t) == group).toList()),
+        ];
+        return CustomScrollView(
+          slivers: [
+            SliverPadding(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: _StreakBanner(
-                streak: streak,
-                onTap: () => _openThenReload(StatsScreen(today: widget.today)),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Стрик-баннер — только при активной серии; тап ведёт
+                    // в «Практику» с календарём.
+                    if (streak > 0) ...[
+                      _StreakBanner(
+                        streak: streak,
+                        onTap: () => _openThenReload(
+                            StatsScreen(today: widget.today)),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                    // Быстрый старт (У1): последняя техника в один тап.
+                    if (lastTechnique != null)
+                      _QuickStartCard(
+                        technique: lastTechnique,
+                        subtitle: techniqueSubtitle(l, lastTechnique),
+                        onTap: () => _quickStart(lastTechnique!),
+                      ),
+                    // Коучмарк: показывается один раз при первом запуске.
+                    CoachMark(id: 'home.pick', message: l.coachHomePick),
+                  ],
+                ),
               ),
             ),
-          // Коучмарк над сеткой: показывается один раз при первом запуске.
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-            child: CoachMark(
-              id: 'home.pick',
-              message: l.coachHomePick,
-            ),
-          ),
-          // Сетка техник — занимает оставшееся место и прокручивается.
-          Expanded(
-            child: Builder(builder: (context) {
-              // Стабильная сортировка: избранные — первыми, внутри групп
-              // исходный порядок каталога сохраняется.
-              final favList =
-                  catalog.where((t) => _favorites.contains(t.id)).toList();
-              final restList =
-                  catalog.where((t) => !_favorites.contains(t.id)).toList();
-              final sorted = [...favList, ...restList];
-              return GridView.builder(
-                padding: const EdgeInsets.all(12),
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1.0,
+            for (final (title, list) in sections) ...[
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
                 ),
-                itemCount: sorted.length,
-                itemBuilder: (context, index) {
-                  final t = sorted[index];
-                  return _TechniqueGridCard(
-                    technique: t,
-                    subtitle: techniqueSubtitle(l, t),
-                    isFavorite: _favorites.contains(t.id),
-                    onToggleFavorite: () => _toggleFavorite(t.id),
-                    onTap: () =>
-                        _openThenReload(TechniqueCardScreen(technique: t)),
-                  );
-                },
-              );
-            }),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+                sliver: SliverGrid(
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1.0,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final t = list[index];
+                      return _TechniqueGridCard(
+                        technique: t,
+                        subtitle: techniqueSubtitle(l, t),
+                        isFavorite: _favorites.contains(t.id),
+                        onToggleFavorite: () => _toggleFavorite(t.id),
+                        onTap: () => _openThenReload(
+                            TechniqueCardScreen(technique: t)),
+                      );
+                    },
+                    childCount: list.length,
+                  ),
+                ),
+              ),
+            ],
+            const SliverPadding(padding: EdgeInsets.only(bottom: 12)),
+          ],
+        );
+      }),
+    );
+  }
+}
+
+/// Карточка быстрого старта (У1): «Продолжить» + последняя техника и её
+/// паттерн; тап запускает сессию с сохранёнными настройками в один тап.
+class _QuickStartCard extends StatelessWidget {
+  final Technique technique;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _QuickStartCard({
+    required this.technique,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        key: const ValueKey('quick_start'),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: theme.colorScheme.primary,
+                child: BreathinIcon(
+                  BreathinIcons.playerPlay,
+                  size: 22,
+                  color: theme.colorScheme.onPrimary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.quickStartTitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    Text(
+                      '${l.techniqueName(technique)} · $subtitle',
+                      style: theme.textTheme.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              BreathinIcon(
+                BreathinIcons.chevronRight,
+                size: 20,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

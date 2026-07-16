@@ -371,6 +371,12 @@
   "whResultsTitle": "Retentions by round",
   "whRoundShort": "Round {r}",
   "@whRoundShort": { "placeholders": { "r": { "type": "int" } } },
+  "quickStartTitle": "Continue",
+  "groupFavorites": "Favorites",
+  "groupCalm": "Calm & sleep",
+  "groupEnergy": "Energy & transformation",
+  "groupTraditions": "Traditions",
+
   "timerDurationLabel": "Duration, min",
   "timerCueLabel": "Nostril switch cues",
   "timerCueOff": "Off",

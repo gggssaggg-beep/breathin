@@ -1664,6 +1664,36 @@ abstract class AppLocalizations {
   /// **'Раунд {r}'**
   String whRoundShort(int r);
 
+  /// No description provided for @quickStartTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить'**
+  String get quickStartTitle;
+
+  /// No description provided for @groupFavorites.
+  ///
+  /// In ru, this message translates to:
+  /// **'Избранное'**
+  String get groupFavorites;
+
+  /// No description provided for @groupCalm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спокойствие и сон'**
+  String get groupCalm;
+
+  /// No description provided for @groupEnergy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Энергия и трансформация'**
+  String get groupEnergy;
+
+  /// No description provided for @groupTraditions.
+  ///
+  /// In ru, this message translates to:
+  /// **'Традиции'**
+  String get groupTraditions;
+
   /// No description provided for @timerDurationLabel.
   ///
   /// In ru, this message translates to:

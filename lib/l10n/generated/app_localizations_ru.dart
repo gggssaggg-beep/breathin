@@ -922,6 +922,21 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get quickStartTitle => 'Продолжить';
+
+  @override
+  String get groupFavorites => 'Избранное';
+
+  @override
+  String get groupCalm => 'Спокойствие и сон';
+
+  @override
+  String get groupEnergy => 'Энергия и трансформация';
+
+  @override
+  String get groupTraditions => 'Традиции';
+
+  @override
   String get timerDurationLabel => 'Длительность, мин';
 
   @override
