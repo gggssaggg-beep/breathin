@@ -500,6 +500,18 @@ abstract class AppLocalizations {
   /// **'За девять дыханий сбрасывает раздражение, «залипание» и вялость — свежесть, как после проветривания комнаты.'**
   String get tech_nine_breaths_benefit;
 
+  /// No description provided for @tech_energy_wave_name.
+  ///
+  /// In ru, this message translates to:
+  /// **'Энерговолна'**
+  String get tech_energy_wave_name;
+
+  /// No description provided for @tech_energy_wave_desc.
+  String get tech_energy_wave_desc;
+
+  /// No description provided for @tech_energy_wave_benefit.
+  String get tech_energy_wave_benefit;
+
   /// No description provided for @segNineLeft.
   ///
   /// In ru, this message translates to:

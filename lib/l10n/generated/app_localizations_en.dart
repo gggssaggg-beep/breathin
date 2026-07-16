@@ -254,6 +254,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Nine breaths flush out irritation, \"sticking\" and sluggishness — freshness, like after airing a room.';
 
   @override
+  String get tech_energy_wave_name => 'Energy Wave';
+
+  @override
+  String get tech_energy_wave_desc =>
+      'A Taoist qigong practice in a secular form: steady diaphragmatic nasal breathing while attention moves as a warm wave along the body — rising on the inhale, descending on the exhale.\n\nWhen to use: to ground yourself, release bodily tension, or feel the body as one whole after long hours at a screen.\n\nHow to practise: sit or lie down comfortably. Picture a warm wave at the soles of your feet. On the inhale — the wave rises slowly from the feet up through the legs, belly, chest, throat, to the crown; breathing is even, belly gently expanding. On the exhale — the wave descends smoothly from the crown down through the face, chest, belly, to the feet; the body softly relaxes in the wave\'s wake. Attention follows the wave continuously — if it drifts, gently bring it back to the feet and begin the rise again. Breathe through the nose, without effort.\n\nMarker: a sense of warmth or gentle tingling throughout the body; shoulders and neck noticeably soften by the fifth to seventh cycle.';
+
+  @override
+  String get tech_energy_wave_benefit =>
+      'Grounds and relaxes the body through a gentle pairing of breath and attention — relieves habitual muscle tension and deepens the felt sense of the body as a whole.';
+
+  @override
   String get segNineLeft => 'Inhale left · exhale right';
 
   @override

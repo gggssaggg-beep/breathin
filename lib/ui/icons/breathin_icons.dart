@@ -296,6 +296,12 @@ abstract final class BreathinIcons {
     'M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6',
   ]);
 
+  /// Волна энергии — Энерговолна (даосская ведомая волна).
+  /// Tabler «current-ac»: форма сигнала AC — энергетическая волна.
+  static const energyWave = BreathinIconData([
+    'M3 12h4l3 -9l4 18l3 -9h4',
+  ]);
+
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
@@ -303,5 +309,6 @@ abstract final class BreathinIcons {
     user, login, download, circleCheck, calendar, flame, chartBar,
     trophy, copy, send, sun, stretch, circles, quote,
     flask, arrowsVertical, sparkles, star, trendingDown, lock, rotate, eye,
+    energyWave,
   ];
 }
