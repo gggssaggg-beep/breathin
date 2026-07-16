@@ -11,6 +11,7 @@ import '../../ui/charts/sparkline_chart.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../session_setup/session_setup_screen.dart';
+import '../timer_session/timer_setup_screen.dart';
 import '../wim_hof/wim_hof_setup_screen.dart';
 import 'technique_icons.dart';
 import 'technique_subtitle.dart';
@@ -22,9 +23,10 @@ const _energizingSun = Color(0xFFF9A825);
 ///
 /// Отображает крупную иконку, подпись-паттерн, три секции
 /// (описание / польза / безопасность) и круглую кнопку старта в стиле
-/// «ряби» иконки приложения (влад. §5). Для counted-техник кнопка активна
-/// и запускает [SessionRunner]; для timer, wimHof и stage2-техник — disabled
-/// с подписью comingSoonStage2. У бодрящих техник рядом с названием — солнышко.
+/// «ряби» иконки приложения (влад. §5). Кнопка ведёт на setup своего типа
+/// (counted/scripted — общий, timer и wimHof — свои); для stage2-техник —
+/// disabled с подписью comingSoonStage2. У бодрящих техник рядом
+/// с названием — солнышко.
 class TechniqueCardScreen extends StatefulWidget {
   final Technique technique;
 
@@ -63,6 +65,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
     final bool canStart = !t.stage2 &&
         ((t.type == TechniqueType.counted && t.phases != null) ||
             (t.type == TechniqueType.scripted && t.cycleScript != null) ||
+            (t.type == TechniqueType.timer && t.defaultTimerMin != null) ||
             (t.type == TechniqueType.wimHof && t.wimHof != null));
 
     return Scaffold(
@@ -214,11 +217,14 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
 
   void _startSession(BuildContext context) {
     // Вим Хоф — свой setup (машина раундов + safety-гейт, ПЛАН §3.4);
+    // timer — setup таймер-сессии (ПЛАН §10);
     // counted/scripted — общий экран настройки сессии.
     final t = widget.technique;
-    final Widget setup = t.type == TechniqueType.wimHof
-        ? WimHofSetupScreen(technique: t)
-        : SessionSetupScreen(technique: t);
+    final Widget setup = switch (t.type) {
+      TechniqueType.wimHof => WimHofSetupScreen(technique: t),
+      TechniqueType.timer => TimerSetupScreen(technique: t),
+      _ => SessionSetupScreen(technique: t),
+    };
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => setup),
     );

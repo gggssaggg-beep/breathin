@@ -356,6 +356,12 @@
   "whResultsTitle": "Задержки по раундам",
   "whRoundShort": "Раунд {r}",
   "@whRoundShort": { "placeholders": { "r": { "type": "int" } } },
+  "timerDurationLabel": "Длительность, мин",
+  "timerCueLabel": "Подсказки смены ноздри",
+  "timerCueOff": "Выкл",
+  "timerLeftNostril": "Левая ноздря",
+  "timerRightNostril": "Правая ноздря",
+
   "whProgressTitle": "Ваш прогресс",
   "whBestLabel": "Лучшая задержка: {sec} с",
   "@whBestLabel": { "placeholders": { "sec": { "type": "String" } } },

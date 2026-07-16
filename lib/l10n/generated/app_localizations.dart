@@ -1592,6 +1592,36 @@ abstract class AppLocalizations {
   /// **'Раунд {r}'**
   String whRoundShort(int r);
 
+  /// No description provided for @timerDurationLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Длительность, мин'**
+  String get timerDurationLabel;
+
+  /// No description provided for @timerCueLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подсказки смены ноздри'**
+  String get timerCueLabel;
+
+  /// No description provided for @timerCueOff.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выкл'**
+  String get timerCueOff;
+
+  /// No description provided for @timerLeftNostril.
+  ///
+  /// In ru, this message translates to:
+  /// **'Левая ноздря'**
+  String get timerLeftNostril;
+
+  /// No description provided for @timerRightNostril.
+  ///
+  /// In ru, this message translates to:
+  /// **'Правая ноздря'**
+  String get timerRightNostril;
+
   /// No description provided for @whProgressTitle.
   ///
   /// In ru, this message translates to:

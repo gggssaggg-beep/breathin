@@ -31,4 +31,9 @@ class VibrationPattern {
   /// Тройной импульс завершения сессии (сопровождает гонг).
   static List<int> get sessionEnd =>
       const [0, _short, _gap, _short, _gap, _long];
+
+  /// Подсказки смены ноздри (таймер-режим, ПЛАН §10): левая — один импульс,
+  /// правая — два. Различимо с закрытыми глазами.
+  static List<int> get cueLeft => const [0, _short];
+  static List<int> get cueRight => const [0, _short, _gap, _short];
 }

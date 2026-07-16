@@ -356,6 +356,12 @@
   "whResultsTitle": "Retentions by round",
   "whRoundShort": "Round {r}",
   "@whRoundShort": { "placeholders": { "r": { "type": "int" } } },
+  "timerDurationLabel": "Duration, min",
+  "timerCueLabel": "Nostril switch cues",
+  "timerCueOff": "Off",
+  "timerLeftNostril": "Left nostril",
+  "timerRightNostril": "Right nostril",
+
   "whProgressTitle": "Your progress",
   "whBestLabel": "Best hold: {sec} s",
   "@whBestLabel": { "placeholders": { "sec": { "type": "String" } } },

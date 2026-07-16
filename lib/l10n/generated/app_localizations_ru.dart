@@ -879,6 +879,21 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get timerDurationLabel => 'Длительность, мин';
+
+  @override
+  String get timerCueLabel => 'Подсказки смены ноздри';
+
+  @override
+  String get timerCueOff => 'Выкл';
+
+  @override
+  String get timerLeftNostril => 'Левая ноздря';
+
+  @override
+  String get timerRightNostril => 'Правая ноздря';
+
+  @override
   String get whProgressTitle => 'Ваш прогресс';
 
   @override
