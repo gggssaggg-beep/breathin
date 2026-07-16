@@ -6,9 +6,9 @@ import 'package:breathin/services/audio/sound_preferences.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('дефолт — «Поток»', () async {
+  test('дефолт — «Арфа»', () async {
     SharedPreferences.setMockInitialValues({});
-    expect(await SoundSetStore().load(), SoundSet.flow);
+    expect(await SoundSetStore().load(), SoundSet.harp);
   });
 
   test('save/load сохраняет «Чаши»', () async {
@@ -18,11 +18,11 @@ void main() {
     expect(await store.load(), SoundSet.bowls);
   });
 
-  test('устаревшие значения (nature/minimal) откатываются к дефолту',
+  test('устаревшие значения (flow/nature/minimal) откатываются к дефолту',
       () async {
-    SharedPreferences.setMockInitialValues({'sound.set': 'nature'});
-    expect(await SoundSetStore().load(), SoundSet.flow);
-    SharedPreferences.setMockInitialValues({'sound.set': 'minimal'});
-    expect(await SoundSetStore().load(), SoundSet.flow);
+    for (final legacy in ['flow', 'nature', 'minimal', 'jazz']) {
+      SharedPreferences.setMockInitialValues({'sound.set': legacy});
+      expect(await SoundSetStore().load(), SoundSet.harp, reason: legacy);
+    }
   });
 }

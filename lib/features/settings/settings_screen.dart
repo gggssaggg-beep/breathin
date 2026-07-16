@@ -31,7 +31,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   UpdatePreferences _prefs = const UpdatePreferences();
   UpdateCheckResult _update = UpdateCheckResult.upToDate;
-  SoundSet _soundSet = SoundSet.flow;
+  SoundSet _soundSet = SoundSet.harp;
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
   AppLanguage _language = AppLanguage.system;
   bool _hasBoltResult = false;
@@ -140,25 +140,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onUpdateNow: _downloadUpdate,
           ),
           const SizedBox(height: 24),
-          // --- Звук: «Поток» (синтез на всю фазу) или «Чаши» (клипы) ---
+          // --- Звук: «Арфа» (мелодия+фон) или «Чаши» (клипы) ---
           Text(l.soundSection, style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(
-              _soundSet == SoundSet.flow ? l.soundSetFlow : l.soundSetBowls,
+              _soundSet == SoundSet.harp ? l.soundSetHarp : l.soundSetBowls,
             ),
             subtitle: Text(
-              _soundSet == SoundSet.flow
-                  ? l.soundSetFlowNote
+              _soundSet == SoundSet.harp
+                  ? l.soundSetHarpNote
                   : l.soundSetBowlsNote,
             ),
           ),
           SegmentedButton<SoundSet>(
             segments: [
               ButtonSegment(
-                value: SoundSet.flow,
-                label: Text(l.soundSetFlow),
+                value: SoundSet.harp,
+                label: Text(l.soundSetHarp),
               ),
               ButtonSegment(
                 value: SoundSet.bowls,

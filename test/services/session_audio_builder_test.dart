@@ -11,26 +11,21 @@ import 'package:breathin/services/audio/wav_io.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Маркерные клипы-события: у каждого своя амплитуда — по значению сэмпла в
-/// буфере видно, какой клип туда лёг. Банк режима «Поток» (synthPhases):
-/// фазы поёт синтез, и на ПЕРВОМ сэмпле вдоха после подготовки его уровень
-/// строго 0 (тон стартует с тишины) — маркеры границ фаз точно проверяемы.
+/// буфере видно, какой клип туда лёг. Банк режима «Арфа» (scale задан):
+/// фазы озвучивает мелодия из лесенки; маркер-ноты — константа 100 —
+/// на первом сэмпле вдоха лежит нота лесенки (100·0.8 = 80).
 SoundBank markerBank() {
   Int16List clip(int amp) => Int16List.fromList([amp, amp]);
-  return SoundBank(sampleRate: 1000, synthPhases: true, clips: {
-    ClipId.prepBeep: clip(500),
-    ClipId.gong: clip(600),
-    ClipId.tick: clip(700),
-    ClipId.tickAccent: clip(800),
-  });
-}
-
-/// Средняя энергия диапазона сэмплов (детект прибоя: шум ≠ тишина).
-double rmsOf(List<int> pcm, int from, int to) {
-  var sum = 0.0;
-  for (var i = from; i < to; i++) {
-    sum += pcm[i] * pcm[i].toDouble();
-  }
-  return sum / (to - from);
+  return SoundBank(
+    sampleRate: 1000,
+    scale: [for (var i = 0; i < 8; i++) clip(100)],
+    clips: {
+      ClipId.prepBeep: clip(500),
+      ClipId.gong: clip(600),
+      ClipId.tick: clip(700),
+      ClipId.tickAccent: clip(800),
+    },
+  );
 }
 
 void main() {
@@ -81,19 +76,19 @@ void main() {
   });
 
   group('buildSessionWav', () {
-    test('оба канала: прибой фазы и тик в буфере', () {
+    test('оба канала: нота мелодии и тик в буфере', () {
       final wav = buildSessionWav(
         plan,
         markerBank(),
         const FeedbackChannels(sound: true, metronome: true),
       );
       final pcm = WavIo.decode(wav!).samples;
-      // t=3000 мс → сэмпл 3000: акцент-тик 800 + прибой вдоха (на первом
-      // сэмпле фазы строго 0 — волна стартует с тишины).
-      expect(pcm[3000], 800);
-      // Между тиками внутри вдоха звучит прибой (не тишина).
-      expect(rmsOf(pcm, 4400, 4600), greaterThan(0));
-      // Гонг на 19000 (фазы закончились — прибой не примешивается).
+      // t=3000 мс → сэмпл 3000: акцент-тик 800 + первая нота лесенки
+      // (маркер 100 · гейн 0.8 = 80).
+      expect(pcm[3000], 880);
+      // Вторая нота вдоха — на 4000 мс: тик 700 + нота 80.
+      expect(pcm[4000], 780);
+      // Гонг на 19000 (мелодия фаз закончилась).
       expect(pcm[19000], 600);
       // Длина ≥ полной сессии.
       expect(pcm.length, greaterThanOrEqualTo(19000));
@@ -113,17 +108,17 @@ void main() {
       expect(pcm[18999], 0);
     });
 
-    test('только звук: тиков нет, прибой есть', () {
+    test('только звук: тиков нет, мелодия есть', () {
       final wav = buildSessionWav(
         plan,
         markerBank(),
         const FeedbackChannels(sound: true, metronome: false),
       );
       final pcm = WavIo.decode(wav!).samples;
-      // Старт вдоха: без акцент-тика остаётся только прибой с уровня 0.
-      expect(pcm[3000], 0);
-      // Прибой внутри фазы звучит.
-      expect(rmsOf(pcm, 4400, 4600), greaterThan(0));
+      // Старт вдоха: без акцент-тика остаётся только нота лесенки.
+      expect(pcm[3000], 80);
+      // Между нотами — тишина (щипки короткие, маркер 2 сэмпла).
+      expect(pcm[3500], 0);
     });
 
     test('аудио-каналы выключены → null', () {

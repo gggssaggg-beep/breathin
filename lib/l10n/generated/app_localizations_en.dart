@@ -709,10 +709,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soundSection => 'Sound';
 
   @override
-  String get soundSetFlow => 'Flow';
+  String get soundSetHarp => 'Harp';
 
   @override
-  String get soundSetFlowNote => 'A singing tone that breathes with you';
+  String get soundSetHarpNote => 'Live harp with ambient background';
 
   @override
   String get soundSetBowls => 'Bowls';

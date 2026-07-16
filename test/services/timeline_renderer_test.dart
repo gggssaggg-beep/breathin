@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:breathin/domain/catalog/techniques.dart';
 import 'package:breathin/domain/engine/session_plan_compiler.dart';
 import 'package:breathin/domain/models/session_config.dart';
+import 'package:breathin/domain/models/technique.dart';
+import 'package:breathin/services/audio/harp_melody.dart';
 import 'package:breathin/services/audio/timeline_renderer.dart';
 import 'package:breathin/services/audio/wav_io.dart';
 
@@ -50,8 +52,8 @@ void main() {
       expect(buf[off + 100], 0, reason: 'после клипа снова тишина');
     });
 
-    test('«Поток»: тон вдоха звучит всю фазу и нарастает, задержка — тихо',
-        () {
+    test('«Арфа»: ноты лесенки ложатся на точные позиции, фазовые клипы '
+        'не кладутся (мелодия вместо них)', () {
       const cfg = SessionConfig(
         endMode: EndMode.cycles,
         cycles: 1,
@@ -59,30 +61,49 @@ void main() {
         prepSeconds: 0,
       );
       final plan = compiler.compile(boxBreathing, cfg);
+      // Маркерная лесенка: нота i — константа (i+1)·10 длиной 5 сэмплов.
+      final scale = [
+        for (var i = 0; i < 8; i++) Int16List(5)..fillRange(0, 5, (i + 1) * 10),
+      ];
       final buf = renderer.render(
         plan,
         SoundBank(
           sampleRate: 44100,
-          synthPhases: true,
-          clips: {ClipId.gong: Int16List(10)},
+          clips: {
+            // Фазовый клип в банке НЕ должен звучать при мелодии.
+            ClipId.inhale: Int16List(5)..fillRange(0, 5, 9999),
+            ClipId.gong: Int16List(10),
+          },
+          scale: scale,
         ),
       );
 
-      double rms(int fromMs, int toMs) {
-        final a = renderer.sampleOffsetForMs(fromMs);
-        final b = renderer.sampleOffsetForMs(toMs);
-        var sum = 0.0;
-        for (var i = a; i < b; i++) {
-          sum += buf[i] * buf[i].toDouble();
-        }
-        return sum / (b - a);
-      }
+      // Вдох 4 c → 4 ноты (0..3) на 0/1000/2000/3000 мс (гейн 0.8).
+      expect(buf[renderer.sampleOffsetForMs(0)], 8);
+      expect(buf[renderer.sampleOffsetForMs(1000)], 16);
+      expect(buf[renderer.sampleOffsetForMs(2000)], 24);
+      expect(buf[renderer.sampleOffsetForMs(3000)], 32);
+      // Задержка после вдоха: одна тихая верхняя нота (C5, индекс 5,
+      // гейн 0.3 → 60·0.3=18).
+      expect(buf[renderer.sampleOffsetForMs(4000)], 18);
+      // Выдох: те же ноты вниз — на 8000 мс нота индекса 3 (40·0.8=32).
+      expect(buf[renderer.sampleOffsetForMs(8000)], 32);
+      expect(buf[renderer.sampleOffsetForMs(11000)], 8); // индекс 0
+      // Маркер фазового клипа (9999) нигде не всплыл.
+      expect(buf.any((s) => s > 5000), isFalse,
+          reason: 'фазовый клип не должен звучать при мелодии');
+    });
 
-      // Вдох [0..4000): энергия в конце фазы много выше начала (накат).
-      expect(rms(3000, 3900), greaterThan(rms(100, 1000) * 4));
-      // Задержка [4000..8000): фон стабилен и тише конца вдоха.
-      expect(rms(6000, 7000), lessThan(rms(3000, 3900) / 4));
-      expect(rms(6000, 7000), greaterThan(0), reason: 'фон не тишина');
+    test('«Арфа»: число нот адаптивно к длительности фазы', () {
+      // 8-секундный вдох → 8 нот лесенки; 2-секундный выдох → 2 ноты.
+      final up = notesForPhase(PhaseKind.inhale, 8000);
+      expect(up, hasLength(8));
+      expect(up.first.scaleIndex, 0);
+      expect(up.last.scaleIndex, 7);
+      final down = notesForPhase(PhaseKind.exhale, 2000);
+      expect(down, hasLength(2));
+      expect(down.first.scaleIndex, 1);
+      expect(down.last.scaleIndex, 0);
     });
 
     test('длина буфера учитывает хвост гонга за концом сессии', () {
