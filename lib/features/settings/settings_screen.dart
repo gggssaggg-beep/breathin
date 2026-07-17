@@ -20,6 +20,7 @@ import '../../services/update/update_service.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/section_header.dart';
 import 'account_section.dart';
 import 'update_section.dart';
 
@@ -166,12 +167,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-          Text(l.accountSection, style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.accountSection),
           const SizedBox(height: 8),
           const AccountSection(),
           const SizedBox(height: 24),
-          Text(l.updatesSection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.updatesSection),
           const SizedBox(height: 8),
           UpdateSection(
             result: _update,
@@ -181,7 +181,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Звук: «Арфа» (мелодия+фон) или «Чаши» (клипы) ---
-          Text(l.soundSection, style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.soundSection),
           const SizedBox(height: 8),
           ListTile(
             contentPadding: EdgeInsets.zero,
@@ -210,8 +210,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Язык ---
-          Text(l.languageSection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.languageSection),
           const SizedBox(height: 8),
           SegmentedButton<AppLanguage>(
             segments: [
@@ -233,8 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Интерфейс: классический или HANT (техно-мистика) ---
-          Text(l.settingsUiTheme,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.settingsUiTheme),
           const SizedBox(height: 8),
           SegmentedButton<AppUiTheme>(
             segments: [
@@ -262,8 +260,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Сложность: глобальный пресет длительностей (эпик §4–5) ---
-          Text(l.difficultySection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.difficultySection),
           const SizedBox(height: 8),
           DifficultySection(
             preset: _difficulty,
@@ -272,8 +269,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Сообщество: обратная связь и чат (внешние ссылки Telegram) ---
-          Text(l.communitySection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.communitySection),
           const SizedBox(height: 8),
           ListTile(
             contentPadding: EdgeInsets.zero,

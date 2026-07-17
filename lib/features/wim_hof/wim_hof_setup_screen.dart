@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/widgets/safety_card.dart';
+import '../../ui/widgets/slider_tile.dart';
 import 'wim_hof_session_screen.dart';
 
 /// Настройка метода Вима Хофа (ПЛАН §3.4, этап 2): дыханий в раунде,
@@ -97,7 +98,7 @@ class _WimHofSetupScreenState extends State<WimHofSetupScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           children: [
-          _SliderTile(
+          SliderTile(
             label: l.whBreathsLabel,
             value: '${c.breaths}',
             slider: Slider(
@@ -113,7 +114,7 @@ class _WimHofSetupScreenState extends State<WimHofSetupScreen> {
               )),
             ),
           ),
-          _SliderTile(
+          SliderTile(
             label: l.whPaceLabel,
             value: l.whPaceValue(c.paceSec.toStringAsFixed(1)),
             slider: Slider(
@@ -130,7 +131,7 @@ class _WimHofSetupScreenState extends State<WimHofSetupScreen> {
               )),
             ),
           ),
-          _SliderTile(
+          SliderTile(
             label: l.whRoundsLabel,
             value: '${c.rounds}',
             slider: Slider(
@@ -161,44 +162,6 @@ class _WimHofSetupScreenState extends State<WimHofSetupScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _SliderTile extends StatelessWidget {
-  final String label;
-  final String value;
-  final Slider slider;
-
-  const _SliderTile({
-    required this.label,
-    required this.value,
-    required this.slider,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                label,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Text(value, style: theme.textTheme.bodyMedium),
-          ],
-        ),
-        slider,
-      ],
     );
   }
 }

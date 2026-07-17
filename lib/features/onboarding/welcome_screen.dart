@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/onboarding/coach_store.dart';
-import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/icon_badge.dart';
 
 /// Приветственный экран первого запуска.
 ///
@@ -31,15 +31,7 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // Иконка приложения — «рябь» в круге primaryContainer
-            CircleAvatar(
-              radius: 36,
-              backgroundColor: theme.colorScheme.primaryContainer,
-              child: BreathinIcon(
-                BreathinIcons.ripple,
-                size: 36,
-                color: theme.colorScheme.onPrimaryContainer,
-              ),
-            ),
+            IconBadge(BreathinIcons.ripple, radius: 36),
             const SizedBox(height: 20),
             // Название приложения
             Text(
