@@ -159,7 +159,8 @@ class HantTheme {
         foregroundColor: text,
         centerTitle: true,
         elevation: 0,
-        titleTextStyle: _mono(15, weight: FontWeight.w500, spacing: 3.5,
+        // 18/4 вместо 15/3.5: «Дыши» смотрелся мелко (отзыв 2026-07-17).
+        titleTextStyle: _mono(18, weight: FontWeight.w500, spacing: 4,
             color: cyan),
       ),
       filledButtonTheme: FilledButtonThemeData(

@@ -361,89 +361,95 @@ class _TechniqueGridCard extends StatelessWidget {
     final t = technique;
     final isDimmed = t.stage2;
 
+    // Слоты фиксированной высоты (аудит-фидбек 2026-07-17 «кружки и надписи
+    // вразнобой»): кружок, название и подпись у ВСЕХ карточек на одной
+    // высоте, независимо от того, на сколько строк переносится название.
+    // Высоты слотов текста растут вместе с системным шрифтом.
+    final scaler = MediaQuery.textScalerOf(context);
+    final titleSlot =
+        scaler.scale((theme.textTheme.titleSmall?.fontSize ?? 14) * 1.45) * 2;
+    final subtitleSlot =
+        scaler.scale((theme.textTheme.bodySmall?.fontSize ?? 12) * 1.5);
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
+          // InkWell растянут на ВСЮ карточку (hover раньше подсвечивал
+          // только контент — отзыв с ноутбука 2026-07-17).
           InkWell(
             onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Иконка. Flexible+FittedBox: при нехватке высоты (двухстрочное
-              // название, крупный системный шрифт) сжимается ИКОНКА, а не
-              // текст — иначе «BOTTOM OVERFLOWED» на карточке Вима Хофа.
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: IconBadge(
-                    iconDataFor(t.icon),
-                    radius: 28,
-                    dimmed: isDimmed,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              // Название (+ солнышко у бодрящих техник, влад. §10)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      l.techniqueName(t),
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: isDimmed
-                            ? theme.colorScheme.onSurfaceVariant
-                            : null,
+            child: SizedBox.expand(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                child: Column(
+                  children: [
+                    // Слот иконки: забирает свободное место; при нехватке
+                    // высоты (крупный шрифт) сжимается ИКОНКА, не текст —
+                    // одинаково во всех ячейках, выравнивание сохраняется.
+                    Flexible(
+                      child: Center(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: IconBadge(
+                            iconDataFor(t.icon),
+                            radius: 28,
+                            dimmed: isDimmed,
+                          ),
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  if (t.energizing) ...[
-                    const SizedBox(width: 4),
-                    BreathinIcon(
-                      BreathinIcons.sun,
-                      size: 18,
-                      color: AppTheme.accentSunColor(context),
+                    const SizedBox(height: 8),
+                    // Слот названия: всегда высота двух строк.
+                    SizedBox(
+                      height: titleSlot,
+                      child: Center(
+                        child: Text(
+                          l.techniqueName(t),
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: isDimmed
+                                ? theme.colorScheme.onSurfaceVariant
+                                : null,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    // Слот подписи-паттерна.
+                    SizedBox(
+                      height: subtitleSlot,
+                      child: Center(
+                        child: Text(
+                          subtitle,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                   ],
-                ],
-              ),
-              const SizedBox(height: 4),
-              // Подпись-паттерн
-              Text(
-                subtitle,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
-              // Бейдж «скоро» для stage2
-              if (t.stage2) ...[
-                const SizedBox(height: 6),
-                Chip(
-                  label: Text(
-                    l.comingSoonBadge,
-                    style: theme.textTheme.labelSmall,
-                  ),
-                  backgroundColor: theme.colorScheme.secondaryContainer,
-                  side: BorderSide.none,
-                  padding: EdgeInsets.zero,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: VisualDensity.compact,
-                ),
-              ],
-            ],
+            ),
           ),
-        ),
-      ),
+          // Солнышко бодрящих — в левом углу, зеркально звезде: название
+          // остаётся чистым и центрированным (влад. §10 + фидбек 2026-07-17).
+          if (t.energizing)
+            Positioned(
+              top: 10,
+              left: 10,
+              child: BreathinIcon(
+                BreathinIcons.sun,
+                size: 16,
+                color: AppTheme.accentSunColor(context),
+              ),
+            ),
           // Звезда избранного: тап по ней НЕ открывает карточку.
           Positioned(
             top: 0,

@@ -147,9 +147,36 @@ class _BreathinAppState extends State<BreathinApp> {
           // rebuild самого MaterialApp.
           builder: (context, child) => CoachScope(
             controller: _coachController,
-            child: child!,
+            child: _PhoneFrame(child: child!),
           ),
           home: HomeScreen(),
         ));
+  }
+}
+
+/// Телефонная рамка для широких экранов (веб на ноутбуке, отзыв 2026-07-17:
+/// «растянутые кнопки»): контент ограничивается шириной телефона и
+/// центрируется на фоне HANT; на мобильных экранах прозрачно отдаёт child.
+class _PhoneFrame extends StatelessWidget {
+  final Widget child;
+
+  const _PhoneFrame({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth <= 560) return child;
+        return ColoredBox(
+          color: HantTheme.bg,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: child,
+            ),
+          ),
+        );
+      },
+    );
   }
 }
