@@ -3,21 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:breathin/app/app.dart';
 import 'package:breathin/app/hant_theme.dart';
-import 'package:breathin/services/theme/ui_theme_store.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  tearDown(() {
-    // Возвращаем глобальный нотификатор к дефолту после теста.
-    uiThemeNotifier.value = AppUiTheme.classic;
-  });
-
-  testWidgets(
-      'smoke: при uiTheme=hant тема содержит HantStyle extension',
+  testWidgets('smoke: приложение всегда в HANT (HantStyle в теме)',
       (tester) async {
-    uiThemeNotifier.value = AppUiTheme.hant;
-
+    // HANT — единственный интерфейс (решение владельца 2026-07-17).
     await tester.pumpWidget(
       const BreathinApp(checkUpdates: false, showOnboarding: false),
     );

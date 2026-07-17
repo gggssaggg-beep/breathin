@@ -11,7 +11,6 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_preferences.dart';
 import '../../services/locale/locale_store.dart';
 import '../../services/reminders/reminder_preferences.dart';
-import '../../services/theme/ui_theme_store.dart';
 import '../../services/reminders/streak_reminder.dart';
 import '../../services/update/update_preferences.dart';
 import 'difficulty_section.dart';
@@ -42,7 +41,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   SoundSet _soundSet = SoundSet.harp;
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
   AppLanguage _language = AppLanguage.system;
-  AppUiTheme _uiTheme = AppUiTheme.classic;
   bool _hasBoltResult = false;
   bool _streakReminder = true; // дефолт ВКЛ (решение владельца)
   String? _version;
@@ -62,9 +60,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     LocaleStore().load().then((lang) {
       if (mounted) setState(() => _language = lang);
-    });
-    UiThemeStore().load().then((t) {
-      if (mounted) setState(() => _uiTheme = t);
     });
     BoltRepository().all().then((r) {
       if (mounted) setState(() => _hasBoltResult = r.isNotEmpty);
@@ -110,13 +105,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _language = lang);
     LocaleStore().save(lang);
     localeNotifier.value = localeFor(lang);
-  }
-
-  void _onUiThemeChanged(AppUiTheme v) {
-    setState(() => _uiTheme = v);
-    // Fire-and-forget — сохраняем и сразу применяем тему без перезапуска.
-    UiThemeStore().save(v);
-    uiThemeNotifier.value = v;
   }
 
   void _onStreakReminderChanged(bool v) {
@@ -230,24 +218,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
             selected: {_language},
             onSelectionChanged: (v) => _onLanguageChanged(v.first),
-          ),
-          const SizedBox(height: 24),
-          // --- Интерфейс: классический или HANT (техно-мистика) ---
-          SectionHeader(l.settingsUiTheme),
-          const SizedBox(height: 8),
-          SegmentedButton<AppUiTheme>(
-            segments: [
-              ButtonSegment(
-                value: AppUiTheme.classic,
-                label: Text(l.uiThemeClassic),
-              ),
-              ButtonSegment(
-                value: AppUiTheme.hant,
-                label: Text(l.uiThemeHant),
-              ),
-            ],
-            selected: {_uiTheme},
-            onSelectionChanged: (v) => _onUiThemeChanged(v.first),
           ),
           const SizedBox(height: 24),
           // --- Напоминание о серии (С1): дефолт выкл, включение планирует

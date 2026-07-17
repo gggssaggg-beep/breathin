@@ -8,12 +8,10 @@ import '../l10n/generated/app_localizations.dart';
 import '../services/locale/locale_store.dart';
 import '../services/onboarding/coach_store.dart';
 import '../services/permissions/notification_permission.dart';
-import '../services/theme/ui_theme_store.dart';
 import '../services/update/update_preferences.dart';
 import '../services/update/update_runtime.dart';
 import '../services/update/update_service.dart';
 import 'hant_theme.dart';
-import 'theme.dart';
 
 /// Корень приложения «Дыши». Тема светлая/тёмная по системной настройке
 /// (ТЗ §7). Навигация — Navigator (go_router подключим в партии маршрутов).
@@ -127,9 +125,10 @@ class _BreathinAppState extends State<BreathinApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<AppUiTheme>(
-      valueListenable: uiThemeNotifier,
-      builder: (context, uiTheme, _) => ValueListenableBuilder<Locale?>(
+    // HANT — единственный интерфейс (решение владельца 2026-07-17):
+    // классическая тема скрыта из UI, код остаётся в проекте (AppTheme
+    // держит контекстные хелперы), удалить из приложения в следующей сборке.
+    return ValueListenableBuilder<Locale?>(
         valueListenable: localeNotifier,
         builder: (context, locale, _) => MaterialApp(
           onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
@@ -139,16 +138,9 @@ class _BreathinAppState extends State<BreathinApp> {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: locale,
-          // HANT — только тёмный (часть стиля): обе слота получают его,
-          // системный светлый/тёмный остаётся за классикой.
-          theme: uiTheme == AppUiTheme.hant
-              ? HantTheme.dark()
-              : AppTheme.light(),
-          darkTheme: uiTheme == AppUiTheme.hant
-              ? HantTheme.dark()
-              : AppTheme.dark(),
-          themeMode:
-              uiTheme == AppUiTheme.hant ? ThemeMode.dark : ThemeMode.system,
+          theme: HantTheme.dark(),
+          darkTheme: HantTheme.dark(),
+          themeMode: ThemeMode.dark,
           // CoachScope вставляется через builder ВНУТРЬ MaterialApp (после
           // локализаций и темы), но ВЫШЕ Navigator — так он доступен всем
           // экранам через CoachScope.of(context) и не вызывает бесконечный
@@ -158,8 +150,6 @@ class _BreathinAppState extends State<BreathinApp> {
             child: child!,
           ),
           home: HomeScreen(),
-        ),
-      ),
-    );
+        ));
   }
 }
