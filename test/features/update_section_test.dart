@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:breathin/app/theme.dart';
+import 'package:breathin/app/hant_theme.dart';
 import 'package:breathin/l10n/generated/app_localizations.dart';
 import 'package:breathin/services/update/app_version.dart';
 import 'package:breathin/services/update/update_manifest.dart';
@@ -59,7 +59,8 @@ void main() {
     // Раньше minimumSize=Size.fromHeight(52) в теме давал кнопке «Обновить»
     // minWidth=infinity: в Row карточки она отжимала всю ширину, и заголовок
     // рисовался по одной букве на строку (баг из отзыва 2026-07-15).
-    await tester.pumpWidget(wrap(result: available, theme: AppTheme.light()));
+    // Тема приложения теперь HANT (классика удалена 2026-07-17).
+    await tester.pumpWidget(wrap(result: available, theme: HantTheme.dark()));
     expect(tester.takeException(), isNull);
     final title = tester.getSize(find.text('Update 1.3.0 available'));
     // При сжатии в столбик ширина ≈ одной буквы (~15 px).

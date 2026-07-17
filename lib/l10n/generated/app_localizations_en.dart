@@ -775,15 +775,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSystem => 'System default';
 
   @override
-  String get settingsUiTheme => 'Interface';
-
-  @override
-  String get uiThemeClassic => 'Classic';
-
-  @override
-  String get uiThemeHant => 'HANT';
-
-  @override
   String get favoriteTooltip => 'Favourite';
 
   @override
