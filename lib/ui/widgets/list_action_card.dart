@@ -104,7 +104,10 @@ class ListActionCard extends StatelessWidget {
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
-                              maxLines: 1,
+                              // 2 строки: подписи вроде «Оцените, как дыхание
+                              // переносит паузу» раньше переносились —
+                              // обрезка в 1 строку теряла смысл.
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                         ],
