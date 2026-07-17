@@ -4,6 +4,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../app/theme.dart';
+
 import '../../data/challenges_repository.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/engine/wim_hof_machine.dart';
@@ -14,8 +16,10 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_bank_loader.dart';
 import '../../services/audio/timeline_renderer.dart';
 import '../../services/sync/session_sync_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/session_finish.dart';
 
 /// Экран сессии Вима Хофа (ПЛАН §3.4): машина раундов [WimHofMachine].
 ///
@@ -238,41 +242,44 @@ class _WimHofSessionScreenState extends State<WimHofSessionScreen>
     final theme = Theme.of(context);
     final m = _machine;
     return Scaffold(
-      body: SafeArea(
-        child: switch (m.stage) {
-          WimHofStage.prep => _CenterPrompt(
-              title: l.prepGetReady,
-              huge: '${m.prepRemainingSec}',
-            ),
-          WimHofStage.breathing => _BreathingView(
-              l: l,
-              machine: m,
-              onStop: _stop,
-            ),
-          WimHofStage.retention => _RetentionView(
-              l: l,
-              machine: m,
-              onTap: () {
-                m.endRetention();
-                _vibrate(60);
-              },
-            ),
-          WimHofStage.recovery => _CenterPrompt(
-              title: l.whRecoveryPrompt,
-              huge: '${m.recoveryRemainingSec}',
-            ),
-          WimHofStage.finished => _FinishedView(
-              l: l,
-              theme: theme,
-              retentions: m.retentionsSec,
-              prevBestEver: _prevBestEver,
-              prevBestToday: _prevBestToday,
-              onClose: () {
-                _record(completed: true);
-                Navigator.of(context).pop();
-              },
-            ),
-        },
+      // В HANT под сессией Вима Хофа — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: switch (m.stage) {
+            WimHofStage.prep => _CenterPrompt(
+                title: l.prepGetReady,
+                huge: '${m.prepRemainingSec}',
+              ),
+            WimHofStage.breathing => _BreathingView(
+                l: l,
+                machine: m,
+                onStop: _stop,
+              ),
+            WimHofStage.retention => _RetentionView(
+                l: l,
+                machine: m,
+                onTap: () {
+                  m.endRetention();
+                  _vibrate(60);
+                },
+              ),
+            WimHofStage.recovery => _CenterPrompt(
+                title: l.whRecoveryPrompt,
+                huge: '${m.recoveryRemainingSec}',
+              ),
+            WimHofStage.finished => _FinishedView(
+                l: l,
+                theme: theme,
+                retentions: m.retentionsSec,
+                prevBestEver: _prevBestEver,
+                prevBestToday: _prevBestToday,
+                onClose: () {
+                  _record(completed: true);
+                  Navigator.of(context).pop();
+                },
+              ),
+          },
+        ),
       ),
     );
   }
@@ -476,7 +483,7 @@ class _FinishedView extends StatelessWidget {
   /// Строка сравнения: «Новый рекорд!» с огоньком, если лучшая задержка этой
   /// сессии побила прежний рекорд (или это первая сессия с данными); иначе —
   /// «Лучшая за сегодня: N с · Рекорд: M с». null — задержек нет вовсе.
-  Widget? _recordLine() {
+  Widget? _recordLine(BuildContext context) {
     if (retentions.isEmpty) return null;
     final currentBest = retentions.reduce((a, b) => a > b ? a : b);
     final isRecord = prevBestEver == null || currentBest > prevBestEver!;
@@ -484,8 +491,8 @@ class _FinishedView extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const BreathinIcon(BreathinIcons.flame,
-              size: 20, color: Color(0xFFF9A825)),
+          BreathinIcon(BreathinIcons.flame,
+              size: 20, color: AppTheme.accentSunColor(context)),
           const SizedBox(width: 8),
           Text(
             l.whNewRecord,
@@ -513,21 +520,17 @@ class _FinishedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onClose,
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    // Единый финиш (аудит §3 High): круг-галочка общий, результаты раундов —
+    // телом под заголовком.
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: SessionFinish(
+        title: l.sessionDone,
+        tapHint: l.sessionDoneTapHint,
+        onClose: onClose,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              l.sessionDone,
-              style: theme.textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
             Text(
               l.whResultsTitle,
               style: theme.textTheme.titleSmall?.copyWith(
@@ -540,6 +543,7 @@ class _FinishedView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -557,18 +561,10 @@ class _FinishedView extends StatelessWidget {
                   ],
                 ),
               ),
-            if (_recordLine() case final line?) ...[
-              const SizedBox(height: 20),
+            if (_recordLine(context) case final line?) ...[
+              const SizedBox(height: 12),
               line,
             ],
-            const SizedBox(height: 24),
-            Text(
-              l.sessionDoneTapHint,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
           ],
         ),
       ),

@@ -6,8 +6,10 @@ import '../../data/bolt_repository.dart';
 import '../../domain/bolt/bolt_interpretation.dart';
 import '../../domain/models/bolt_result.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/section_header.dart';
 import 'bolt_chart.dart';
 import 'bolt_texts.dart';
 
@@ -99,20 +101,23 @@ class _BoltTestScreenState extends State<BoltTestScreen> {
       appBar: _stage == _Stage.holding
           ? null
           : AppBar(title: Text(l.boltTitle)),
-      body: SafeArea(
-        child: switch (_stage) {
-          _Stage.intro => _IntroView(history: _history, onStart: _startHold),
-          _Stage.holding => _HoldingView(
-              elapsed: _elapsed,
-              onStop: _stopHold,
-            ),
-          _Stage.result => _ResultView(
-              seconds: _seconds,
-              saved: _saved,
-              onSave: _save,
-              onRetry: _retry,
-            ),
-        },
+      // В HANT под экраном BOLT — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: switch (_stage) {
+            _Stage.intro => _IntroView(history: _history, onStart: _startHold),
+            _Stage.holding => _HoldingView(
+                elapsed: _elapsed,
+                onStop: _stopHold,
+              ),
+            _Stage.result => _ResultView(
+                seconds: _seconds,
+                saved: _saved,
+                onSave: _save,
+                onRetry: _retry,
+              ),
+          },
+        ),
       ),
     );
   }
@@ -138,7 +143,8 @@ class _IntroView extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               if (hist.isNotEmpty) ...[
-                _Section(title: l.boltHistoryTitle),
+                SectionHeader(l.boltHistoryTitle),
+                const SizedBox(height: 8),
                 _LatestCard(results: hist),
                 const SizedBox(height: 8),
                 BoltChart(results: hist),
@@ -153,10 +159,12 @@ class _IntroView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
               ],
-              _Section(title: l.boltIntroHeading),
+              SectionHeader(l.boltIntroHeading),
+              const SizedBox(height: 8),
               Text(l.boltIntro, style: theme.textTheme.bodyMedium),
               const SizedBox(height: 20),
-              _Section(title: l.boltMethodHeading),
+              SectionHeader(l.boltMethodHeading),
+              const SizedBox(height: 8),
               Text(l.boltMethod, style: theme.textTheme.bodyMedium),
               const SizedBox(height: 20),
               // Дисклеймер: честная рамка «не медицина» (научный справочник).
@@ -404,23 +412,3 @@ class _ResultView extends StatelessWidget {
 }
 
 // ─── Мелочи ──────────────────────────────────────────────────────────────────
-
-class _Section extends StatelessWidget {
-  final String title;
-  const _Section({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        title,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}

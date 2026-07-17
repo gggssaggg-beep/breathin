@@ -8,16 +8,18 @@ import '../../features/onboarding/coach_mark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../ui/charts/sparkline_chart.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/icon_badge.dart';
+import '../../ui/widgets/safety_card.dart';
+import '../../ui/widgets/section_header.dart';
 import '../session_setup/session_setup_screen.dart';
 import '../timer_session/timer_setup_screen.dart';
 import '../wim_hof/wim_hof_setup_screen.dart';
 import 'technique_icons.dart';
 import 'technique_subtitle.dart';
 
-/// Цвет метки-солнышка бодрящих техник (влад. §10) — мягкий амбер.
-const _energizingSun = Color(0xFFF9A825);
 
 /// Экран «Описание техники» (ТЗ §6.3).
 ///
@@ -77,33 +79,30 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
             // Солнышко бодрящих техник рядом с названием (влад. §10).
             if (t.energizing) ...[
               const SizedBox(width: 8),
-              const BreathinIcon(
+              BreathinIcon(
                 BreathinIcons.sun,
                 size: 18,
-                color: _energizingSun,
+                color: AppTheme.accentSunColor(context),
               ),
             ],
           ],
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Прокручиваемое тело
-            Expanded(
-              child: ListView(
+      // В HANT под карточкой техники — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Прокручиваемое тело
+              Expanded(
+                child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                 children: [
                   // Крупная иконка
                   Center(
-                    child: CircleAvatar(
+                    child: IconBadge(
+                      iconDataFor(t.icon),
                       radius: 48,
-                      backgroundColor: theme.colorScheme.primaryContainer,
-                      child: BreathinIcon(
-                        iconDataFor(t.icon),
-                        size: 48,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -134,7 +133,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
                   const SizedBox(height: 24),
 
                   // Секция: Описание
-                  _SectionHeader(title: l.sectionDescription),
+                  SectionHeader(l.sectionDescription),
                   const SizedBox(height: 8),
                   Text(
                     l.techniqueDescription(t),
@@ -143,7 +142,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
                   const SizedBox(height: 20),
 
                   // Секция: Польза
-                  _SectionHeader(title: l.sectionBenefit),
+                  SectionHeader(l.sectionBenefit),
                   const SizedBox(height: 8),
                   Text(
                     l.techniqueBenefit(t),
@@ -156,7 +155,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
                     _WimHofProgressSection(progress: _whProgress),
 
                   // Секция: Безопасность
-                  _SectionHeader(title: l.sectionSafety),
+                  SectionHeader(l.sectionSafety),
                   const SizedBox(height: 8),
                   _SafetySection(technique: t),
                   const SizedBox(height: 20),
@@ -212,6 +211,7 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -251,7 +251,7 @@ class _WimHofProgressSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: l.whProgressTitle),
+        SectionHeader(l.whProgressTitle),
         const SizedBox(height: 8),
         SparklineChart(values: [for (final s in progress) s.bestSec]),
         const SizedBox(height: 8),
@@ -275,68 +275,17 @@ class _WimHofProgressSection extends StatelessWidget {
   }
 }
 
-/// Заголовок секции.
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  const _SectionHeader({required this.title});
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Text(
-      title,
-      style: theme.textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-}
-
-/// Секция безопасности: high — Card с красным errorContainer, medium — Card
-/// с мягким амбером (красный слишком ярок; корректировка владельца), low —
-/// обычный текст.
+/// Секция безопасности: единая плашка [SafetyCard] для всех уровней
+/// (решение владельца 2026-07-17); интенсивным техникам серьёзность
+/// добавляет полноэкранный гейт ВХ.
 class _SafetySection extends StatelessWidget {
   final Technique technique;
   const _SafetySection({required this.technique});
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final text = l.safetyText(technique);
-
-    if (technique.safetyLevel == SafetyLevel.high) {
-      return Card(
-        color: theme.colorScheme.errorContainer,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onErrorContainer,
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (technique.safetyLevel == SafetyLevel.medium) {
-      final b = theme.brightness;
-      return Card(
-        color: AppTheme.warningContainer(b),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: AppTheme.onWarningContainer(b),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Text(text, style: theme.textTheme.bodyMedium);
+    return SafetyCard(AppLocalizations.of(context).safetyText(technique));
   }
 }
 

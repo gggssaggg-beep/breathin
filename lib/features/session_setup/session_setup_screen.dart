@@ -18,8 +18,10 @@ import '../../domain/models/technique.dart';
 import '../../domain/models/technique_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/section_header.dart';
 import '../session/phase_labels.dart';
 import '../session/session_runner.dart';
 
@@ -170,7 +172,9 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
     if (s == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l.setupTitle)),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const HantBackdrop(
+          child: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
 
@@ -202,12 +206,14 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
             ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        children: [
+      // В HANT под настройкой сессии — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          children: [
           // --- Скриптовая техника: фиксированный рисунок дыхания ---
           if (isScripted) ...[
-            _SectionHeader(title: l.stretchPatternTitle),
+            SectionHeader(l.stretchPatternTitle),
             const SizedBox(height: 8),
             Text(
               _t.id == 'elemental' ? l.elementalPatternDesc : l.stretchPatternDesc,
@@ -216,14 +222,14 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
             const SizedBox(height: 16),
           ] else ...[
             // --- Режим окончания ---
-            _SectionHeader(title: _endModeLabel(l, s)),
+            SectionHeader(_endModeLabel(l, s)),
             const SizedBox(height: 8),
             _buildEndModeSegment(l, s, theme),
             const SizedBox(height: 16),
 
             // --- Длительности фаз (не для tempoMultiplier) ---
             if (_t.scaling != ScalingMode.tempoMultiplier) ...[
-              _SectionHeader(title: l.phasesSection),
+              SectionHeader(l.phasesSection),
               const SizedBox(height: 4),
               _buildPhasesSection(l, s, theme),
               const SizedBox(height: 8),
@@ -232,7 +238,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
             // --- Темп (только tempoMultiplier) ---
             if (_t.scaling == ScalingMode.tempoMultiplier &&
                 _t.tempoOptions != null) ...[
-              _SectionHeader(title: l.tempoLabel),
+              SectionHeader(l.tempoLabel),
               const SizedBox(height: 8),
               _buildTempoSection(l, s, theme),
               const SizedBox(height: 8),
@@ -240,7 +246,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
 
             // --- Фразы фикра (№10): аффирмации / вазифы ---
             if (_t.id == 'fikr') ...[
-              _SectionHeader(title: l.fikrPhrasesLabel),
+              SectionHeader(l.fikrPhrasesLabel),
               const SizedBox(height: 4),
               _buildFikrPhraseSection(l, s, theme),
               const SizedBox(height: 8),
@@ -248,7 +254,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
           ],
 
           // --- Подготовка ---
-          _SectionHeader(title: l.prepLabel),
+          SectionHeader(l.prepLabel),
           const SizedBox(height: 4),
           _buildPrepSection(l, s),
           const SizedBox(height: 8),
@@ -259,10 +265,11 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
             id: 'setup.feedback',
             message: l.coachSetupFeedback,
           ),
-          _SectionHeader(title: l.feedbackSection),
+          SectionHeader(l.feedbackSection),
           _buildFeedbackSection(l, s),
           const SizedBox(height: 16),
         ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -752,20 +759,3 @@ class _CustomPhraseTileState extends State<_CustomPhraseTile> {
   }
 }
 
-/// Заголовок секции настройки.
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  const _SectionHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Text(
-      title,
-      style: theme.textTheme.titleSmall?.copyWith(
-        color: theme.colorScheme.primary,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-}

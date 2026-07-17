@@ -9,12 +9,15 @@ import 'services/auth/auth_service.dart';
 import 'services/locale/locale_store.dart';
 import 'services/sync/prefs_sync_service.dart';
 import 'services/sync/session_sync_service.dart';
+import 'services/theme/ui_theme_store.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AuthService.init();
-  // Гидрируем локаль ДО runApp, чтобы первый кадр уже был правильным.
+  // Гидрируем локаль и интерфейс ДО runApp, чтобы первый кадр уже был
+  // правильным (durable-источник — prefs, не localStorage).
   localeNotifier.value = localeFor(await LocaleStore().load());
+  uiThemeNotifier.value = await UiThemeStore().load();
   // Аудио-подсистема сессий (foreground service, локскрин-контролы).
   await initSessionAudio();
   // Облачный синк настроек: сторы сообщают об изменениях через шину.

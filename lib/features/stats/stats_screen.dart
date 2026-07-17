@@ -10,8 +10,12 @@ import '../../domain/stats/practice_stats.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../services/auth/auth_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/empty_state.dart';
+import '../../ui/widgets/list_action_card.dart';
+import '../../ui/widgets/section_header.dart';
 import '../bolt/bolt_test_screen.dart';
 import '../catalog/technique_icons.dart';
 
@@ -86,50 +90,53 @@ class _StatsScreenState extends State<StatsScreen> {
     final records = _records;
     return Scaffold(
       appBar: AppBar(title: Text(l.statsTitle)),
-      body: records == null
-          ? const Center(child: CircularProgressIndicator())
-          : records.isEmpty
-              ? ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    const _BoltEntryCard(),
-                    const SizedBox(height: 24),
-                    _Empty(text: l.statsEmpty),
-                  ],
-                )
-              : ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    if (_isGuest &&
-                        records.length >= 10 &&
-                        !_guestHintDismissed) ...[
-                      _GuestHintCard(onDismiss: _dismissGuestHint),
-                      const SizedBox(height: 16),
+      // В HANT под статистикой — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: records == null
+            ? const Center(child: CircularProgressIndicator())
+            : records.isEmpty
+                ? ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      const _BoltEntryCard(),
+                      const SizedBox(height: 24),
+                      _Empty(text: l.statsEmpty),
                     ],
-                    _SummaryRow(records: records, today: _today),
-                    const SizedBox(height: 24),
-                    _MonthHeader(
-                      year: _year,
-                      month: _month,
-                      canGoNext: !_atCurrentMonth,
-                      onPrev: () => _shiftMonth(-1),
-                      onNext: () => _shiftMonth(1),
-                    ),
-                    const SizedBox(height: 12),
-                    _MonthCalendar(
-                      records: records,
-                      year: _year,
-                      month: _month,
-                      today: _today,
-                    ),
-                    const SizedBox(height: 16),
-                    _MonthTotals(records: records, year: _year, month: _month),
-                    const SizedBox(height: 16),
-                    const _BoltEntryCard(),
-                    const SizedBox(height: 16),
-                    _ByTechnique(records: records, year: _year, month: _month),
-                  ],
-                ),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      if (_isGuest &&
+                          records.length >= 10 &&
+                          !_guestHintDismissed) ...[
+                        _GuestHintCard(onDismiss: _dismissGuestHint),
+                        const SizedBox(height: 16),
+                      ],
+                      _SummaryRow(records: records, today: _today),
+                      const SizedBox(height: 24),
+                      _MonthHeader(
+                        year: _year,
+                        month: _month,
+                        canGoNext: !_atCurrentMonth,
+                        onPrev: () => _shiftMonth(-1),
+                        onNext: () => _shiftMonth(1),
+                      ),
+                      const SizedBox(height: 12),
+                      _MonthCalendar(
+                        records: records,
+                        year: _year,
+                        month: _month,
+                        today: _today,
+                      ),
+                      const SizedBox(height: 16),
+                      _MonthTotals(records: records, year: _year, month: _month),
+                      const SizedBox(height: 16),
+                      const _BoltEntryCard(),
+                      const SizedBox(height: 16),
+                      _ByTechnique(records: records, year: _year, month: _month),
+                    ],
+                  ),
+      ),
     );
   }
 }
@@ -186,86 +193,39 @@ class _BoltEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    return Card(
+    return ListActionCard(
       color: theme.colorScheme.secondaryContainer,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const BoltTestScreen()),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              BreathinIcon(
-                BreathinIcons.chartBar,
-                size: 28,
-                color: theme.colorScheme.onSecondaryContainer,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.boltTitle,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.onSecondaryContainer,
-                      ),
-                    ),
-                    Text(
-                      l.boltEntrySubtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSecondaryContainer,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              BreathinIcon(
-                BreathinIcons.chevronRight,
-                size: 20,
-                color: theme.colorScheme.onSecondaryContainer,
-              ),
-            ],
-          ),
-        ),
+      leading: BreathinIcon(
+        BreathinIcons.chartBar,
+        size: 28,
+        // Явный цвет onSecondaryContainer: ListActionCard не перекрашивает
+        // leading автоматически при кастомном фоне карточки.
+        color: theme.colorScheme.onSecondaryContainer,
+      ),
+      title: l.boltTitle,
+      subtitle: l.boltEntrySubtitle,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const BoltTestScreen()),
+      ),
+      trailing: BreathinIcon(
+        BreathinIcons.chevronRight,
+        size: 20,
+        color: theme.colorScheme.onSecondaryContainer,
       ),
     );
   }
 }
 
+/// Пустая история — делегирует EmptyState с иконкой calendar.
 class _Empty extends StatelessWidget {
   final String text;
   const _Empty({required this.text});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BreathinIcon(
-              BreathinIcons.calendar,
-              size: 56,
-              color: theme.colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              text,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => EmptyState(
+        icon: BreathinIcons.calendar,
+        message: text,
+      );
 }
 
 /// Верхняя карточка: streak огоньком.
@@ -331,10 +291,7 @@ class _MonthHeader extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onPrev,
-          icon: Transform.flip(
-            flipX: true,
-            child: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
-          ),
+          icon: const BreathinIcon(BreathinIcons.chevronLeft, size: 20),
         ),
         Expanded(
           child: Text(
@@ -470,7 +427,6 @@ class _ByTechnique extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     final rows = PracticeStats.byTechnique(records, year, month);
     if (rows.isEmpty) return const SizedBox.shrink();
 
@@ -482,8 +438,7 @@ class _ByTechnique extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 4, bottom: 4),
-              child: Text(l.byTechniqueLabel,
-                  style: theme.textTheme.titleSmall),
+              child: SectionHeader(l.byTechniqueLabel),
             ),
             for (final (id, agg) in rows) _row(context, id, agg),
           ],

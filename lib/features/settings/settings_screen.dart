@@ -11,13 +11,17 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../services/audio/sound_preferences.dart';
 import '../../services/locale/locale_store.dart';
 import '../../services/reminders/reminder_preferences.dart';
+import '../../services/theme/ui_theme_store.dart';
 import '../../services/reminders/streak_reminder.dart';
 import '../../services/update/update_preferences.dart';
 import 'difficulty_section.dart';
 import '../../services/update/update_runtime.dart';
 import '../../services/update/update_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/list_action_card.dart';
+import '../../ui/widgets/section_header.dart';
 import 'account_section.dart';
 import 'update_section.dart';
 
@@ -38,6 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   SoundSet _soundSet = SoundSet.harp;
   DifficultyPreset _difficulty = DifficultyPreset.breeze;
   AppLanguage _language = AppLanguage.system;
+  AppUiTheme _uiTheme = AppUiTheme.classic;
   bool _hasBoltResult = false;
   bool _streakReminder = true; // дефолт ВКЛ (решение владельца)
   String? _version;
@@ -57,6 +62,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     LocaleStore().load().then((lang) {
       if (mounted) setState(() => _language = lang);
+    });
+    UiThemeStore().load().then((t) {
+      if (mounted) setState(() => _uiTheme = t);
     });
     BoltRepository().all().then((r) {
       if (mounted) setState(() => _hasBoltResult = r.isNotEmpty);
@@ -104,6 +112,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     localeNotifier.value = localeFor(lang);
   }
 
+  void _onUiThemeChanged(AppUiTheme v) {
+    setState(() => _uiTheme = v);
+    // Fire-and-forget — сохраняем и сразу применяем тему без перезапуска.
+    UiThemeStore().save(v);
+    uiThemeNotifier.value = v;
+  }
+
   void _onStreakReminderChanged(bool v) {
     final l = AppLocalizations.of(context);
     setState(() => _streakReminder = v);
@@ -148,15 +163,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l.settingsTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Text(l.accountSection, style: Theme.of(context).textTheme.titleSmall),
+      // В HANT под настройками — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+          SectionHeader(l.accountSection),
           const SizedBox(height: 8),
           const AccountSection(),
           const SizedBox(height: 24),
-          Text(l.updatesSection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.updatesSection),
           const SizedBox(height: 8),
           UpdateSection(
             result: _update,
@@ -166,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Звук: «Арфа» (мелодия+фон) или «Чаши» (клипы) ---
-          Text(l.soundSection, style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.soundSection),
           const SizedBox(height: 8),
           ListTile(
             contentPadding: EdgeInsets.zero,
@@ -195,8 +211,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Язык ---
-          Text(l.languageSection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.languageSection),
           const SizedBox(height: 8),
           SegmentedButton<AppLanguage>(
             segments: [
@@ -217,6 +232,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onSelectionChanged: (v) => _onLanguageChanged(v.first),
           ),
           const SizedBox(height: 24),
+          // --- Интерфейс: классический или HANT (техно-мистика) ---
+          SectionHeader(l.settingsUiTheme),
+          const SizedBox(height: 8),
+          SegmentedButton<AppUiTheme>(
+            segments: [
+              ButtonSegment(
+                value: AppUiTheme.classic,
+                label: Text(l.uiThemeClassic),
+              ),
+              ButtonSegment(
+                value: AppUiTheme.hant,
+                label: Text(l.uiThemeHant),
+              ),
+            ],
+            selected: {_uiTheme},
+            onSelectionChanged: (v) => _onUiThemeChanged(v.first),
+          ),
+          const SizedBox(height: 24),
           // --- Напоминание о серии (С1): дефолт выкл, включение планирует
           // ближайший вечер по журналу ---
           SwitchListTile(
@@ -228,8 +261,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Сложность: глобальный пресет длительностей (эпик §4–5) ---
-          Text(l.difficultySection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.difficultySection),
           const SizedBox(height: 8),
           DifficultySection(
             preset: _difficulty,
@@ -238,31 +270,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 24),
           // --- Сообщество: обратная связь и чат (внешние ссылки Telegram) ---
-          Text(l.communitySection,
-              style: Theme.of(context).textTheme.titleSmall),
+          SectionHeader(l.communitySection),
           const SizedBox(height: 8),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
+          ListActionCard(
             leading: const BreathinIcon(BreathinIcons.send),
-            title: Text(l.feedbackAction),
-            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            title: l.feedbackAction,
             onTap: () => _openUrl('https://t.me/U314159'),
           ),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
+          const SizedBox(height: 8),
+          ListActionCard(
             leading: const BreathinIcon(BreathinIcons.send),
-            title: Text(l.communityChatAction),
-            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            title: l.communityChatAction,
             // Ссылка на конкретное сообщение в телеграм-канале (так задумано).
             onTap: () => _openUrl('https://t.me/Hant_Live/257'),
           ),
           const SizedBox(height: 24),
           // --- Обучение: сброс подсказок и приветствия ---
-          ListTile(
-            contentPadding: EdgeInsets.zero,
+          ListActionCard(
             leading: const BreathinIcon(BreathinIcons.refresh),
-            title: Text(l.replayOnboarding),
-            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            title: l.replayOnboarding,
             onTap: () => _resetOnboarding(context),
           ),
           if (_version != null) ...[
@@ -276,7 +302,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ],
-        ],
+          ],
+        ),
       ),
     );
   }

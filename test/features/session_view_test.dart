@@ -163,7 +163,8 @@ void main() {
     await tester.pumpWidget(wrap(finished, onStop: () => stopped = true));
     expect(find.text('Done'), findsOneWidget);
     expect(find.byType(FilledButton), findsNothing); // кнопки исчезли
-    await tester.tap(find.text('✓'));
+    // Галочка теперь векторная (единый SessionFinish) — тапаем по заголовку.
+    await tester.tap(find.text('Done'));
     expect(stopped, isTrue);
   });
 

@@ -8,8 +8,10 @@ import '../../data/challenges_repository.dart';
 import '../../domain/stats/challenge_progress.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/auth/auth_service.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/empty_state.dart';
 
 /// Экран «Челленджи» (ТЗ §4 — соревнование с друзьями).
 ///
@@ -83,7 +85,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l.challengesTitle)),
-      body: _body(l),
+      // В HANT под челленджами — фон-«чертёж» (в классике HantBackdrop прозрачен).
+      body: HantBackdrop(child: _body(l)),
     );
   }
 
@@ -123,6 +126,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
 
 // ─── Гейт входа ─────────────────────────────────────────────────────────────
 
+/// Гейт-заглушка: строит EmptyState с двумя кнопками входа.
 class _SignInGate extends StatelessWidget {
   final AuthService auth;
   final VoidCallback onSignedIn;
@@ -132,109 +136,61 @@ class _SignInGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BreathinIcon(
-              BreathinIcons.trophy,
-              size: 56,
-              color: theme.colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l.challengesSignInHint,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.tonalIcon(
-                icon: const BreathinIcon(BreathinIcons.user, size: 20),
-                label: Text(l.createGuestProfile),
-                onPressed: () async {
-                  try {
-                    await auth.signInAnonymously();
-                    onSignedIn();
-                  } catch (_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l.authActionFailed)),
-                      );
-                    }
-                  }
-                },
-              ),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                icon: const BreathinIcon(BreathinIcons.login, size: 20),
-                label: Text(l.signInGoogle),
-                onPressed: () async {
-                  try {
-                    await auth.signInWithGoogle();
-                  } catch (_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l.authActionFailed)),
-                      );
-                    }
-                  }
-                },
-              ),
-            ),
-          ],
+    return EmptyState(
+      icon: BreathinIcons.trophy,
+      message: l.challengesSignInHint,
+      actions: [
+        FilledButton.tonalIcon(
+          icon: const BreathinIcon(BreathinIcons.user, size: 20),
+          label: Text(l.createGuestProfile),
+          onPressed: () async {
+            try {
+              await auth.signInAnonymously();
+              onSignedIn();
+            } catch (_) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(l.authActionFailed)),
+                );
+              }
+            }
+          },
         ),
-      ),
+        OutlinedButton.icon(
+          icon: const BreathinIcon(BreathinIcons.login, size: 20),
+          label: Text(l.signInGoogle),
+          onPressed: () async {
+            try {
+              await auth.signInWithGoogle();
+            } catch (_) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(l.authActionFailed)),
+                );
+              }
+            }
+          },
+        ),
+      ],
     );
   }
 }
 
-// ─── Заглушка пустого списка ─────────────────────────────────────────────────
+// ─── Заглушка пустого списка и ошибки ────────────────────────────────────────
 
+/// Пустой список — иконка + текст, без действий.
 class _EmptyState extends StatelessWidget {
   final String message;
   const _EmptyState({required this.message});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BreathinIcon(
-              BreathinIcons.trophy,
-              size: 56,
-              color: theme.colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => EmptyState(
+        icon: BreathinIcons.trophy,
+        message: message,
+      );
 }
 
-// ─── Ошибка загрузки (нет сети) ──────────────────────────────────────────────
-
+/// Ошибка загрузки — иконка + текст + кнопка «Повторить».
 class _ErrorState extends StatelessWidget {
   final VoidCallback onRetry;
   const _ErrorState({required this.onRetry});
@@ -242,38 +198,16 @@ class _ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BreathinIcon(
-              BreathinIcons.trophy,
-              size: 56,
-              color: theme.colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l.challengesLoadFailed,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            // Полноширинная CTA — явной обёрткой (minWidth темы больше не ∞).
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.tonal(
-                onPressed: onRetry,
-                child: Text(l.commonRetry),
-              ),
-            ),
-          ],
+    return EmptyState(
+      icon: BreathinIcons.trophy,
+      message: l.challengesLoadFailed,
+      actions: [
+        // Полноширинная CTA — EmptyState сам добавляет SizedBox.expand.
+        FilledButton.tonal(
+          onPressed: onRetry,
+          child: Text(l.commonRetry),
         ),
-      ),
+      ],
     );
   }
 }

@@ -507,9 +507,15 @@ abstract class AppLocalizations {
   String get tech_energy_wave_name;
 
   /// No description provided for @tech_energy_wave_desc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Даосская практика из цигун в светской форме: ровное диафрагмальное дыхание носом, внимание движется как тёплая волна вдоль тела — вверх на вдохе, вниз на выдохе.\n\nКогда применять: когда нужно заземлиться, снять телесное напряжение или почувствовать тело единым целым после долгого сидения за экраном.\n\nКак выполнять: сядьте или лягте удобно. Представьте тёплую волну у подошв стоп. На вдохе — волна медленно поднимается от стоп вверх по ногам, животу, груди, шее, до макушки; дыхание ровное, живот мягко расширяется. На выдохе — волна так же плавно опускается от макушки вниз по лицу, груди, животу до стоп; тело мягко расслабляется вслед за волной. Внимание следует за волной непрерывно — если ускользнуло, мягко возвращайте на стопы и начинайте подъём заново. Дышите через нос, без усилия.\n\nМаркер: ощущение тепла или лёгкого покалывания по всему телу; мышцы плеч и шеи заметно расслабляются к 5–7 циклу.'**
   String get tech_energy_wave_desc;
 
   /// No description provided for @tech_energy_wave_benefit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заземляет и расслабляет тело через мягкое совместное движение дыхания и внимания — снимает привычное мышечное напряжение, усиливает целостное ощущение тела.'**
   String get tech_energy_wave_benefit;
 
   /// No description provided for @segNineLeft.
@@ -1399,6 +1405,24 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Как в системе'**
   String get languageSystem;
+
+  /// No description provided for @settingsUiTheme.
+  ///
+  /// In ru, this message translates to:
+  /// **'Интерфейс'**
+  String get settingsUiTheme;
+
+  /// No description provided for @uiThemeClassic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Классический'**
+  String get uiThemeClassic;
+
+  /// No description provided for @uiThemeHant.
+  ///
+  /// In ru, this message translates to:
+  /// **'HANT'**
+  String get uiThemeHant;
 
   /// No description provided for @favoriteTooltip.
   ///

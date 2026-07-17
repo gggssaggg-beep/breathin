@@ -6,10 +6,15 @@
 // никакого растра и эмодзи, цвет наследуется от темы).
 
 /// Данные одной иконки: набор SVG-путей из viewBox 0 0 24 24.
+///
+/// [visualScale] — выравнивание оптического веса (аудит 2026-07-16 §1):
+/// «худые» иконки (узкая фигура в полупустом вьюбоксе) рисуются чуть
+/// крупнее в том же боксе; толщина штриха остаётся 2/24, как у набора.
 class BreathinIconData {
   final List<String> paths;
+  final double visualScale;
 
-  const BreathinIconData(this.paths);
+  const BreathinIconData(this.paths, {this.visualScale = 1.0});
 }
 
 // ignore_for_file: lines_longer_than_80_chars
@@ -43,14 +48,14 @@ abstract final class BreathinIcons {
   /// Синусоида — 2-8 (удлинённый выдох).
   static const waveSine = BreathinIconData([
     'M21 12h-2c-.894 0 -1.662 -.857 -1.761 -2c-.296 -3.45 -.749 -6 -2.749 -6s-2.5 3.582 -2.5 8s-.5 8 -2.5 8s-2.452 -2.547 -2.749 -6c-.1 -1.147 -.867 -2 -1.763 -2h-2',
-  ]);
+  ], visualScale: 1.12);
 
   /// Рябь — 2-10 (глубокая версия удлинённого выдоха).
   static const ripple = BreathinIconData([
     'M3 7c3 -2 6 -2 9 0s6 2 9 0',
     'M3 17c3 -2 6 -2 9 0s6 2 9 0',
     'M3 12c3 -2 6 -2 9 0s6 2 9 0',
-  ]);
+  ], visualScale: 1.12);
 
   /// Гора — 4-16-8 (пранаяма для опытных).
   static const mountain = BreathinIconData([
@@ -93,7 +98,7 @@ abstract final class BreathinIcons {
     'M5 8h8.5a2.5 2.5 0 1 0 -2.34 -3.24',
     'M3 12h15.5a2.5 2.5 0 1 1 -2.34 3.24',
     'M4 16h5.5a2.5 2.5 0 1 1 -2.34 3.24',
-  ]);
+  ], visualScale: 1.12);
 
   /// Громкость — дыхание со звуком (Уджайи/Брамари).
   static const volume2 = BreathinIconData([
@@ -118,6 +123,12 @@ abstract final class BreathinIcons {
   /// Шеврон вправо — навигация по спискам.
   static const chevronRight = BreathinIconData([
     'M9 6l6 6l-6 6',
+  ]);
+
+  /// Шеврон влево — парный (навигация по месяцам в статистике; честный
+  /// глиф вместо Transform.flip правого).
+  static const chevronLeft = BreathinIconData([
+    'M15 6l-6 6l6 6',
   ]);
 
   /// Стрелка влево — назад.
@@ -241,7 +252,6 @@ abstract final class BreathinIcons {
     'M17.5 17.5m-3.5 0a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0',
   ]);
 
-  /// Все иконки набора (для тестов парсинга).
   /// Кавычки — фикр (мысленное повторение фразы с дыханием).
   static const quote = BreathinIconData([
     'M10 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5',
@@ -300,12 +310,13 @@ abstract final class BreathinIcons {
   /// Вертикальный серпантин: волна течёт вдоль тела снизу вверх.
   static const energyWave = BreathinIconData([
     'M12 21c-3 -1.5 -3 -4.5 0 -6s3 -4.5 0 -6s-3 -4.5 0 -6',
-  ]);
+  ], visualScale: 1.12);
 
+  /// Все иконки набора (для тестов парсинга).
   static const List<BreathinIconData> all = [
     square, triangle, moon, scale, waveSine, ripple, mountain, heartbeat,
     snowflake, lungs, wind, volume2, music, settings, chevronRight,
-    arrowLeft, playerPlay, playerPause, playerStop, refresh,
+    chevronLeft, arrowLeft, playerPlay, playerPause, playerStop, refresh,
     user, login, download, circleCheck, calendar, flame, chartBar,
     trophy, copy, send, sun, stretch, circles, quote,
     flask, arrowsVertical, sparkles, star, trendingDown, lock, rotate, eye,

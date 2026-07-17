@@ -42,3 +42,6 @@ tools/_out/
 # === Misc ===
 .DS_Store
 Thumbs.db
+
+# Локальные референсы дизайна (не для репо)
+pic/

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme.dart';
 import '../../data/favorites_store.dart';
 import '../../data/session_log_repository.dart';
 import '../../domain/catalog/technique_groups.dart';
@@ -12,8 +13,11 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../services/reminders/reminder_preferences.dart';
 import '../../services/reminders/streak_reminder.dart';
+import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/icon_badge.dart';
+import '../../ui/widgets/list_action_card.dart';
 import '../catalog/technique_card_screen.dart';
 import '../catalog/technique_icons.dart';
 import '../catalog/technique_subtitle.dart';
@@ -158,7 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Builder(builder: (context) {
+      // В HANT под каталогом — фон-«чертёж» (в классике прозрачен).
+      body: HantBackdrop(child: Builder(builder: (context) {
         // Секции: «Избранное» (дубли, порядок каталога) + три группы.
         final favList =
             catalog.where((t) => _favorites.contains(t.id)).toList();
@@ -245,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverPadding(padding: EdgeInsets.only(bottom: 12)),
           ],
         );
-      }),
+      })),
     );
   }
 }
@@ -266,55 +271,12 @@ class _QuickStartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        key: const ValueKey('quick_start'),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: theme.colorScheme.primary,
-                child: BreathinIcon(
-                  BreathinIcons.playerPlay,
-                  size: 22,
-                  color: theme.colorScheme.onPrimary,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.quickStartTitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    Text(
-                      '${l.techniqueName(technique)} · $subtitle',
-                      style: theme.textTheme.titleSmall,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              BreathinIcon(
-                BreathinIcons.chevronRight,
-                size: 20,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-        ),
-      ),
+    return ListActionCard(
+      key: const ValueKey('quick_start'),
+      leading: IconBadge(BreathinIcons.playerPlay, radius: 22, primary: true),
+      label: l.quickStartTitle,
+      title: '${l.techniqueName(technique)} · $subtitle',
+      onTap: onTap,
     );
   }
 }
@@ -416,18 +378,10 @@ class _TechniqueGridCard extends StatelessWidget {
               Flexible(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: CircleAvatar(
+                  child: IconBadge(
+                    iconDataFor(t.icon),
                     radius: 28,
-                    backgroundColor: isDimmed
-                        ? theme.colorScheme.surfaceContainerHighest
-                        : theme.colorScheme.primaryContainer,
-                    child: BreathinIcon(
-                      iconDataFor(t.icon),
-                      color: isDimmed
-                          ? theme.colorScheme.onSurfaceVariant
-                          : theme.colorScheme.onPrimaryContainer,
-                      size: 28,
-                    ),
+                    dimmed: isDimmed,
                   ),
                 ),
               ),
@@ -452,10 +406,10 @@ class _TechniqueGridCard extends StatelessWidget {
                   ),
                   if (t.energizing) ...[
                     const SizedBox(width: 4),
-                    const BreathinIcon(
+                    BreathinIcon(
                       BreathinIcons.sun,
                       size: 18,
-                      color: Color(0xFFF9A825),
+                      color: AppTheme.accentSunColor(context),
                     ),
                   ],
                 ],
@@ -499,7 +453,7 @@ class _TechniqueGridCard extends StatelessWidget {
                 BreathinIcons.star,
                 size: 20,
                 color: isFavorite
-                    ? const Color(0xFFF9A825)
+                    ? AppTheme.accentSunColor(context)
                     : theme.colorScheme.outlineVariant,
               ),
               tooltip: l.favoriteTooltip,

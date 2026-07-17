@@ -8,9 +8,11 @@ import '../l10n/generated/app_localizations.dart';
 import '../services/locale/locale_store.dart';
 import '../services/onboarding/coach_store.dart';
 import '../services/permissions/notification_permission.dart';
+import '../services/theme/ui_theme_store.dart';
 import '../services/update/update_preferences.dart';
 import '../services/update/update_runtime.dart';
 import '../services/update/update_service.dart';
+import 'hant_theme.dart';
 import 'theme.dart';
 
 /// Корень приложения «Дыши». Тема светлая/тёмная по системной настройке
@@ -125,28 +127,38 @@ class _BreathinAppState extends State<BreathinApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<Locale?>(
-      valueListenable: localeNotifier,
-      builder: (context, locale, _) => MaterialApp(
-        onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-        debugShowCheckedModeBanner: false,
-        navigatorKey: _navKey,
-        scaffoldMessengerKey: _messengerKey,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: locale,
-        theme: AppTheme.light(),
-        darkTheme: AppTheme.dark(),
-        themeMode: ThemeMode.system,
-        // CoachScope вставляется через builder ВНУТРЬ MaterialApp (после
-        // локализаций и темы), но ВЫШЕ Navigator — так он доступен всем
-        // экранам через CoachScope.of(context) и не вызывает бесконечный
-        // rebuild самого MaterialApp.
-        builder: (context, child) => CoachScope(
-          controller: _coachController,
-          child: child!,
+    return ValueListenableBuilder<AppUiTheme>(
+      valueListenable: uiThemeNotifier,
+      builder: (context, uiTheme, _) => ValueListenableBuilder<Locale?>(
+        valueListenable: localeNotifier,
+        builder: (context, locale, _) => MaterialApp(
+          onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+          debugShowCheckedModeBanner: false,
+          navigatorKey: _navKey,
+          scaffoldMessengerKey: _messengerKey,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: locale,
+          // HANT — только тёмный (часть стиля): обе слота получают его,
+          // системный светлый/тёмный остаётся за классикой.
+          theme: uiTheme == AppUiTheme.hant
+              ? HantTheme.dark()
+              : AppTheme.light(),
+          darkTheme: uiTheme == AppUiTheme.hant
+              ? HantTheme.dark()
+              : AppTheme.dark(),
+          themeMode:
+              uiTheme == AppUiTheme.hant ? ThemeMode.dark : ThemeMode.system,
+          // CoachScope вставляется через builder ВНУТРЬ MaterialApp (после
+          // локализаций и темы), но ВЫШЕ Navigator — так он доступен всем
+          // экранам через CoachScope.of(context) и не вызывает бесконечный
+          // rebuild самого MaterialApp.
+          builder: (context, child) => CoachScope(
+            controller: _coachController,
+            child: child!,
+          ),
+          home: HomeScreen(),
         ),
-        home: HomeScreen(),
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'hant_theme.dart';
+
 /// Тема приложения: спокойная сине-бирюзовая палитра, Material 3, светлый и
 /// тёмный варианты (ТЗ §7). Один seed-цвет → согласованные схемы.
 class AppTheme {
@@ -14,6 +16,31 @@ class AppTheme {
       b == Brightness.light ? const Color(0xFFF8E1A0) : const Color(0xFF4E3B00);
   static Color onWarningContainer(Brightness b) =>
       b == Brightness.light ? const Color(0xFF4E3B00) : const Color(0xFFF8E1A0);
+
+  /// Контекстный вариант warningContainer: в HANT возвращает тёмный янтарный
+  /// из палитры bg (`0xFF2A1F0C`), иначе — прежнее значение по Brightness.
+  static Color warningContainerOf(BuildContext context) {
+    if (Theme.of(context).extension<HantStyle>() != null) {
+      return const Color(0xFF2A1F0C); // тёмный янтарный фон, в палитре HANT bg
+    }
+    return warningContainer(Theme.of(context).brightness);
+  }
+
+  /// Контекстный вариант onWarningContainer: в HANT — amberGlow (`0xFFFFC875`),
+  /// иначе — прежнее значение по Brightness.
+  static Color onWarningContainerOf(BuildContext context) {
+    if (Theme.of(context).extension<HantStyle>() != null) {
+      return const Color(0xFFFFC875); // amberGlow — светлый янтарь для читаемости
+    }
+    return onWarningContainer(Theme.of(context).brightness);
+  }
+
+  /// Акцент «солнышко/звезда/пламя» для бодрящих техник и избранного:
+  /// в HANT — HantTheme.amber (`source`); в классике — прежний тёплый янтарь.
+  static Color accentSunColor(BuildContext context) {
+    return Theme.of(context).extension<HantStyle>()?.source ??
+        const Color(0xFFF9A825);
+  }
 
   static ThemeData _base(Brightness brightness) {
     final scheme = ColorScheme.fromSeed(
