@@ -6,6 +6,7 @@ import '../../domain/models/technique.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../l10n/technique_texts.dart';
 import '../../ui/hant/hant_backdrop.dart';
+import '../../ui/widgets/safety_card.dart';
 import 'wim_hof_session_screen.dart';
 
 /// Настройка метода Вима Хофа (ПЛАН §3.4, этап 2): дыханий в раунде,
@@ -212,7 +213,6 @@ class _WimHofWarningScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l.whWarningTitle)),
       // В HANT под экраном предупреждения — фон-«чертёж» (в классике HantBackdrop прозрачен).
@@ -224,17 +224,11 @@ class _WimHofWarningScreen extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    Card(
-                      color: theme.colorScheme.errorContainer,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          l.safetyText(technique),
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onErrorContainer,
-                          ),
-                        ),
-                      ),
+                    // Единая плашка безопасности (2026-07-17); серьёзность
+                    // ВХ доносит сам этот гейт с явным принятием рисков.
+                    SafetyCard(
+                      l.safetyText(technique),
+                      padding: const EdgeInsets.all(16),
                     ),
                   ],
                 ),

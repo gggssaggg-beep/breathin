@@ -11,6 +11,7 @@ import '../../ui/charts/sparkline_chart.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/safety_card.dart';
 import '../session_setup/session_setup_screen.dart';
 import '../timer_session/timer_setup_screen.dart';
 import '../wim_hof/wim_hof_setup_screen.dart';
@@ -294,50 +295,16 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Секция безопасности: high — Card с красным errorContainer, medium — Card
-/// с мягким амбером (красный слишком ярок; корректировка владельца), low —
-/// обычный текст.
+/// Секция безопасности: единая плашка [SafetyCard] для всех уровней
+/// (решение владельца 2026-07-17); интенсивным техникам серьёзность
+/// добавляет полноэкранный гейт ВХ.
 class _SafetySection extends StatelessWidget {
   final Technique technique;
   const _SafetySection({required this.technique});
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final text = l.safetyText(technique);
-
-    if (technique.safetyLevel == SafetyLevel.high) {
-      return Card(
-        color: theme.colorScheme.errorContainer,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onErrorContainer,
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (technique.safetyLevel == SafetyLevel.medium) {
-      return Card(
-        color: AppTheme.warningContainerOf(context),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: AppTheme.onWarningContainerOf(context),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Text(text, style: theme.textTheme.bodyMedium);
+    return SafetyCard(AppLocalizations.of(context).safetyText(technique));
   }
 }
 
