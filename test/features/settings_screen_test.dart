@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:breathin/features/settings/settings_screen.dart';
 import 'package:breathin/l10n/generated/app_localizations.dart';
-import 'package:breathin/services/theme/ui_theme_store.dart';
 
 /// Оборачивает SettingsScreen в MaterialApp с локализацией (en).
 Widget wrapSettings() => MaterialApp(
@@ -21,38 +20,22 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  tearDown(() {
-    // Возвращаем глобальный нотификатор к дефолту после каждого теста.
-    uiThemeNotifier.value = AppUiTheme.classic;
-  });
-
-  testWidgets('секция «Interface» видна на экране настроек', (tester) async {
+  testWidgets('переключателя интерфейса больше нет (HANT — единственный)',
+      (tester) async {
+    // Решение владельца 2026-07-17: классика скрыта из UI, секция
+    // «Interface» удалена из настроек.
     await tester.pumpWidget(wrapSettings());
     await tester.pump(); // ждём setState после async-загрузки
 
-    // Скроллим вниз до секции интерфейса, если она за экраном.
+    // Секция языка ниже фолда — доскролливаем (заодно прокатываем весь
+    // список: переключателя не должно быть нигде).
     await tester.scrollUntilVisible(
-      find.text('Interface'),
+      find.text('Language'),
       300,
       scrollable: find.byType(Scrollable),
     );
-    expect(find.text('Interface'), findsOneWidget);
-    expect(find.text('Classic'), findsOneWidget);
-    expect(find.text('HANT'), findsOneWidget);
-  });
-
-  testWidgets('тап по «HANT» меняет uiThemeNotifier на hant', (tester) async {
-    await tester.pumpWidget(wrapSettings());
-    await tester.pump();
-
-    await tester.scrollUntilVisible(
-      find.text('HANT'),
-      300,
-      scrollable: find.byType(Scrollable),
-    );
-    await tester.tap(find.text('HANT'));
-    await tester.pump();
-
-    expect(uiThemeNotifier.value, AppUiTheme.hant);
+    expect(find.text('Language'), findsOneWidget);
+    expect(find.text('Interface'), findsNothing);
+    expect(find.text('Classic'), findsNothing);
   });
 }
