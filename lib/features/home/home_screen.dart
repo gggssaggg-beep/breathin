@@ -17,6 +17,7 @@ import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../../ui/widgets/icon_badge.dart';
+import '../../ui/widgets/list_action_card.dart';
 import '../catalog/technique_card_screen.dart';
 import '../catalog/technique_icons.dart';
 import '../catalog/technique_subtitle.dart';
@@ -270,51 +271,12 @@ class _QuickStartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        key: const ValueKey('quick_start'),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              IconBadge(
-                BreathinIcons.playerPlay,
-                radius: 22,
-                primary: true,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.quickStartTitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    Text(
-                      '${l.techniqueName(technique)} · $subtitle',
-                      style: theme.textTheme.titleSmall,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              BreathinIcon(
-                BreathinIcons.chevronRight,
-                size: 20,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-        ),
-      ),
+    return ListActionCard(
+      key: const ValueKey('quick_start'),
+      leading: IconBadge(BreathinIcons.playerPlay, radius: 22, primary: true),
+      label: l.quickStartTitle,
+      title: '${l.techniqueName(technique)} · $subtitle',
+      onTap: onTap,
     );
   }
 }

@@ -14,6 +14,7 @@ import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
 import '../../ui/widgets/empty_state.dart';
+import '../../ui/widgets/list_action_card.dart';
 import '../../ui/widgets/section_header.dart';
 import '../bolt/bolt_test_screen.dart';
 import '../catalog/technique_icons.dart';
@@ -192,50 +193,24 @@ class _BoltEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    return Card(
+    return ListActionCard(
       color: theme.colorScheme.secondaryContainer,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const BoltTestScreen()),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              BreathinIcon(
-                BreathinIcons.chartBar,
-                size: 28,
-                color: theme.colorScheme.onSecondaryContainer,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.boltTitle,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.onSecondaryContainer,
-                      ),
-                    ),
-                    Text(
-                      l.boltEntrySubtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSecondaryContainer,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              BreathinIcon(
-                BreathinIcons.chevronRight,
-                size: 20,
-                color: theme.colorScheme.onSecondaryContainer,
-              ),
-            ],
-          ),
-        ),
+      leading: BreathinIcon(
+        BreathinIcons.chartBar,
+        size: 28,
+        // Явный цвет onSecondaryContainer: ListActionCard не перекрашивает
+        // leading автоматически при кастомном фоне карточки.
+        color: theme.colorScheme.onSecondaryContainer,
+      ),
+      title: l.boltTitle,
+      subtitle: l.boltEntrySubtitle,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const BoltTestScreen()),
+      ),
+      trailing: BreathinIcon(
+        BreathinIcons.chevronRight,
+        size: 20,
+        color: theme.colorScheme.onSecondaryContainer,
       ),
     );
   }

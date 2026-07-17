@@ -20,6 +20,7 @@ import '../../services/update/update_service.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/list_action_card.dart';
 import '../../ui/widgets/section_header.dart';
 import 'account_section.dart';
 import 'update_section.dart';
@@ -271,28 +272,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // --- Сообщество: обратная связь и чат (внешние ссылки Telegram) ---
           SectionHeader(l.communitySection),
           const SizedBox(height: 8),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
+          ListActionCard(
             leading: const BreathinIcon(BreathinIcons.send),
-            title: Text(l.feedbackAction),
-            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            title: l.feedbackAction,
             onTap: () => _openUrl('https://t.me/U314159'),
           ),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
+          const SizedBox(height: 8),
+          ListActionCard(
             leading: const BreathinIcon(BreathinIcons.send),
-            title: Text(l.communityChatAction),
-            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            title: l.communityChatAction,
             // Ссылка на конкретное сообщение в телеграм-канале (так задумано).
             onTap: () => _openUrl('https://t.me/Hant_Live/257'),
           ),
           const SizedBox(height: 24),
           // --- Обучение: сброс подсказок и приветствия ---
-          ListTile(
-            contentPadding: EdgeInsets.zero,
+          ListActionCard(
             leading: const BreathinIcon(BreathinIcons.refresh),
-            title: Text(l.replayOnboarding),
-            trailing: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
+            title: l.replayOnboarding,
             onTap: () => _resetOnboarding(context),
           ),
           if (_version != null) ...[
