@@ -29,7 +29,8 @@ void main() {
         'difficulty.preset': 'breeze',
         'sound.set': 'harp',
         'app.locale': 'ru',
-        'app.ui_theme': 'hant', // добавлено в PR hant-plumbing
+        // 'app.ui_theme' удалён вместе с классической темой (2026-07-17).
+        'app.ui_theme': 'hant',
         'reminders.streak_evening.v1': true,
         'bolt_log.v1': boltRaw([boltRes('a', '2026-07-15T10:00:00')]),
         // Не синкуется:
@@ -39,7 +40,8 @@ void main() {
         PrefsSyncService.markerKey: '2026-07-16T10:00:00Z',
       };
       final snapshot = buildPrefsSnapshot(all);
-      expect(snapshot.keys, hasLength(12)); // +app.ui_theme
+      expect(snapshot.keys, hasLength(11)); // app.ui_theme больше не в списке
+      expect(snapshot.containsKey('app.ui_theme'), isFalse);
       expect(snapshot.containsKey('session_log.v1'), isFalse);
       expect(snapshot.containsKey('coach.seen.v1'), isFalse);
       expect(snapshot.containsKey('welcome.seen.v1'), isFalse);

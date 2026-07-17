@@ -1406,24 +1406,6 @@ abstract class AppLocalizations {
   /// **'Как в системе'**
   String get languageSystem;
 
-  /// No description provided for @settingsUiTheme.
-  ///
-  /// In ru, this message translates to:
-  /// **'Интерфейс'**
-  String get settingsUiTheme;
-
-  /// No description provided for @uiThemeClassic.
-  ///
-  /// In ru, this message translates to:
-  /// **'Классический'**
-  String get uiThemeClassic;
-
-  /// No description provided for @uiThemeHant.
-  ///
-  /// In ru, this message translates to:
-  /// **'HANT'**
-  String get uiThemeHant;
-
   /// No description provided for @favoriteTooltip.
   ///
   /// In ru, this message translates to:
