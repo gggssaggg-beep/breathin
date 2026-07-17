@@ -11,6 +11,7 @@ import '../../ui/charts/sparkline_chart.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/icon_badge.dart';
 import '../../ui/widgets/section_header.dart';
 import '../session_setup/session_setup_screen.dart';
 import '../timer_session/timer_setup_screen.dart';
@@ -98,14 +99,9 @@ class _TechniqueCardScreenState extends State<TechniqueCardScreen> {
                 children: [
                   // Крупная иконка
                   Center(
-                    child: CircleAvatar(
+                    child: IconBadge(
+                      iconDataFor(t.icon),
                       radius: 48,
-                      backgroundColor: theme.colorScheme.primaryContainer,
-                      child: BreathinIcon(
-                        iconDataFor(t.icon),
-                        size: 48,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
                     ),
                   ),
                   const SizedBox(height: 12),

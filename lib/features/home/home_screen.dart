@@ -16,6 +16,7 @@ import '../../services/reminders/streak_reminder.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/icon_badge.dart';
 import '../catalog/technique_card_screen.dart';
 import '../catalog/technique_icons.dart';
 import '../catalog/technique_subtitle.dart';
@@ -280,14 +281,10 @@ class _QuickStartCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
-              CircleAvatar(
+              IconBadge(
+                BreathinIcons.playerPlay,
                 radius: 22,
-                backgroundColor: theme.colorScheme.primary,
-                child: BreathinIcon(
-                  BreathinIcons.playerPlay,
-                  size: 22,
-                  color: theme.colorScheme.onPrimary,
-                ),
+                primary: true,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -419,18 +416,10 @@ class _TechniqueGridCard extends StatelessWidget {
               Flexible(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: CircleAvatar(
+                  child: IconBadge(
+                    iconDataFor(t.icon),
                     radius: 28,
-                    backgroundColor: isDimmed
-                        ? theme.colorScheme.surfaceContainerHighest
-                        : theme.colorScheme.primaryContainer,
-                    child: BreathinIcon(
-                      iconDataFor(t.icon),
-                      color: isDimmed
-                          ? theme.colorScheme.onSurfaceVariant
-                          : theme.colorScheme.onPrimaryContainer,
-                      size: 28,
-                    ),
+                    dimmed: isDimmed,
                   ),
                 ),
               ),
