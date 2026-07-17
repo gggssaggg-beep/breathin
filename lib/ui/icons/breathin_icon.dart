@@ -47,17 +47,25 @@ class _BreathinIconPainter extends CustomPainter {
     final scale = canvasSize.shortestSide / 24.0;
     // Толщина задаётся в координатах viewBox (2/24): canvas.scale масштабирует
     // и штрих — задавать её в экранных пикселях нельзя (штрих раздуло бы в
-    // scale² раз).
+    // scale² раз). visualScale выравнивает оптический вес «худых» иконок
+    // (аудит 2026-07-16 §1): растёт фигура, штрих остаётся 2/24 — компенсируем
+    // делением strokeWidth.
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0
+      ..strokeWidth = 2.0 / data.visualScale
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
       ..isAntiAlias = true;
 
     canvas.save();
     canvas.scale(scale, scale);
+    if (data.visualScale != 1.0) {
+      // Масштаб вокруг центра вьюбокса (12,12).
+      canvas.translate(12, 12);
+      canvas.scale(data.visualScale, data.visualScale);
+      canvas.translate(-12, -12);
+    }
     for (final path in _parsedPaths()) {
       canvas.drawPath(path, paint);
     }

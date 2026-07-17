@@ -8,7 +8,8 @@ import 'package:path_drawing/path_drawing.dart';
 
 void main() {
   test('все иконки набора: пути непусты и парсятся без исключений', () {
-    expect(BreathinIcons.all, hasLength(43));
+    // 44: +chevronLeft (парный к правому, навигация по месяцам).
+    expect(BreathinIcons.all, hasLength(44));
     for (final icon in BreathinIcons.all) {
       expect(icon.paths, isNotEmpty);
       for (final d in icon.paths) {

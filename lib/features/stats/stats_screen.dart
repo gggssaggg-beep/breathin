@@ -336,10 +336,7 @@ class _MonthHeader extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onPrev,
-          icon: Transform.flip(
-            flipX: true,
-            child: const BreathinIcon(BreathinIcons.chevronRight, size: 20),
-          ),
+          icon: const BreathinIcon(BreathinIcons.chevronLeft, size: 20),
         ),
         Expanded(
           child: Text(
