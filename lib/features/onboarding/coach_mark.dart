@@ -150,13 +150,19 @@ class _CoachMarkState extends State<CoachMark>
                     ),
                   ),
                 ),
-                // Уголок-указатель вниз
-                CustomPaint(
-                  size: const Size(14, 7),
-                  painter: _DownArrowPainter(
-                    color: theme.colorScheme.secondaryContainer,
+                // Уголок-указатель вниз: с отступом от левого края пузырька
+                // (у самого угла выглядел оторванным — отзыв 2026-07-17)…
+                Padding(
+                  padding: const EdgeInsets.only(left: 18),
+                  child: CustomPaint(
+                    size: const Size(14, 7),
+                    painter: _DownArrowPainter(
+                      color: theme.colorScheme.secondaryContainer,
+                    ),
                   ),
                 ),
+                // …и с воздухом до следующего блока (облачко липло к нему).
+                const SizedBox(height: 10),
               ],
             ),
           ),

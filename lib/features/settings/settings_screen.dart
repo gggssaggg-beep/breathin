@@ -7,7 +7,9 @@ import '../../data/session_log_repository.dart';
 import '../../domain/difficulty/difficulty.dart';
 import '../../domain/stats/practice_stats.dart';
 import '../../features/onboarding/coach_controller.dart';
+import '../../features/onboarding/welcome_screen.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../services/onboarding/coach_store.dart';
 import '../../services/audio/sound_preferences.dart';
 import '../../services/locale/locale_store.dart';
 import '../../services/reminders/reminder_preferences.dart';
@@ -141,6 +143,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await controller.resetAll();
     } catch (_) {}
     if (!mounted) return;
+    // Вводное слово — сразу же (решение 2026-07-17): мгновенный отклик
+    // вместо ожидания перезапуска; кнопка «Начать» снова пометит его
+    // просмотренным. Снекбар про подсказки — после закрытия.
+    await showDialog<void>(
+      context: this.context,
+      barrierDismissible: false,
+      builder: (_) => WelcomeScreen(store: CoachStore()),
+    );
     messenger.showSnackBar(
       SnackBar(content: Text(l.onboardingReset)),
     );

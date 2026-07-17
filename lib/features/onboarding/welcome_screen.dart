@@ -42,13 +42,18 @@ class WelcomeScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
-            // Краткое описание
-            Text(
-              l.welcomeBody,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            // Вступительное слово (2026-07-17): текст длинный — скроллится,
+            // чтобы на низких экранах диалог не переполнялся.
+            Flexible(
+              child: SingleChildScrollView(
+                child: Text(
+                  l.welcomeBody,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 28),
             // Кнопка «Начать»
