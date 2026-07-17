@@ -1,6 +1,15 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'auth_config.dart';
+
+/// Режим открытия страницы Google-входа.
+/// Веб: ТОЛЬКО та же вкладка (platformDefault) — externalApplication делает
+/// window.open после await, активация клика теряется, и блокировщик попапов
+/// молча съедает окно («кнопка не нажимается», баг сайта 2026-07-17).
+/// Мобилки: системный браузер (WebView Google не пускает — disallowed_useragent).
+LaunchMode get _oauthLaunchMode =>
+    kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication;
 
 /// Профиль вошедшего пользователя — минимум, нужный UI.
 /// Изолирует виджеты от типов Supabase.
@@ -87,7 +96,7 @@ class AuthService {
     await Supabase.instance.client.auth.signInWithOAuth(
       OAuthProvider.google,
       redirectTo: authRedirectUrl,
-      authScreenLaunchMode: LaunchMode.externalApplication,
+      authScreenLaunchMode: _oauthLaunchMode,
     );
   }
 
@@ -153,7 +162,7 @@ class AuthService {
     await Supabase.instance.client.auth.linkIdentity(
       OAuthProvider.google,
       redirectTo: authRedirectUrl,
-      authScreenLaunchMode: LaunchMode.externalApplication,
+      authScreenLaunchMode: _oauthLaunchMode,
     );
   }
 
