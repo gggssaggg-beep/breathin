@@ -13,6 +13,7 @@ import '../../services/auth/auth_service.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
+import '../../ui/widgets/empty_state.dart';
 import '../../ui/widgets/section_header.dart';
 import '../bolt/bolt_test_screen.dart';
 import '../catalog/technique_icons.dart';
@@ -240,37 +241,16 @@ class _BoltEntryCard extends StatelessWidget {
   }
 }
 
+/// Пустая история — делегирует EmptyState с иконкой calendar.
 class _Empty extends StatelessWidget {
   final String text;
   const _Empty({required this.text});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BreathinIcon(
-              BreathinIcons.calendar,
-              size: 56,
-              color: theme.colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              text,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => EmptyState(
+        icon: BreathinIcons.calendar,
+        message: text,
+      );
 }
 
 /// Верхняя карточка: streak огоньком.
