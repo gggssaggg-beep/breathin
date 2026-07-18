@@ -90,23 +90,6 @@ class SessionView extends StatelessWidget {
                   ),
                 ),
               ],
-              // Фраза фикра — в такт фазе (№10). AnimatedSwitcher мягко
-              // меняет текст на границе вдох/выдох.
-              if (phraseTexts != null && !finished) ...[
-                const SizedBox(height: 8),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 350),
-                  child: Text(
-                    _phraseFor() ?? '',
-                    key: ValueKey(_phraseFor() ?? ''),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
               Expanded(
                 // На невысоких экранах (iPhone) фигура вместе с подписью под
                 // ней раньше вылезала за пределы области и накрывалась
@@ -164,23 +147,7 @@ class SessionView extends StatelessWidget {
             : GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: onPauseResume,
-                child: Stack(
-                  children: [
-                    body,
-                    // Подсказки поверх, без сдвига макета: сначала
-                    // растворяющаяся «тап — пауза», на паузе — постоянная.
-                    Positioned(
-                      top: 40,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: paused
-                            ? SessionHintPill(text: l.pausedTapHint)
-                            : const TapPauseHint(),
-                      ),
-                    ),
-                  ],
-                ),
+                child: body,
               ),
       )),
     );
@@ -197,6 +164,29 @@ class SessionView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Аффирмация (фраза фикра) — сразу над кругом (влад. 2026-07-18:
+        // под шапкой экрана она выпадала из поля зрения). AnimatedSwitcher
+        // мягко меняет текст на границе вдох/выдох (№10).
+        if (phraseTexts != null) ...[
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              child: Text(
+                _phraseFor() ?? '',
+                key: ValueKey(_phraseFor() ?? ''),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
         SizedBox(
           height: 260,
           width: 260,
@@ -217,23 +207,41 @@ class SessionView extends StatelessWidget {
                   hant: theme.extension<HantStyle>(),
                 ),
               ),
-              // Число секунд поверх фигуры
-              Text(
-                number,
-                style: theme.textTheme.displayMedium?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w300,
-                ),
+              // Подпись фазы и отсчёт секунд — в центре фигуры («центр
+              // дисплея» — влад. 2026-07-18: раньше подпись жила под кругом
+              // и терялась).
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: Text(
+                      title,
+                      style: theme.textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                    ),
+                  ),
+                  Text(
+                    number,
+                    style: theme.textTheme.displayMedium?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ],
+              ),
+              // Подсказки тапа — поверх нижней части круга, чтобы попадали
+              // в поле зрения (влад. 2026-07-18): сначала растворяющаяся
+              // «тап — пауза», на паузе — постоянная «тап — продолжить».
+              Align(
+                alignment: const Alignment(0, 0.72),
+                child: paused
+                    ? SessionHintPill(text: l.pausedTapHint)
+                    : const TapPauseHint(),
               ),
             ],
           ),
-        ),
-        const SizedBox(height: 28),
-        // Заголовок фазы под фигурой
-        Text(
-          title,
-          style: theme.textTheme.headlineSmall,
-          textAlign: TextAlign.center,
         ),
       ],
     );
