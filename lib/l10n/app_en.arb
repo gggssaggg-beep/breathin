@@ -375,7 +375,7 @@
   "whResultsTitle": "Retentions by round",
   "whRoundShort": "Round {r}",
   "@whRoundShort": { "placeholders": { "r": { "type": "int" } } },
-  "quickStartTitle": "Continue",
+  "quickStartTitle": "Quick start",
   "streakReminderToggle": "Evening streak reminder",
   "streakReminderHint": "Around 8 pm if you haven't practised today yet",
   "streakReminderTitle": "Your streak is waiting",

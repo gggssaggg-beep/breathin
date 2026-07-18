@@ -375,7 +375,7 @@
   "whResultsTitle": "Задержки по раундам",
   "whRoundShort": "Раунд {r}",
   "@whRoundShort": { "placeholders": { "r": { "type": "int" } } },
-  "quickStartTitle": "Продолжить",
+  "quickStartTitle": "Быстрый старт",
   "streakReminderToggle": "Вечернее напоминание о серии",
   "streakReminderHint": "Около 20:00, если сегодня ещё не было практики",
   "streakReminderTitle": "Огонёк ждёт",

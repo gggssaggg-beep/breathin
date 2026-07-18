@@ -925,7 +925,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get quickStartTitle => 'Continue';
+  String get quickStartTitle => 'Quick start';
 
   @override
   String get streakReminderToggle => 'Evening streak reminder';
