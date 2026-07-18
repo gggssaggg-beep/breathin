@@ -1052,6 +1052,12 @@ abstract class AppLocalizations {
   /// **'Введите корректный адрес почты'**
   String get emailInvalidNote;
 
+  /// No description provided for @emailSignInHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Входили раньше? Укажите тот же адрес (для входа через Google — ваш gmail) — откроется ваш профиль со всей историей.'**
+  String get emailSignInHint;
+
   /// No description provided for @emailLinkSentNote.
   ///
   /// In ru, this message translates to:

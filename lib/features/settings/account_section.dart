@@ -187,6 +187,13 @@ class _AccountSectionState extends State<AccountSection> {
                 actionLabel: l.emailSignInAction,
                 onSubmit: (email) => _guard(() => widget.auth.signInWithEmail(email)),
               ),
+              const SizedBox(height: 6),
+              Text(
+                l.emailSignInHint,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ],
             // 2. Google — второй (если включён)
             if (googleAuthEnabled) ...[

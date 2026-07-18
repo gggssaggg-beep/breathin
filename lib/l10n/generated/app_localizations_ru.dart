@@ -567,6 +567,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get emailInvalidNote => 'Введите корректный адрес почты';
 
   @override
+  String get emailSignInHint =>
+      'Входили раньше? Укажите тот же адрес (для входа через Google — ваш gmail) — откроется ваш профиль со всей историей.';
+
+  @override
   String emailLinkSentNote(String email) {
     return 'Мы отправили ссылку для входа на $email. Откройте письмо на этом устройстве и нажмите ссылку.';
   }

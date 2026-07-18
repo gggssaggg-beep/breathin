@@ -563,6 +563,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emailInvalidNote => 'Enter a valid email address';
 
   @override
+  String get emailSignInHint =>
+      'Signed in before? Use the same address (for Google sign-in — your gmail) and you\'ll get your profile back.';
+
+  @override
   String emailLinkSentNote(String email) {
     return 'We sent a sign-in link to $email. Open the email on this device and tap the link.';
   }
