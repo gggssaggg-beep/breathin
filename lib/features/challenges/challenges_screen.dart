@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 import '../../data/challenges_repository.dart';
 import '../../domain/stats/challenge_progress.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../services/auth/auth_config.dart';
 import '../../services/auth/auth_service.dart';
+import '../settings/settings_screen.dart';
 import '../../ui/hant/hant_backdrop.dart';
 import '../../ui/icons/breathin_icon.dart';
 import '../../ui/icons/breathin_icons.dart';
@@ -156,21 +158,34 @@ class _SignInGate extends StatelessWidget {
             }
           },
         ),
+        // Постоянный вход — по почте: форма живёт в настройках (секция
+        // «Аккаунт»), отсюда — переход. Возврат дёргает onSignedIn: если
+        // вход уже случился, гейт сменяется списком без ручного обновления.
         OutlinedButton.icon(
           icon: const BreathinIcon(BreathinIcons.login, size: 20),
-          label: Text(l.signInGoogle),
-          onPressed: () async {
-            try {
-              await auth.signInWithGoogle();
-            } catch (_) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l.authActionFailed)),
-                );
-              }
-            }
-          },
+          label: Text(l.emailSignInAction),
+          onPressed: () => Navigator.of(context)
+              .push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              )
+              .then((_) => onSignedIn()),
         ),
+        if (googleAuthEnabled)
+          OutlinedButton.icon(
+            icon: const BreathinIcon(BreathinIcons.login, size: 20),
+            label: Text(l.signInGoogle),
+            onPressed: () async {
+              try {
+                await auth.signInWithGoogle();
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(l.authActionFailed)),
+                  );
+                }
+              }
+            },
+          ),
       ],
     );
   }
