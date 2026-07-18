@@ -933,7 +933,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get quickStartTitle => 'Продолжить';
+  String get quickStartTitle => 'Быстрый старт';
 
   @override
   String get streakReminderToggle => 'Вечернее напоминание о серии';

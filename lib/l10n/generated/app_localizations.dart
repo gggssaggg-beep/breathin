@@ -1685,7 +1685,7 @@ abstract class AppLocalizations {
   /// No description provided for @quickStartTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Продолжить'**
+  /// **'Быстрый старт'**
   String get quickStartTitle;
 
   /// No description provided for @streakReminderToggle.

@@ -15,13 +15,15 @@ Widget wrap(Widget child) => MaterialApp(
       home: child,
     );
 
-SessionRecord rec(DateTime at, {String technique = 'box'}) => SessionRecord(
+SessionRecord rec(DateTime at,
+        {String technique = 'box', bool completed = true}) =>
+    SessionRecord(
       id: '${at.millisecondsSinceEpoch}-$technique',
       techniqueId: technique,
       startedAt: at,
       durationSec: 300,
       cyclesCompleted: 10,
-      completed: true,
+      completed: completed,
     );
 
 void main() {
@@ -53,7 +55,7 @@ void main() {
     expect(find.text('Box Breathing'), findsNWidgets(2));
   });
 
-  testWidgets('быстрый старт: карточка «Продолжить» ведёт сразу в сессию',
+  testWidgets('быстрый старт: карточка «Быстрый старт» ведёт сразу в сессию',
       (tester) async {
     final repo = SessionLogRepository();
     await repo.add(rec(DateTime(2026, 7, 16, 8)));
@@ -61,7 +63,7 @@ void main() {
         .pumpWidget(wrap(HomeScreen(log: repo, today: DateTime(2026, 7, 16))));
     await tester.pumpAndSettle();
 
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Quick start'), findsOneWidget);
     expect(find.textContaining('Box Breathing ·'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('quick_start')));
@@ -72,9 +74,40 @@ void main() {
     expect(find.byType(SessionRunner), findsOneWidget);
   });
 
-  testWidgets('без истории карточки «Продолжить» нет', (tester) async {
+  testWidgets('без истории карточки «Быстрый старт» нет', (tester) async {
     await tester.pumpWidget(wrap(HomeScreen(today: DateTime(2026, 7, 16))));
     await tester.pumpAndSettle();
-    expect(find.text('Continue'), findsNothing);
+    expect(find.text('Quick start'), findsNothing);
+  });
+
+  testWidgets(
+      'прерванные практики не задают карточку; '
+      'завершённая из более ранней записи — показывается',
+      (tester) async {
+    final repo = SessionLogRepository();
+    // Старая завершённая — техника box.
+    await repo.add(rec(DateTime(2026, 7, 16, 8), technique: 'box'));
+    // Свежая прерванная — другая техника.
+    await repo.add(rec(DateTime(2026, 7, 16, 9),
+        technique: 'four_seven_eight', completed: false));
+    await tester
+        .pumpWidget(wrap(HomeScreen(log: repo, today: DateTime(2026, 7, 16))));
+    await tester.pumpAndSettle();
+
+    // Карточка есть (завершённая существует).
+    expect(find.text('Quick start'), findsOneWidget);
+    // Показывает технику завершённой записи (box), не прерванной.
+    expect(find.textContaining('Box Breathing ·'), findsOneWidget);
+  });
+
+  testWidgets('только прерванная запись — карточки нет', (tester) async {
+    final repo = SessionLogRepository();
+    await repo.add(rec(DateTime(2026, 7, 16, 8),
+        technique: 'box', completed: false));
+    await tester
+        .pumpWidget(wrap(HomeScreen(log: repo, today: DateTime(2026, 7, 16))));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Quick start'), findsNothing);
   });
 }
