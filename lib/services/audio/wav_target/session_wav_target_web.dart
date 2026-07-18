@@ -38,6 +38,9 @@ Future<SessionWavTarget?> prepareSessionWav(
     final chunk = Int16List(rest < chunkSamples ? rest : chunkSamples);
     renderer.renderRange(filtered, bank, chunk, start);
     parts.add(WavIo.pcmBytes(chunk).toJS);
+    // Веб однопоточный: без уступки между чанками рендер минутной сессии
+    // блокирует UI на секунды — визуал уже идущей сессии замирает.
+    await Future<void>.delayed(Duration.zero);
   }
 
   final blob = web.Blob(

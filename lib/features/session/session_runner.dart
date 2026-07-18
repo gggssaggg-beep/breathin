@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:just_audio/just_audio.dart'
@@ -109,6 +110,10 @@ class _SessionRunnerState extends State<SessionRunner>
   bool _canVibrate = false;
   StreamSubscription<ProcessingState>? _playerSub;
 
+  /// Веб (Ж2): опрос передачи мастер-часов плееру после позднего
+  /// присоединения аудио к уже идущей сессии (см. [_tryJoinAudio]).
+  Timer? _joinTimer;
+
   /// Фоновый медитативный трек (луп, отдельный слой just_audio): часть
   /// варианта «Арфа». В строгий таймлайн не входит — синхронизация не нужна.
   AudioPlayer? _bgPlayer;
@@ -138,49 +143,125 @@ class _SessionRunnerState extends State<SessionRunner>
       }
     }
 
-    final handler = sessionAudioHandler;
-    if (handler != null &&
-        (widget.feedback.sound || widget.feedback.metronome)) {
-      try {
-        // Вариант звука — по выбору пользователя (настройки, дефолт «Арфа»).
-        final set = await SoundSetStore().load();
-        final bank = await loadSoundBank(set);
-        // Фон — только у «Арфы» и только при включённом звуке фаз.
-        if (set == SoundSet.harp && widget.feedback.sound) {
-          unawaited(_startBackground());
-        }
-        final target =
-            await prepareSessionWav(widget.plan, bank, widget.feedback);
-        if (target != null) {
-          _wavTarget = target;
-          await handler.loadSessionFile(
-            target.source,
-            title: widget.mediaTitle ?? systemL10n().sessionMediaTitle,
-            duration: Duration(milliseconds: widget.plan.totalDurationMs),
-          );
-          // Жизненный цикл плеера: completed — гонг дозвучал (гасим
-          // сервис), idle — «Стоп» с локскрина (ревью С1, М3).
-          // Подписка и флаги — ДО play.
-          _playerSub = handler.player.processingStateStream
-              .listen(_onProcessingState);
-          _audioLoaded = true;
-          _audioMode = true;
-          // Ж1 (живой баг v0.3.0): play() у just_audio завершается только
-          // при паузе/стопе/конце файла — await здесь вешал _start до конца
-          // сессии: тикер не стартовал (визуал мёртв), _audioMode не
-          // выставлялся (стоп не глушил звук). Запускаем и НЕ ждём.
-          unawaited(handler.play().catchError((_) {}));
-        }
-      } catch (_) {
-        // Не поднялось аудио — честный визуал-режим.
-        _audioMode = false;
-        _audioLoaded = false;
-      }
+    // Веб (Ж2, влад. 2026-07-18 «тормозит и не начинает, пока не потыкаешь»):
+    // визуал стартует СРАЗУ на Ticker+Stopwatch, аудио готовится в фоне и
+    // присоединяется через [_tryJoinAudio]. Раньше экран молча ждал загрузку
+    // банка и рендер WAV (секунды), а сам play() браузер мог заблокировать
+    // autoplay-политикой — позиция плеера-мастер-часов стояла на нуле
+    // бессрочно; «оживал» экран только от тапов пауза→резюм (реальный жест,
+    // который браузер принимал как разрешение на звук).
+    if (kIsWeb) {
+      _clock.start();
+      _ticker.start();
+      unawaited(_prepareAudio(joinLive: true));
+      return;
     }
 
+    await _prepareAudio(joinLive: false);
     if (!mounted) return;
     if (!_audioMode) _clock.start();
     _ticker.start();
+  }
+
+  /// Готовит аудио-путь сессии: банк звука → WAV → загрузка в плеер.
+  ///
+  /// [joinLive] = false (мобилки): плеер сразу становится мастер-часами и
+  /// играет с нуля (прежнее поведение). true (веб): сессия уже идёт на
+  /// визуальных часах — готовый файл присоединяется [_tryJoinAudio] с seek
+  /// к текущей позиции.
+  Future<void> _prepareAudio({required bool joinLive}) async {
+    final handler = sessionAudioHandler;
+    if (handler == null ||
+        (!widget.feedback.sound && !widget.feedback.metronome)) {
+      return;
+    }
+    try {
+      // Вариант звука — по выбору пользователя (настройки, дефолт «Арфа»).
+      final set = await SoundSetStore().load();
+      final bank = await loadSoundBank(set);
+      // Фон — только у «Арфы» и только при включённом звуке фаз.
+      if (set == SoundSet.harp && widget.feedback.sound) {
+        unawaited(_startBackground());
+      }
+      final target =
+          await prepareSessionWav(widget.plan, bank, widget.feedback);
+      if (target == null) return;
+      if (!mounted || _closing) {
+        unawaited(target.cleanup());
+        return;
+      }
+      _wavTarget = target;
+      await handler.loadSessionFile(
+        target.source,
+        title: widget.mediaTitle ?? systemL10n().sessionMediaTitle,
+        duration: Duration(milliseconds: widget.plan.totalDurationMs),
+      );
+      // Экран закрыли, пока файл грузился: dispose видел _audioLoaded=false
+      // и плеер не глушил — глушим сами, иначе звук переживёт экран.
+      if (!mounted || _closing) {
+        handler.stop().ignore();
+        return;
+      }
+      // Жизненный цикл плеера: completed — гонг дозвучал (гасим
+      // сервис), idle — «Стоп» с локскрина (ревью С1, М3).
+      // Подписка и флаги — ДО play.
+      _playerSub = handler.player.processingStateStream
+          .listen(_onProcessingState);
+      _audioLoaded = true;
+      if (joinLive) {
+        _tryJoinAudio();
+      } else {
+        _audioMode = true;
+        // Ж1 (живой баг v0.3.0): play() у just_audio завершается только
+        // при паузе/стопе/конце файла — await здесь вешал _start до конца
+        // сессии: тикер не стартовал (визуал мёртв), _audioMode не
+        // выставлялся (стоп не глушил звук). Запускаем и НЕ ждём.
+        unawaited(handler.play().catchError((_) {}));
+      }
+    } catch (_) {
+      // Не поднялось аудио — честный визуал-режим.
+      _audioMode = false;
+      _audioLoaded = false;
+    }
+  }
+
+  /// Веб (Ж2): присоединяет готовый WAV к уже идущей сессии. seek к позиции
+  /// визуальных часов, play — и только когда позиция плеера реально поехала,
+  /// плеер забирает роль мастер-часов (расхождение в момент передачи — доли
+  /// секунды). Не поехала за ~3 с — браузер заблокировал автозапуск: сессия
+  /// честно остаётся визуальной (тихой), а следующий резюм с паузы (реальный
+  /// жест пользователя) пробует присоединить звук ещё раз.
+  void _tryJoinAudio() {
+    final handler = sessionAudioHandler;
+    if (handler == null ||
+        !_audioLoaded ||
+        _audioMode ||
+        _closing ||
+        _paused) {
+      return;
+    }
+    final target = _positionMs();
+    unawaited(() async {
+      try {
+        await handler.seek(Duration(milliseconds: target));
+        unawaited(handler.play().catchError((_) {}));
+      } catch (_) {}
+    }());
+    _joinTimer?.cancel();
+    var attempts = 0;
+    _joinTimer = Timer.periodic(const Duration(milliseconds: 200), (t) {
+      if (!mounted || _closing || _paused || !_audioLoaded || _audioMode) {
+        t.cancel();
+        return;
+      }
+      if (handler.player.position.inMilliseconds > target + 50) {
+        t.cancel();
+        _clock.stop();
+        _audioMode = true;
+      } else if (++attempts >= 15) {
+        t.cancel(); // автозапуск заблокирован — тихий визуальный режим
+      }
+    });
   }
 
   /// Поднимает фоновый луп. Отдельно от основного пути: сбой фона не должен
@@ -286,6 +367,14 @@ class _SessionRunnerState extends State<SessionRunner>
         await handler.pause();
       } else {
         _clock.stop();
+        // Веб: звук мог уже играть в ожидании передачи часов ([_tryJoinAudio])
+        // — глушим и отменяем передачу; резюм попробует присоединить заново.
+        _joinTimer?.cancel();
+        if (_audioLoaded && handler != null) {
+          try {
+            await handler.pause();
+          } catch (_) {}
+        }
       }
       if (mounted) setState(() => _paused = true);
     } else {
@@ -311,12 +400,16 @@ class _SessionRunnerState extends State<SessionRunner>
         _bgPlayer?.play().catchError((_) {});
       } catch (_) {}
       if (mounted) setState(() => _paused = false);
+      // Веб: резюм — реальный жест; если звук так и не присоединился
+      // (браузер блокировал автозапуск) — самое время попробовать снова.
+      if (kIsWeb && !_audioMode && _audioLoaded) _tryJoinAudio();
     }
   }
 
   void _stopClocks() {
     _ticker.stop();
     _clock.stop();
+    _joinTimer?.cancel();
     try {
       _bgPlayer?.stop();
     } catch (_) {}
@@ -381,6 +474,7 @@ class _SessionRunnerState extends State<SessionRunner>
 
   @override
   void dispose() {
+    _joinTimer?.cancel();
     _playerSub?.cancel();
     _bgPlayer?.dispose();
     _bgPlayer = null;
