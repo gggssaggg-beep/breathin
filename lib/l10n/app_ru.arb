@@ -213,6 +213,7 @@
   "emailSignInAction": "Войти по почте",
   "linkEmailAction": "Привязать почту",
   "emailInvalidNote": "Введите корректный адрес почты",
+  "emailSignInHint": "Входили раньше? Укажите тот же адрес (для входа через Google — ваш gmail) — откроется ваш профиль со всей историей.",
   "emailLinkSentNote": "Мы отправили ссылку для входа на {email}. Откройте письмо на этом устройстве и нажмите ссылку.",
   "@emailLinkSentNote": {
     "placeholders": {
