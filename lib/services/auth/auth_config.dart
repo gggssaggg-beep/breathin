@@ -25,7 +25,15 @@ bool get authConfigured => supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 /// вписаны в конфиг проекта через Management API; docs/SUPABASE_SETUP.md §2
 /// закрыт). Кнопки в UI: «Войти через Google» и «Привязать Google» для
 /// гостевого профиля (identity linking, uid сохраняется).
-const bool googleAuthEnabled = true;
+///
+/// **false с 2026-07-18 (решение владельца: юридические риски Google-входа
+/// в РФ).** Google-UI СКРЫТ, код и провайдер в Supabase не тронуты — вернуть
+/// можно этим флагом. Существующие сессии живут («кто зашёл — тот зашёл»),
+/// identity остаётся привязанной. Вход с нового устройства для «гугловых»
+/// аккаунтов: e-mail-вход (magic-link) на ТОТ ЖЕ gmail-адрес — Supabase
+/// матчит по email и пускает в существующий uid со всеми данными; дубль
+/// создаётся только при вводе ДРУГОГО адреса.
+const bool googleAuthEnabled = false;
 
 /// E-mail-вход (magic-link) через Supabase Auth. Провайдер `email` включён
 /// в проекте по умолчанию (проверено 2026-07-15 через /auth/v1/settings:
