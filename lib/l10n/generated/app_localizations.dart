@@ -1052,6 +1052,18 @@ abstract class AppLocalizations {
   /// **'Введите корректный адрес почты'**
   String get emailInvalidNote;
 
+  /// No description provided for @authLinkExpiredNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ссылка входа устарела или уже была использована. Запросите новую и откройте её сразу.'**
+  String get authLinkExpiredNote;
+
+  /// No description provided for @authLinkFailedNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вход по ссылке не удался. Запросите новую ссылку и откройте её в том же браузере, где вводили почту.'**
+  String get authLinkFailedNote;
+
   /// No description provided for @emailSignInHint.
   ///
   /// In ru, this message translates to:
@@ -1759,6 +1771,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выкл'**
   String get timerCueOff;
+
+  /// No description provided for @timerFreeBreathHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дыхание свободное, в своём ритме'**
+  String get timerFreeBreathHint;
 
   /// No description provided for @timerLeftNostril.
   ///
