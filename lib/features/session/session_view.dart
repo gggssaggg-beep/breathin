@@ -176,7 +176,10 @@ class SessionView extends StatelessWidget {
                 _phraseFor() ?? '',
                 key: ValueKey(_phraseFor() ?? ''),
                 textAlign: TextAlign.center,
-                maxLines: 2,
+                // Свои (кастомные) фразы фикра длину не ограничивают —
+                // 3 строки покрывают штатные пары и большинство своих
+                // (дизайн-аудит F7: раньше 2 строки обрезали «…»).
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: theme.colorScheme.primary,
@@ -213,13 +216,24 @@ class SessionView extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Слот фиксированной высоты + FittedBox(scaleDown): длинные
+                  // подписи («Exhale through the mouth», «Выдох правой
+                  // ноздрёй») и крупный системный шрифт УМЕНЬШАЮТСЯ, а не
+                  // теряют слова (дизайн-аудит F6: раньше maxLines:2 отрезал
+                  // «ноздрёй»).
                   SizedBox(
-                    width: 200,
-                    child: Text(
-                      title,
-                      style: theme.textTheme.headlineSmall,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
+                    width: 216,
+                    height: 64,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 200),
+                        child: Text(
+                          title,
+                          style: theme.textTheme.headlineSmall,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ),
                   Text(
