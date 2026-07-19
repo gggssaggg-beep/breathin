@@ -32,6 +32,34 @@ class SoundBank {
   });
 }
 
+/// Порог «длинной» фазы для голоса: вдох/выдох от этой длительности
+/// озвучиваются медленным клипом (влад. 2026-07-18: «если вдох или выдох
+/// долгий — бери медленную версию, чтоб спокойствие интуитивно считывалось»).
+const int voiceSlowPhaseMs = 6000;
+
+/// Голосовые подсказки фаз (П8): отдельный банк, микшируется ПОВЕРХ
+/// выбранного набора звука (аддитивный слой — набор пользователя не
+/// трогаем). [hold] звучит на обеих задержках; [inhaleSlow]/[exhaleSlow] —
+/// спокойные варианты для фаз ≥ [voiceSlowPhaseMs].
+class VoiceBank {
+  final int sampleRate;
+  final Int16List inhale;
+  final Int16List exhale;
+  final Int16List hold;
+  final Int16List prep;
+  final Int16List inhaleSlow;
+  final Int16List exhaleSlow;
+  const VoiceBank({
+    required this.sampleRate,
+    required this.inhale,
+    required this.exhale,
+    required this.hold,
+    required this.prep,
+    required this.inhaleSlow,
+    required this.exhaleSlow,
+  });
+}
+
 /// Рендерер таймлайна: раскладывает события [SessionPlan] на единый PCM-буфер,
 /// смешивая клипы на точных сэмплах (ПЛАН §3.3, п.2).
 ///
@@ -92,9 +120,43 @@ class TimelineRenderer {
     ];
   }
 
+  /// Голосовые подсказки плана: (сэмпл старта, клип). Фазы — по [PhaseKind],
+  /// длинные вдох/выдох (≥ [voiceSlowPhaseMs], до следующего phaseStart) —
+  /// медленным клипом; «приготовьтесь» — один раз, на первом событии
+  /// отсчёта подготовки.
+  List<({int atSample, Int16List clip})> _voiceCues(
+      SessionPlan plan, VoiceBank voice) {
+    final cues = <({int atSample, Int16List clip})>[];
+    final starts = plan.phaseStarts.toList(growable: false);
+    for (var i = 0; i < starts.length; i++) {
+      final e = starts[i];
+      final durMs =
+          (i + 1 < starts.length ? starts[i + 1].tMs : plan.totalDurationMs) -
+              e.tMs;
+      final slow = durMs >= voiceSlowPhaseMs;
+      final clip = switch (e.phase!) {
+        PhaseKind.inhale => slow ? voice.inhaleSlow : voice.inhale,
+        PhaseKind.exhale => slow ? voice.exhaleSlow : voice.exhale,
+        PhaseKind.holdIn || PhaseKind.holdOut => voice.hold,
+      };
+      cues.add((atSample: sampleOffsetForMs(e.tMs), clip: clip));
+    }
+    EngineEvent? firstPrep;
+    for (final e in plan.events) {
+      if (e.type == EngineEventType.prepCountdown &&
+          (firstPrep == null || e.tMs < firstPrep.tMs)) {
+        firstPrep = e;
+      }
+    }
+    if (firstPrep != null) {
+      cues.add((atSample: sampleOffsetForMs(firstPrep.tMs), clip: voice.prep));
+    }
+    return cues;
+  }
+
   /// Полная длина сессии в сэмплах: конец плана либо хвост последнего клипа
   /// (гонг в t=конец звучит дольше плана — его хвост входит в буфер).
-  int totalSamplesFor(SessionPlan plan, SoundBank bank) {
+  int totalSamplesFor(SessionPlan plan, SoundBank bank, {VoiceBank? voice}) {
     var totalSamples = sampleOffsetForMs(plan.totalDurationMs);
     for (final e in plan.events) {
       // «Арфа»: фазы озвучивает мелодия — фазовый клип не кладём, даже если
@@ -107,6 +169,12 @@ class TimelineRenderer {
       final end = sampleOffsetForMs(e.tMs) + clip.length;
       if (end > totalSamples) totalSamples = end;
     }
+    if (voice != null) {
+      for (final c in _voiceCues(plan, voice)) {
+        final end = c.atSample + c.clip.length;
+        if (end > totalSamples) totalSamples = end;
+      }
+    }
     return totalSamples;
   }
 
@@ -118,11 +186,17 @@ class TimelineRenderer {
     SessionPlan plan,
     SoundBank bank,
     Int16List out,
-    int startSample,
-  ) {
+    int startSample, {
+    VoiceBank? voice,
+  }) {
     if (bank.sampleRate != sampleRate) {
       throw ArgumentError(
         'sample rate набора (${bank.sampleRate}) != рендерера ($sampleRate)',
+      );
+    }
+    if (voice != null && voice.sampleRate != sampleRate) {
+      throw ArgumentError(
+        'sample rate голоса (${voice.sampleRate}) != рендерера ($sampleRate)',
       );
     }
     final end = startSample + out.length;
@@ -160,6 +234,21 @@ class TimelineRenderer {
         }
       }
     }
+    // Голосовые подсказки (П8) — аддитивный слой поверх набора: слова ложатся
+    // на старты фаз, «приготовьтесь» — на начало отсчёта подготовки.
+    if (voice != null) {
+      for (final c in _voiceCues(plan, voice)) {
+        if (c.atSample >= end || c.atSample + c.clip.length <= startSample) {
+          continue;
+        }
+        final from = c.atSample < startSample ? startSample - c.atSample : 0;
+        final toEnd = end - c.atSample;
+        final to = toEnd < c.clip.length ? toEnd : c.clip.length;
+        for (var i = from; i < to; i++) {
+          acc[c.atSample + i - startSample] += c.clip[i];
+        }
+      }
+    }
     for (var i = 0; i < out.length; i++) {
       final v = acc[i];
       out[i] = v > 32767 ? 32767 : (v < -32768 ? -32768 : v);
@@ -168,9 +257,9 @@ class TimelineRenderer {
 
   /// Отрендерить план целиком (короткие планы и тесты; длинные сессии идут
   /// чанками через [renderRange] — см. writeSessionWavFile).
-  Int16List render(SessionPlan plan, SoundBank bank) {
-    final out = Int16List(totalSamplesFor(plan, bank));
-    renderRange(plan, bank, out, 0);
+  Int16List render(SessionPlan plan, SoundBank bank, {VoiceBank? voice}) {
+    final out = Int16List(totalSamplesFor(plan, bank, voice: voice));
+    renderRange(plan, bank, out, 0, voice: voice);
     return out;
   }
 }

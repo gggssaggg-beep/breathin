@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -19,8 +20,10 @@ import '../../domain/models/technique.dart';
 import '../../services/audio/audio_bootstrap.dart';
 import '../../services/audio/sound_bank_loader.dart';
 import '../../services/audio/sound_preferences.dart';
+import '../../services/audio/timeline_renderer.dart' show VoiceBank;
 import '../../services/audio/wav_target/session_wav_target.dart';
 import '../../services/haptics/vibration_pattern.dart';
+import '../../services/locale/locale_store.dart';
 import '../../services/sync/session_sync_service.dart';
 import 'breathing_painter.dart';
 import 'session_view.dart';
@@ -172,19 +175,32 @@ class _SessionRunnerState extends State<SessionRunner>
   Future<void> _prepareAudio({required bool joinLive}) async {
     final handler = sessionAudioHandler;
     if (handler == null ||
-        (!widget.feedback.sound && !widget.feedback.metronome)) {
+        (!widget.feedback.sound &&
+            !widget.feedback.metronome &&
+            !widget.feedback.voice)) {
       return;
     }
     try {
       // Вариант звука — по выбору пользователя (настройки, дефолт «Арфа»).
       final set = await SoundSetStore().load();
       final bank = await loadSoundBank(set);
+      // Голос (П8): клипы по языку приложения (выбор в настройках, иначе
+      // системный). Сбой загрузки не валит сессию — просто без голоса.
+      VoiceBank? voice;
+      if (widget.feedback.voice) {
+        try {
+          final lang = (localeNotifier.value ??
+                  PlatformDispatcher.instance.locale)
+              .languageCode;
+          voice = await loadVoiceBank(lang);
+        } catch (_) {}
+      }
       // Фон — только у «Арфы» и только при включённом звуке фаз.
       if (set == SoundSet.harp && widget.feedback.sound) {
         unawaited(_startBackground());
       }
-      final target =
-          await prepareSessionWav(widget.plan, bank, widget.feedback);
+      final target = await prepareSessionWav(widget.plan, bank, widget.feedback,
+          voice: voice);
       if (target == null) return;
       if (!mounted || _closing) {
         unawaited(target.cleanup());

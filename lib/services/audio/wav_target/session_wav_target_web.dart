@@ -20,13 +20,15 @@ import 'session_wav_target.dart';
 Future<SessionWavTarget?> prepareSessionWav(
   SessionPlan plan,
   SoundBank bank,
-  FeedbackChannels feedback,
-) async {
+  FeedbackChannels feedback, {
+  VoiceBank? voice,
+}) async {
   final filtered = audioPlanFor(plan, feedback);
   if (filtered == null) return null;
 
+  final eff = effectiveBank(bank, feedback);
   final renderer = TimelineRenderer(sampleRate: bank.sampleRate);
-  final total = renderer.totalSamplesFor(filtered, bank);
+  final total = renderer.totalSamplesFor(filtered, eff, voice: voice);
   if (total > bank.sampleRate * 1200) return null; // > 20 мин — без аудио
 
   final chunkSamples = 10 * bank.sampleRate;
@@ -36,7 +38,7 @@ Future<SessionWavTarget?> prepareSessionWav(
   for (var start = 0; start < total; start += chunkSamples) {
     final rest = total - start;
     final chunk = Int16List(rest < chunkSamples ? rest : chunkSamples);
-    renderer.renderRange(filtered, bank, chunk, start);
+    renderer.renderRange(filtered, eff, chunk, start, voice: voice);
     parts.add(WavIo.pcmBytes(chunk).toJS);
     // Веб однопоточный: без уступки между чанками рендер минутной сессии
     // блокирует UI на секунды — визуал уже идущей сессии замирает.

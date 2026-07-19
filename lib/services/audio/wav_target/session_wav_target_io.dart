@@ -20,12 +20,14 @@ Future<bool> writeSessionWavFile(
   FeedbackChannels feedback,
   File out, {
   int chunkSeconds = 10,
+  VoiceBank? voice,
 }) async {
   final filtered = audioPlanFor(plan, feedback);
   if (filtered == null) return false;
 
+  final eff = effectiveBank(bank, feedback);
   final renderer = TimelineRenderer(sampleRate: bank.sampleRate);
-  final total = renderer.totalSamplesFor(filtered, bank);
+  final total = renderer.totalSamplesFor(filtered, eff, voice: voice);
   final chunkSamples = chunkSeconds * bank.sampleRate;
   final sink = out.openWrite();
   try {
@@ -33,7 +35,7 @@ Future<bool> writeSessionWavFile(
     for (var start = 0; start < total; start += chunkSamples) {
       final rest = total - start;
       final chunk = Int16List(rest < chunkSamples ? rest : chunkSamples);
-      renderer.renderRange(filtered, bank, chunk, start);
+      renderer.renderRange(filtered, eff, chunk, start, voice: voice);
       sink.add(WavIo.pcmBytes(chunk));
     }
     await sink.flush();
@@ -48,11 +50,13 @@ Future<bool> writeSessionWavFile(
 Future<SessionWavTarget?> prepareSessionWav(
   SessionPlan plan,
   SoundBank bank,
-  FeedbackChannels feedback,
-) async {
+  FeedbackChannels feedback, {
+  VoiceBank? voice,
+}) async {
   final dir = await getTemporaryDirectory();
   final file = File('${dir.path}/session_current.wav');
-  final written = await writeSessionWavFile(plan, bank, feedback, file);
+  final written =
+      await writeSessionWavFile(plan, bank, feedback, file, voice: voice);
   if (!written) return null;
   return SessionWavTarget(
     source: file.path,

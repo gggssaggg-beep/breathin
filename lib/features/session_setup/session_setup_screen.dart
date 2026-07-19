@@ -573,14 +573,13 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
 
     return Column(
       children: [
-        // Голосовой канал не реализован до партии П8 — тумблер disabled,
-        // жёстко выключен, с подписью «скоро». Включим в П8.
+        // Голос (П8, 2026-07-18): подсказки фаз словами — аддитивный слой
+        // поверх выбранного звука; работает и при выключенном «Звуке».
         SwitchListTile(
           title: Text(l.channelVoice),
-          value: false,
+          value: fb.voice,
           contentPadding: EdgeInsets.zero,
-          subtitle: Text(l.comingSoonBadge),
-          onChanged: null,
+          onChanged: (v) => toggle(fb.copyWith(voice: v)),
         ),
         SwitchListTile(
           title: Text(l.channelSound),
