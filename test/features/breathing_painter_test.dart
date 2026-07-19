@@ -110,7 +110,10 @@ void main() {
   group('dotPosition — треугольник', () {
     const size = 200.0;
 
-    test('phaseIndex=0, progress=0 → левый нижний (старт)', () {
+    // Основание вверху (влад. 2026-07-19): вдох — подъём по левому ребру,
+    // задержка — горизонталь по верхнему основанию, выдох — спуск к нижней
+    // вершине.
+    test('phaseIndex=0, progress=0 → нижняя вершина (старт)', () {
       final pos = dotPosition(
         shape: VisualShape.triangle,
         phaseCount: 3,
@@ -118,11 +121,11 @@ void main() {
         progress: 0.0,
         size: size,
       );
-      expect(pos.dx, closeTo(0, 1e-9));
+      expect(pos.dx, closeTo(size / 2, 1e-9));
       expect(pos.dy, closeTo(size, 1e-9));
     });
 
-    test('phaseIndex=0, progress=1 → вершина', () {
+    test('phaseIndex=0 (вдох), progress=1 → левый верхний', () {
       final pos = dotPosition(
         shape: VisualShape.triangle,
         phaseCount: 3,
@@ -130,11 +133,11 @@ void main() {
         progress: 1.0,
         size: size,
       );
-      expect(pos.dx, closeTo(size / 2, 1e-9));
+      expect(pos.dx, closeTo(0, 1e-9));
       expect(pos.dy, closeTo(0, 1e-9));
     });
 
-    test('phaseIndex=1, progress=1 → правый нижний', () {
+    test('phaseIndex=1 (задержка), progress=1 → правый верхний', () {
       final pos = dotPosition(
         shape: VisualShape.triangle,
         phaseCount: 3,
@@ -143,6 +146,18 @@ void main() {
         size: size,
       );
       expect(pos.dx, closeTo(size, 1e-9));
+      expect(pos.dy, closeTo(0, 1e-9));
+    });
+
+    test('phaseIndex=2 (выдох), progress=1 → возврат в нижнюю вершину', () {
+      final pos = dotPosition(
+        shape: VisualShape.triangle,
+        phaseCount: 3,
+        phaseIndex: 2,
+        progress: 1.0,
+        size: size,
+      );
+      expect(pos.dx, closeTo(size / 2, 1e-9));
       expect(pos.dy, closeTo(size, 1e-9));
     });
   });
