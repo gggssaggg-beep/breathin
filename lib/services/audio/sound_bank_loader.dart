@@ -89,3 +89,45 @@ Future<SoundBank> loadSoundBank(
       : null;
   return SoundBank(sampleRate: sampleRate!, clips: clips, scale: scale);
 }
+
+/// Загружает голосовые подсказки (П8) по языку приложения: `ru` — все
+/// русские локали, остальное — `en` (как резолюция MaterialApp). Голоса и
+/// пайплайн обработки — assets/audio/voice/README.md; SR совпадает с
+/// наборами звука (44,1 кГц) — рендерер микширует без ресемпла.
+Future<VoiceBank> loadVoiceBank(
+  String languageCode, {
+  AssetBundle? bundle,
+}) async {
+  final lang = languageCode.toLowerCase().startsWith('ru') ? 'ru' : 'en';
+  final b = bundle ?? rootBundle;
+  int? sampleRate;
+
+  Future<Int16List> loadWav(String name) async {
+    final path = 'assets/audio/voice/$lang/$name.wav';
+    final data = await b.load(path);
+    final wav = WavIo.decode(data.buffer.asUint8List());
+    sampleRate ??= wav.sampleRate;
+    if (wav.sampleRate != sampleRate) {
+      throw FormatException(
+        '$path: sample rate ${wav.sampleRate} != $sampleRate',
+      );
+    }
+    return wav.samples;
+  }
+
+  final inhale = await loadWav('inhale');
+  final exhale = await loadWav('exhale');
+  final hold = await loadWav('hold');
+  final prep = await loadWav('prep');
+  final inhaleSlow = await loadWav('inhale_slow');
+  final exhaleSlow = await loadWav('exhale_slow');
+  return VoiceBank(
+    sampleRate: sampleRate!,
+    inhale: inhale,
+    exhale: exhale,
+    hold: hold,
+    prep: prep,
+    inhaleSlow: inhaleSlow,
+    exhaleSlow: exhaleSlow,
+  );
+}

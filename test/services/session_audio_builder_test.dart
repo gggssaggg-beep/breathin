@@ -132,4 +132,77 @@ void main() {
       );
     });
   });
+
+  group('голос (П8)', () {
+    // Маркеры голоса: по амплитуде видно, какой клип лёг в буфер.
+    VoiceBank markerVoice() {
+      Int16List clip(int amp) => Int16List.fromList([amp, amp]);
+      return VoiceBank(
+        sampleRate: 1000,
+        inhale: clip(10),
+        exhale: clip(20),
+        hold: clip(30),
+        prep: clip(40),
+        inhaleSlow: clip(50),
+        exhaleSlow: clip(60),
+      );
+    }
+
+    test('только голос: слова на фазах, «приготовьтесь» один раз, '
+        'мелодия и гонг молчат', () {
+      final wav = buildSessionWav(
+        plan,
+        markerBank(),
+        const FeedbackChannels(sound: false, metronome: false, voice: true),
+        voice: markerVoice(),
+      );
+      final pcm = WavIo.decode(wav!).samples;
+      // «Приготовьтесь» — на первом событии отсчёта (t=0), и только там.
+      expect(pcm[0], 40);
+      expect(pcm[1000], 0);
+      expect(pcm[2000], 0);
+      // Фазы квадрата 4-4-4-4 (короче порога 6 с → обычные клипы).
+      expect(pcm[3000], 10); // вдох
+      expect(pcm[7000], 30); // задержка
+      expect(pcm[11000], 20); // выдох
+      expect(pcm[15000], 30); // задержка
+      // Звук выключен: мелодии между словами нет, гонга нет — буфер ровно
+      // до конца сессии.
+      expect(pcm[4000], 0);
+      expect(pcm.length, 19000);
+    });
+
+    test('длинный выдох (≥6 с) озвучивается медленным клипом', () {
+      const longExhale = SessionConfig(
+        endMode: EndMode.cycles,
+        cycles: 1,
+        phaseSeconds: [4, 4, 8, 4],
+        prepSeconds: 3,
+      );
+      final p = const SessionPlanCompiler().compile(boxBreathing, longExhale);
+      final wav = buildSessionWav(
+        p,
+        markerBank(),
+        const FeedbackChannels(sound: false, metronome: false, voice: true),
+        voice: markerVoice(),
+      );
+      final pcm = WavIo.decode(wav!).samples;
+      expect(pcm[3000], 10); // вдох 4 с — обычный
+      expect(pcm[11000], 60); // выдох 8 с — медленный
+    });
+
+    test('голос поверх звука — аддитивный слой: мелодия, бип и гонг на месте',
+        () {
+      final wav = buildSessionWav(
+        plan,
+        markerBank(),
+        const FeedbackChannels(sound: true, metronome: false, voice: true),
+        voice: markerVoice(),
+      );
+      final pcm = WavIo.decode(wav!).samples;
+      expect(pcm[0], 540); // бип подготовки 500 + «приготовьтесь» 40
+      expect(pcm[3000], 90); // нота лесенки 80 + «вдох» 10
+      expect(pcm[19000], 600); // гонг звучит как раньше
+    });
+  });
 }
