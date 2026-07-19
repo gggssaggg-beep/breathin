@@ -563,6 +563,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emailInvalidNote => 'Enter a valid email address';
 
   @override
+  String get authLinkExpiredNote =>
+      'The sign-in link has expired or was already used. Request a new one and open it right away.';
+
+  @override
+  String get authLinkFailedNote =>
+      'Sign-in via the link failed. Request a new link and open it in the same browser where you entered your email.';
+
+  @override
   String get emailSignInHint =>
       'Signed in before? Use the same address (for Google sign-in — your gmail) and you\'ll get your profile back.';
 
@@ -966,6 +974,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timerCueOff => 'Off';
+
+  @override
+  String get timerFreeBreathHint => 'Breathe freely, at your own pace';
 
   @override
   String get timerLeftNostril => 'Left nostril';

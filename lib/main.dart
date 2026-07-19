@@ -12,7 +12,16 @@ import 'services/sync/session_sync_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AuthService.init();
+  // Снимок URL запуска ДО Supabase: тот вычищает auth-параметры из адреса,
+  // а по ним приложение объясняет неудачный вход по ссылке (веб).
+  AuthService.launchUri = Uri.base;
+  try {
+    await AuthService.init();
+  } catch (e) {
+    // Auth не поднялся (например, битый вход по ссылке из письма) — БЕЗ
+    // белого экрана: приложение живёт гостем, пояснение покажет BreathinApp.
+    AuthService.initError = e;
+  }
   // Гидрируем локаль ДО runApp, чтобы первый кадр уже был правильным.
   localeNotifier.value = localeFor(await LocaleStore().load());
   // Аудио-подсистема сессий (foreground service, локскрин-контролы).

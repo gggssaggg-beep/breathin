@@ -567,6 +567,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get emailInvalidNote => 'Введите корректный адрес почты';
 
   @override
+  String get authLinkExpiredNote =>
+      'Ссылка входа устарела или уже была использована. Запросите новую и откройте её сразу.';
+
+  @override
+  String get authLinkFailedNote =>
+      'Вход по ссылке не удался. Запросите новую ссылку и откройте её в том же браузере, где вводили почту.';
+
+  @override
   String get emailSignInHint =>
       'Входили раньше? Укажите тот же адрес (для входа через Google — ваш gmail) — откроется ваш профиль со всей историей.';
 
@@ -974,6 +982,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get timerCueOff => 'Выкл';
+
+  @override
+  String get timerFreeBreathHint => 'Дыхание свободное, в своём ритме';
 
   @override
   String get timerLeftNostril => 'Левая ноздря';
