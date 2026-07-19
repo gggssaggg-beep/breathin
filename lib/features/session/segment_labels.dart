@@ -32,7 +32,19 @@ String segmentLabel(AppLocalizations l, String id) {
 /// Для inhale/exhale с заданным маршрутом — «Вдох носом» / «Выдох ртом» и т.п.
 /// Null-маршрут (эфир) — тихое дыхание без уточнения. Прочие фазы — стандартный
 /// [phaseLabel].
+///
+/// Девять очищающих (nine_left/nine_right): подпись фазы называет СТОРОНУ
+/// ноздри, а не «носом» — иначе экран противоречил метке сегмента «Вдох левой
+/// · выдох правой» (влад. 2026-07-19). nine_both — обе ноздри, обычная подпись.
 String routedPhaseLabel(AppLocalizations l, BreathSegment seg, PhaseKind phase) {
+  switch (seg.id) {
+    case 'nine_left': // вдох левой, выдох правой
+      if (phase == PhaseKind.inhale) return l.segInhaleLeft;
+      if (phase == PhaseKind.exhale) return l.segExhaleRight;
+    case 'nine_right': // вдох правой, выдох левой
+      if (phase == PhaseKind.inhale) return l.segInhaleRight;
+      if (phase == PhaseKind.exhale) return l.segExhaleLeft;
+  }
   switch (phase) {
     case PhaseKind.inhale:
       if (seg.inhale == null) return l.segSilentBreath;

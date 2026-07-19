@@ -115,7 +115,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_diaphragmatic_desc =>
-      'Free abdominal breathing by timer: breathe deeply, letting the belly rise on the inhale and fall on the exhale — no counting or holds. A voice instruction plays at the start of the session. Inhale through the nose and exhale through the mouth with lips slightly pursed. An optional ambient background sound is available.';
+      'Free abdominal breathing by timer: breathe deeply, letting the belly rise on the inhale and fall on the exhale — no counting or holds. Inhale through the nose and exhale through the mouth with lips slightly pursed. An optional ambient background sound is available.';
 
   @override
   String get tech_diaphragmatic_benefit =>
@@ -137,7 +137,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tech_sound_breath_desc =>
-      'Mindful breathing with vocalisation (Ujjayi) or humming (Bhramari \'bee breath\'). Practised by timer; a voice instruction plays at the start. For Bhramari, optional cues — \'inhale / hum on exhale\' — are available. Breathe through the nose.';
+      'Mindful breathing with vocalisation (Ujjayi) or humming (Bhramari \'bee breath\'). Practised by timer at a free pace. Breathe through the nose: on the exhale, gently narrow the throat (Ujjayi, an ocean-like sound) or softly hum (Bhramari).';
 
   @override
   String get tech_sound_breath_benefit =>
@@ -517,6 +517,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get segExhaleMouth => 'Exhale through the mouth';
+
+  @override
+  String get segInhaleLeft => 'Inhale · left nostril';
+
+  @override
+  String get segExhaleLeft => 'Exhale · left nostril';
+
+  @override
+  String get segInhaleRight => 'Inhale · right nostril';
+
+  @override
+  String get segExhaleRight => 'Exhale · right nostril';
 
   @override
   String get segSilentBreath => 'Silent, subtle breath';
@@ -977,6 +989,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timerFreeBreathHint => 'Breathe freely, at your own pace';
+
+  @override
+  String get timerHintDiaphragmatic =>
+      'Belly breathing: in through the nose, out through the mouth';
+
+  @override
+  String get timerHintMindful => 'Watch the breath without controlling it';
+
+  @override
+  String get timerHintOrbit =>
+      'Circle your attention: up the spine on the inhale, down to the belly on the exhale';
+
+  @override
+  String get timerHintAxis =>
+      'Attention along the axis: up on the inhale, down on the exhale';
+
+  @override
+  String get timerHintNadi => 'Alternate-nostril breathing';
+
+  @override
+  String get timerHintSound =>
+      'Ujjayi or humming on the exhale, through the nose';
 
   @override
   String get timerLeftNostril => 'Left nostril';

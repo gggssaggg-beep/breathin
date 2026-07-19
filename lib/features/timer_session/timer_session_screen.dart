@@ -421,6 +421,27 @@ class _PracticeView extends StatelessWidget {
     return '${s ~/ 60}:${(s % 60).toString().padLeft(2, '0')}';
   }
 
+  /// Инструкция «что делать» по технике (дизайн-аудит F1). Незнакомая
+  /// timer-техника — общая подсказка свободного дыхания.
+  static String _timerHint(AppLocalizations l, String id) {
+    switch (id) {
+      case 'diaphragmatic':
+        return l.timerHintDiaphragmatic;
+      case 'mindful':
+        return l.timerHintMindful;
+      case 'orbit':
+        return l.timerHintOrbit;
+      case 'axis':
+        return l.timerHintAxis;
+      case 'nadi_shodhana':
+        return l.timerHintNadi;
+      case 'sound_breath':
+        return l.timerHintSound;
+      default:
+        return l.timerFreeBreathHint;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -439,8 +460,11 @@ class _PracticeView extends StatelessWidget {
             const SizedBox(height: 4),
             // «Что делать»: ритм свободный, фигура не дирижирует — говорим
             // это словами (влад. 2026-07-19 №7: «непонятно, что делать»).
+            // Подсказка — по технике (дизайн-аудит F1): общая «свободное
+            // дыхание» вводила в заблуждение (напр. Нади — это чередование
+            // ноздрей, а не свободный ритм).
             Text(
-              l.timerFreeBreathHint,
+              _timerHint(l, technique.id),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
