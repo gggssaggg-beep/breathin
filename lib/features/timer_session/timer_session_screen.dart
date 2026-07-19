@@ -430,83 +430,105 @@ class _PracticeView extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onPauseResume,
-      child: Stack(
-        children: [
-          Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: [
-          Text(l.techniqueName(technique), style: theme.textTheme.titleMedium),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Свечение НЕ задаёт ритм дыхания (свободный ритм — ПЛАН
-                  // §10): малая амплитуда, период ~8 с — фигура «живая»,
-                  // но не дирижирует.
-                  AnimatedBuilder(
-                    animation: glow,
-                    builder: (context, child) {
-                      final f = Curves.easeInOut.transform(glow.value);
-                      return Container(
-                        width: 200 + 16 * f,
-                        height: 200 + 16 * f,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: theme.colorScheme.primaryContainer
-                              .withValues(alpha: 0.75 + 0.25 * f),
-                        ),
-                        child: child,
-                      );
-                    },
-                    child: Center(
-                      child: Text(
-                        _remaining,
-                        style: theme.textTheme.displayMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onPrimaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            Text(l.techniqueName(technique),
+                style: theme.textTheme.titleMedium),
+            const SizedBox(height: 4),
+            // «Что делать»: ритм свободный, фигура не дирижирует — говорим
+            // это словами (влад. 2026-07-19 №7: «непонятно, что делать»).
+            Text(
+              l.timerFreeBreathHint,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Expanded(
+              child: Center(
+                // Слот фиксированного размера (216 = максимум пульсации):
+                // раньше свечение меняло габарит круга и подпись ноздри под
+                // ним «гуляла» вверх-вниз (влад. 2026-07-19 №7).
+                child: SizedBox(
+                  width: 216,
+                  height: 216,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Свечение НЕ задаёт ритм дыхания (свободный ритм —
+                      // ПЛАН §10): малая амплитуда, период ~8 с — фигура
+                      // «живая», но не дирижирует.
+                      AnimatedBuilder(
+                        animation: glow,
+                        builder: (context, child) {
+                          final f = Curves.easeInOut.transform(glow.value);
+                          return Container(
+                            width: 200 + 16 * f,
+                            height: 200 + 16 * f,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: theme.colorScheme.primaryContainer
+                                  .withValues(alpha: 0.75 + 0.25 * f),
+                            ),
+                            child: child,
+                          );
+                        },
+                        // Подпись ноздри — В КРУГЕ над временем, статично
+                        // (канон counted-сессий: подпись фазы в центре).
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (cue != null)
+                                Text(
+                                  cue == TimerCue.left
+                                      ? l.timerLeftNostril
+                                      : l.timerRightNostril,
+                                  style:
+                                      theme.textTheme.titleLarge?.copyWith(
+                                    color:
+                                        theme.colorScheme.onPrimaryContainer,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              Text(
+                                _remaining,
+                                style: theme.textTheme.displayMedium
+                                    ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      theme.colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                      // Подсказки тапа — поверх нижней части круга (единый
+                      // канон с counted-сессиями, влад. 2026-07-18).
+                      Align(
+                        alignment: const Alignment(0, 0.92),
+                        child: paused
+                            ? SessionHintPill(text: l.pausedTapHint)
+                            : const TapPauseHint(),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                  if (cue != null)
-                    Text(
-                      cue == TimerCue.left
-                          ? l.timerLeftNostril
-                          : l.timerRightNostril,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                ],
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.tonal(
-              onPressed: onStop,
-              child: Text(l.stopAction),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.tonal(
+                onPressed: onStop,
+                child: Text(l.stopAction),
+              ),
             ),
-          ),
-        ],
-      ),
-          ),
-          Positioned(
-            top: 56,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: paused
-                  ? SessionHintPill(text: l.pausedTapHint)
-                  : const TapPauseHint(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

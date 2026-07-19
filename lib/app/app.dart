@@ -5,6 +5,7 @@ import '../features/home/home_screen.dart';
 import '../features/onboarding/coach_controller.dart';
 import '../features/onboarding/welcome_screen.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../services/auth/auth_service.dart';
 import '../services/locale/locale_store.dart';
 import '../services/onboarding/coach_store.dart';
 import '../services/permissions/notification_permission.dart';
@@ -55,8 +56,45 @@ class _BreathinAppState extends State<BreathinApp> {
     // после первого кадра, чтобы системный диалог лёг поверх готового UI.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       NotificationPermission.ensureRequestedOnce();
+      _maybeShowAuthLinkError();
       if (widget.showOnboarding) _maybeShowWelcome();
     });
+  }
+
+  /// Веб: вход по ссылке из письма мог не удаться — Supabase возвращает на
+  /// сайт с `#error=…` (ссылка устарела/использована), либо PKCE-обмен падает
+  /// в init (ссылку открыли в другом браузере — кода-verifier там нет).
+  /// Раньше это тонуло молча «не залогинилось» (влад. 2026-07-19) — теперь
+  /// показываем пояснение и что делать.
+  void _maybeShowAuthLinkError() {
+    String? note; // ключ уже локализованной строки выбираем ниже
+    final frag = AuthService.launchUri?.fragment ?? '';
+    Map<String, String> params = const {};
+    if (frag.contains('error')) {
+      try {
+        params = Uri.splitQueryString(frag);
+      } catch (_) {}
+    }
+    final messengerContext = _messengerKey.currentContext;
+    final messenger = _messengerKey.currentState;
+    if (messenger == null ||
+        messengerContext == null ||
+        !messengerContext.mounted) {
+      return;
+    }
+    final l = AppLocalizations.of(messengerContext);
+    if (params['error_code']?.contains('otp_expired') ?? false) {
+      note = l.authLinkExpiredNote;
+    } else if (params.containsKey('error') ||
+        params.containsKey('error_code')) {
+      note = l.authLinkFailedNote;
+    } else if (AuthService.initError != null) {
+      note = l.authLinkFailedNote;
+    }
+    if (note == null) return;
+    messenger.showSnackBar(
+      SnackBar(content: Text(note), duration: const Duration(seconds: 12)),
+    );
   }
 
   @override
