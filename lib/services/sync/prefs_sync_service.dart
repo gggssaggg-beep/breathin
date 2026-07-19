@@ -23,6 +23,7 @@ const prefsSyncExactKeys = <String>{
   'difficulty.preset',
   'sound.set',
   'app.locale',
+  'app.feedback',
   'reminders.streak_evening.v1',
   'bolt_log.v1',
 };

@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../data/bolt_repository.dart';
 import '../../data/custom_fikr_store.dart';
 import '../../data/difficulty_store.dart';
+import '../../data/feedback_channels_store.dart';
 import '../../data/technique_settings_repository.dart';
 import '../../features/onboarding/coach_mark.dart';
 import '../../domain/bolt/bolt_interpretation.dart';
@@ -77,10 +80,13 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
       }
     }
     final baseline = _presetBaseline(preset, boltLevel);
+    // Каналы сопровождения — глобальный выбор (фидбек владельца 2026-07-19 №2):
+    // пер-техника настройки подменяются глобальным стором.
+    final globalFeedback = await FeedbackChannelsStore().load();
     if (mounted) {
       setState(() {
         _baseline = baseline;
-        _settings = saved ?? baseline;
+        _settings = (saved ?? baseline).copyWith(feedback: globalFeedback);
       });
     }
   }
@@ -569,6 +575,7 @@ class _SessionSetupScreenState extends State<SessionSetupScreen> {
       setState(() {
         _settings = s.copyWith(feedback: updated);
       });
+      unawaited(FeedbackChannelsStore().save(updated));
     }
 
     return Column(

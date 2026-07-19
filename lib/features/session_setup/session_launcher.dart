@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/custom_fikr_store.dart';
+import '../../data/feedback_channels_store.dart';
 import '../../data/technique_settings_repository.dart';
 import '../../data/timer_settings_store.dart';
 import '../../domain/catalog/fikr_phrases.dart';
@@ -62,8 +63,11 @@ Future<Widget?> quickStartScreen(AppLocalizations l, Technique t) async {
       );
     case TechniqueType.counted:
     case TechniqueType.scripted:
-      final s = await TechniqueSettingsRepository().loadSaved(t) ??
+      final loaded = await TechniqueSettingsRepository().loadSaved(t) ??
           TechniqueSettings.classic(t);
+      // Глобальные каналы сопровождения (фидбек владельца 2026-07-19 №2).
+      final globalFeedback = await FeedbackChannelsStore().load();
+      final s = loaded.copyWith(feedback: globalFeedback);
       final plan = t.type == TechniqueType.scripted
           ? const SessionPlanCompiler().compileScript(
               t.cycleScript!,
