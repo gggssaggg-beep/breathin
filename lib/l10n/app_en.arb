@@ -40,7 +40,7 @@
   "tech_coherent_benefit": "Balances heart rate variability (HRV), reduces chronic stress, and improves the equilibrium between sympathetic and parasympathetic activity.",
 
   "tech_diaphragmatic_name": "Diaphragmatic Breathing",
-  "tech_diaphragmatic_desc": "Free abdominal breathing by timer: breathe deeply, letting the belly rise on the inhale and fall on the exhale — no counting or holds. A voice instruction plays at the start of the session. Inhale through the nose and exhale through the mouth with lips slightly pursed. An optional ambient background sound is available.",
+  "tech_diaphragmatic_desc": "Free abdominal breathing by timer: breathe deeply, letting the belly rise on the inhale and fall on the exhale — no counting or holds. Inhale through the nose and exhale through the mouth with lips slightly pursed. An optional ambient background sound is available.",
   "tech_diaphragmatic_benefit": "Relieves muscle tension, improves oxygenation, and teaches the correct breathing pattern that underlies all other techniques.",
 
   "tech_nadi_shodhana_name": "Nadi Shodhana",
@@ -48,7 +48,7 @@
   "tech_nadi_shodhana_benefit": "Calms the mind, improves focus and nervous system balance, and is traditionally used to prepare for meditation.",
 
   "tech_sound_breath_name": "Sound Breath",
-  "tech_sound_breath_desc": "Mindful breathing with vocalisation (Ujjayi) or humming (Bhramari 'bee breath'). Practised by timer; a voice instruction plays at the start. For Bhramari, optional cues — 'inhale / hum on exhale' — are available. Breathe through the nose.",
+  "tech_sound_breath_desc": "Mindful breathing with vocalisation (Ujjayi) or humming (Bhramari 'bee breath'). Practised by timer at a free pace. Breathe through the nose: on the exhale, gently narrow the throat (Ujjayi, an ocean-like sound) or softly hum (Bhramari).",
   "tech_sound_breath_benefit": "Deeply calms the nervous system through vibration and conscious sound, reduces anxiety, improves focus, and helps enter a meditative state.",
 
   "tech_wim_hof_name": "Wim Hof Method",
@@ -194,6 +194,10 @@
   "segInhaleMouth": "Inhale through the mouth",
   "segExhaleNose": "Exhale through the nose",
   "segExhaleMouth": "Exhale through the mouth",
+  "segInhaleLeft": "Inhale · left nostril",
+  "segExhaleLeft": "Exhale · left nostril",
+  "segInhaleRight": "Inhale · right nostril",
+  "segExhaleRight": "Exhale · right nostril",
   "segSilentBreath": "Silent, subtle breath",
   "secondsShort": "{n} s",
   "@secondsShort": {
@@ -393,6 +397,12 @@
   "timerCueLabel": "Nostril switch cues",
   "timerCueOff": "Off",
   "timerFreeBreathHint": "Breathe freely, at your own pace",
+  "timerHintDiaphragmatic": "Belly breathing: in through the nose, out through the mouth",
+  "timerHintMindful": "Watch the breath without controlling it",
+  "timerHintOrbit": "Circle your attention: up the spine on the inhale, down to the belly on the exhale",
+  "timerHintAxis": "Attention along the axis: up on the inhale, down on the exhale",
+  "timerHintNadi": "Alternate-nostril breathing",
+  "timerHintSound": "Ujjayi or humming on the exhale, through the nose",
   "timerLeftNostril": "Left nostril",
   "timerRightNostril": "Right nostril",
 

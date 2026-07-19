@@ -115,7 +115,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tech_diaphragmatic_desc =>
-      'Свободное дыхание животом по таймеру: дышите глубоко, позволяя животу подниматься на вдохе и опускаться на выдохе — без счёта и задержек. В начале сессии воспроизводится голосовая инструкция. Вдыхайте через нос, выдыхайте через рот, слегка сжав губы. Можно включить мягкий фоновый звук для атмосферы.';
+      'Свободное дыхание животом по таймеру: дышите глубоко, позволяя животу подниматься на вдохе и опускаться на выдохе — без счёта и задержек. Вдыхайте через нос, выдыхайте через рот, слегка сжав губы. Можно включить мягкий фоновый звук для атмосферы.';
 
   @override
   String get tech_diaphragmatic_benefit =>
@@ -137,7 +137,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tech_sound_breath_desc =>
-      'Техника осознанного дыхания с вокализацией (Уджайи) или гудением (Брамари «пчела»). Практикуется по таймеру; в начале — голосовая инструкция. Для Брамари доступны опциональные подсказки «вдох / гудите на выдохе». Дыхание — через нос.';
+      'Техника осознанного дыхания с вокализацией (Уджайи) или гудением (Брамари «пчела»). Практикуется по таймеру в свободном ритме. Дыхание — через нос: на выдохе слегка сужайте горло (Уджайи, звук моря) или мягко гудите (Брамари).';
 
   @override
   String get tech_sound_breath_benefit =>
@@ -521,6 +521,18 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get segExhaleMouth => 'Выдох ртом';
+
+  @override
+  String get segInhaleLeft => 'Вдох левой ноздрёй';
+
+  @override
+  String get segExhaleLeft => 'Выдох левой ноздрёй';
+
+  @override
+  String get segInhaleRight => 'Вдох правой ноздрёй';
+
+  @override
+  String get segExhaleRight => 'Выдох правой ноздрёй';
 
   @override
   String get segSilentBreath => 'Тихое, тонкое дыхание';
@@ -985,6 +997,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get timerFreeBreathHint => 'Дыхание свободное, в своём ритме';
+
+  @override
+  String get timerHintDiaphragmatic => 'Дышите животом: вдох носом, выдох ртом';
+
+  @override
+  String get timerHintMindful => 'Наблюдайте дыхание, не управляя им';
+
+  @override
+  String get timerHintOrbit =>
+      'Внимание по кругу: вдох — вверх по спине, выдох — вниз в живот';
+
+  @override
+  String get timerHintAxis => 'Внимание по оси: вдох — вверх, выдох — вниз';
+
+  @override
+  String get timerHintNadi => 'Попеременное дыхание через ноздри';
+
+  @override
+  String get timerHintSound => 'Уджайи или гудение на выдохе, через нос';
 
   @override
   String get timerLeftNostril => 'Левая ноздря';

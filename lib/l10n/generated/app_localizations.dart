@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_diaphragmatic_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Свободное дыхание животом по таймеру: дышите глубоко, позволяя животу подниматься на вдохе и опускаться на выдохе — без счёта и задержек. В начале сессии воспроизводится голосовая инструкция. Вдыхайте через нос, выдыхайте через рот, слегка сжав губы. Можно включить мягкий фоновый звук для атмосферы.'**
+  /// **'Свободное дыхание животом по таймеру: дышите глубоко, позволяя животу подниматься на вдохе и опускаться на выдохе — без счёта и задержек. Вдыхайте через нос, выдыхайте через рот, слегка сжав губы. Можно включить мягкий фоновый звук для атмосферы.'**
   String get tech_diaphragmatic_desc;
 
   /// No description provided for @tech_diaphragmatic_benefit.
@@ -311,7 +311,7 @@ abstract class AppLocalizations {
   /// No description provided for @tech_sound_breath_desc.
   ///
   /// In ru, this message translates to:
-  /// **'Техника осознанного дыхания с вокализацией (Уджайи) или гудением (Брамари «пчела»). Практикуется по таймеру; в начале — голосовая инструкция. Для Брамари доступны опциональные подсказки «вдох / гудите на выдохе». Дыхание — через нос.'**
+  /// **'Техника осознанного дыхания с вокализацией (Уджайи) или гудением (Брамари «пчела»). Практикуется по таймеру в свободном ритме. Дыхание — через нос: на выдохе слегка сужайте горло (Уджайи, звук моря) или мягко гудите (Брамари).'**
   String get tech_sound_breath_desc;
 
   /// No description provided for @tech_sound_breath_benefit.
@@ -973,6 +973,30 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выдох ртом'**
   String get segExhaleMouth;
+
+  /// No description provided for @segInhaleLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох левой ноздрёй'**
+  String get segInhaleLeft;
+
+  /// No description provided for @segExhaleLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдох левой ноздрёй'**
+  String get segExhaleLeft;
+
+  /// No description provided for @segInhaleRight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вдох правой ноздрёй'**
+  String get segInhaleRight;
+
+  /// No description provided for @segExhaleRight.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдох правой ноздрёй'**
+  String get segExhaleRight;
 
   /// No description provided for @segSilentBreath.
   ///
@@ -1777,6 +1801,42 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Дыхание свободное, в своём ритме'**
   String get timerFreeBreathHint;
+
+  /// No description provided for @timerHintDiaphragmatic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дышите животом: вдох носом, выдох ртом'**
+  String get timerHintDiaphragmatic;
+
+  /// No description provided for @timerHintMindful.
+  ///
+  /// In ru, this message translates to:
+  /// **'Наблюдайте дыхание, не управляя им'**
+  String get timerHintMindful;
+
+  /// No description provided for @timerHintOrbit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Внимание по кругу: вдох — вверх по спине, выдох — вниз в живот'**
+  String get timerHintOrbit;
+
+  /// No description provided for @timerHintAxis.
+  ///
+  /// In ru, this message translates to:
+  /// **'Внимание по оси: вдох — вверх, выдох — вниз'**
+  String get timerHintAxis;
+
+  /// No description provided for @timerHintNadi.
+  ///
+  /// In ru, this message translates to:
+  /// **'Попеременное дыхание через ноздри'**
+  String get timerHintNadi;
+
+  /// No description provided for @timerHintSound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уджайи или гудение на выдохе, через нос'**
+  String get timerHintSound;
 
   /// No description provided for @timerLeftNostril.
   ///
