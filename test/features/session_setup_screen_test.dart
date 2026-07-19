@@ -131,7 +131,52 @@ void main() {
     });
   });
 
-  // --- (д) после «Начать» настройки сохранены в репозитории ---
+  // --- (д) каналы сопровождения — глобальный выбор для всех counted-техник ---
+  group('SessionSetupScreen — глобальные каналы сопровождения', () {
+    testWidgets(
+        'выбор тумблеров в одной технике отражается при открытии другой',
+        (tester) async {
+      // Открываем box; несколько pump-итераций чтобы пройти async-загрузку из SharedPreferences
+      await tester.pumpWidget(_wrap(SessionSetupScreen(technique: boxBreathing)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Прокручиваем к секции «Сопровождение» (она ниже фаз/циклов в ListView)
+      await tester.drag(find.byType(ListView), const Offset(0, -600));
+      await tester.pump();
+
+      // Голос: по умолчанию выключен — включаем (ищем SwitchListTile по тексту заголовка)
+      await tester.tap(find.widgetWithText(SwitchListTile, 'Голос'));
+      await tester.pump();
+
+      // Звук: по умолчанию включён — выключаем
+      await tester.tap(find.widgetWithText(SwitchListTile, 'Звук'));
+      await tester.pump();
+      // Даём fire-and-forget save() завершиться
+      await tester.pump(const Duration(milliseconds: 50));
+
+      // Открываем другую counted-технику (triangle) — должна отразить тот же выбор
+      await tester.pumpWidget(_wrap(SessionSetupScreen(technique: triangleBreathing)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Прокручиваем к секции «Сопровождение»
+      await tester.drag(find.byType(ListView), const Offset(0, -600));
+      await tester.pump();
+
+      // Проверяем, что «Голос» включён, «Звук» выключен
+      final voiceSwitch = tester.widget<SwitchListTile>(
+        find.widgetWithText(SwitchListTile, 'Голос'),
+      );
+      final soundSwitch = tester.widget<SwitchListTile>(
+        find.widgetWithText(SwitchListTile, 'Звук'),
+      );
+      expect(voiceSwitch.value, isTrue, reason: 'Голос должен быть включён');
+      expect(soundSwitch.value, isFalse, reason: 'Звук должен быть выключен');
+    });
+  });
+
+  // --- (е) после «Начать» настройки сохранены в репозитории ---
   group('SessionSetupScreen — сохранение настроек', () {
     testWidgets('после Начать настройки сохранены в SharedPreferences', (
       tester,
