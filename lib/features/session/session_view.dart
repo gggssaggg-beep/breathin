@@ -84,6 +84,11 @@ class SessionView extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   segmentLabel(l, segment!.id),
+                  textAlign: TextAlign.center,
+                  // Длинные метки («Вдох левой · выдох правой») и крупный
+                  // шрифт: 2 строки максимум, не растягивают шапку (аудит F8).
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: elementColor(segment!.id),
                     fontWeight: FontWeight.w600,
