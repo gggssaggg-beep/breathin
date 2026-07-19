@@ -149,7 +149,10 @@ class TimelineRenderer {
       }
     }
     if (firstPrep != null) {
-      cues.add((atSample: sampleOffsetForMs(firstPrep.tMs), clip: voice.prep));
+      // Не с самого нуля: старт аудио-пайплайна съедает первые ~100 мс
+      // файла — «Приготовьтесь» теряло «При-» (влад. 2026-07-19 №1).
+      final tMs = firstPrep.tMs < 150 ? 150 : firstPrep.tMs;
+      cues.add((atSample: sampleOffsetForMs(tMs), clip: voice.prep));
     }
     return cues;
   }

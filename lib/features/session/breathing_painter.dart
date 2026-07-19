@@ -66,11 +66,12 @@ Object visualSignature(SessionState s, VisualShape shape) {
 ///   Обход по часовой: вверх по левой стороне (вдох), вправо по верхней,
 ///   вниз по правой, влево по нижней.
 ///
-/// Для треугольника (равносторонний вершиной вверх, 3 фазы):
-///   Старт — левый нижний угол.
-///   Фаза 0: вверх к вершине (вдох).
-///   Фаза 1: вниз к правому нижнему (задержка).
-///   Фаза 2: влево по основанию (выдох).
+/// Для треугольника (равносторонний ОСНОВАНИЕМ ВВЕРХ, 3 фазы; влад.
+/// 2026-07-19: задержка — горизонталь, а не ребро вниз):
+///   Старт — нижняя вершина.
+///   Фаза 0: подъём по левому ребру к левому верхнему углу (вдох).
+///   Фаза 1: горизонтально по верхнему основанию (задержка).
+///   Фаза 2: спуск по правому ребру к нижней вершине (выдох).
 Offset dotPosition({
   required VisualShape shape,
   required int phaseCount,
@@ -142,29 +143,31 @@ Offset _squareDotPosition({
   );
 }
 
-/// Позиция точки на периметре равностороннего треугольника (вершиной вверх).
-/// Стартовая точка — левый нижний угол.
-/// Фаза 0: вверх к вершине (вдох).
-/// Фаза 1: вниз к правому нижнему (задержка).
-/// Фаза 2: влево по основанию (выдох).
+/// Позиция точки на периметре равностороннего треугольника ОСНОВАНИЕМ ВВЕРХ
+/// (влад. 2026-07-19: вдох — подъём, задержка — горизонталь, выдох — спуск;
+/// раньше вершина была сверху и задержка шла ребром вниз — нелогично).
+/// Стартовая точка — нижняя вершина.
+/// Фаза 0: подъём по левому ребру (вдох).
+/// Фаза 1: горизонтально по верхнему основанию (задержка).
+/// Фаза 2: спуск по правому ребру (выдох).
 Offset _triangleDotPosition({
   required int phaseIndex,
   required double progress,
   required double size,
 }) {
   // Равносторонний треугольник, вписанный в квадрат size×size:
-  // вершина верхняя: (size/2, 0)
-  // левый нижний: (0, size)
-  // правый нижний: (size, size)
-  final top = Offset(size / 2, 0);
-  final bottomLeft = Offset(0, size);
-  final bottomRight = Offset(size, size);
+  // нижняя вершина: (size/2, size)
+  // левый верхний: (0, 0)
+  // правый верхний: (size, 0)
+  final bottom = Offset(size / 2, size);
+  final topLeft = Offset(0, 0);
+  final topRight = Offset(size, 0);
 
   final corners = [
-    bottomLeft,  // старт
-    top,         // после фазы 0
-    bottomRight, // после фазы 1
-    bottomLeft,  // после фазы 2 (замыкаем)
+    bottom,   // старт
+    topLeft,  // после фазы 0 (вдох поднялся)
+    topRight, // после фазы 1 (задержка прошла по основанию)
+    bottom,   // после фазы 2 (выдох спустился, замыкаем)
   ];
 
   if (phaseIndex < 0) {
@@ -356,15 +359,17 @@ class BreathingPainter extends CustomPainter {
     final left = (size.width - triSize) / 2;
     final top = (size.height - triSize) / 2;
 
-    // Вершины: вершина вверху, основание внизу
-    final apex = Offset(left + triSize / 2, top);
-    final bottomLeft = Offset(left, top + triSize);
-    final bottomRight = Offset(left + triSize, top + triSize);
+    // Вершины: основание вверху, вершина внизу (влад. 2026-07-19 —
+    // геометрия согласована с маршрутом точки: вдох-подъём/задержка-
+    // горизонталь/выдох-спуск).
+    final bottom = Offset(left + triSize / 2, top + triSize);
+    final topLeft = Offset(left, top);
+    final topRight = Offset(left + triSize, top);
 
     final path = Path()
-      ..moveTo(apex.dx, apex.dy)
-      ..lineTo(bottomRight.dx, bottomRight.dy)
-      ..lineTo(bottomLeft.dx, bottomLeft.dy)
+      ..moveTo(bottom.dx, bottom.dy)
+      ..lineTo(topLeft.dx, topLeft.dy)
+      ..lineTo(topRight.dx, topRight.dy)
       ..close();
 
     // Статичный контур

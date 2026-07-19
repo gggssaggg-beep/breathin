@@ -86,10 +86,6 @@ class _SessionRunnerState extends State<SessionRunner>
   /// подготовки) попало в первое окно (ревью М1).
   int _lastMs = -1;
 
-  /// Смещение визуальных часов: Stopwatch не умеет seek, поэтому позиция =
-  /// база + elapsed; резюм после паузы переставляет базу на начало фазы.
-  int _visualBaseMs = 0;
-
   /// Аудио-источник сессии (io — временный файл, web — Blob-URL); cleanup
   /// в dispose освобождает ресурс — кэш/память не растут (ревью К3).
   SessionWavTarget? _wavTarget;
@@ -256,7 +252,14 @@ class _SessionRunnerState extends State<SessionRunner>
         _paused) {
       return;
     }
-    final target = _positionMs();
+    // Ранний джойн (подготовка/самое начало первого цикла): перезапускаем
+    // сессию с нуля вместе со звуком — иначе «Приготовьтесь» (t≈0)
+    // обрезается («.товьтесь») или молчит вовсе: на долгих техниках рендер
+    // WAV длится дольше подготовки (влад. 2026-07-19 №1/№3). Поздний джойн
+    // (звук разблокирован жестом посреди сессии) — к текущей позиции.
+    final live = _positionMs();
+    final restart = live < 10000;
+    final target = restart ? 0 : live;
     unawaited(() async {
       try {
         await handler.seek(Duration(milliseconds: target));
@@ -273,6 +276,8 @@ class _SessionRunnerState extends State<SessionRunner>
       if (handler.player.position.inMilliseconds > target + 50) {
         t.cancel();
         _clock.stop();
+        // Перезапуск: вибро-окно тоже с нуля (первое событие t=0 — в окно).
+        if (restart) _lastMs = -1;
         _audioMode = true;
       } else if (++attempts >= 15) {
         t.cancel(); // автозапуск заблокирован — тихий визуальный режим
@@ -315,10 +320,11 @@ class _SessionRunnerState extends State<SessionRunner>
   }
 
   /// Позиция сессии: аудио-режим — позиция плеера (мастер-часы),
-  /// иначе смещённый Stopwatch.
+  /// иначе Stopwatch (пауза его останавливает, резюм продолжает — позиция
+  /// копится с места остановки).
   int _positionMs() => _audioMode
       ? sessionAudioHandler!.player.position.inMilliseconds
-      : _visualBaseMs + _clock.elapsedMilliseconds;
+      : _clock.elapsedMilliseconds;
 
   void _onTick(Duration _) {
     final pos = _positionMs();
@@ -394,23 +400,16 @@ class _SessionRunnerState extends State<SessionRunner>
       }
       if (mounted) setState(() => _paused = true);
     } else {
-      // Резюм с начала текущей фазы (ПЛАН §3.3 п.5): фаза целиком, не с
-      // полуслова. Вибро прошедших событий не переигрываем (_lastMs = цель
-      // ПОСЛЕ seek — до него позиция плеера ещё старая, ревью Р5);
-      // звуковой сигнал фазы повторится из файла — это и есть подсказка.
-      final target =
-          (_positionMs() - _state.phaseElapsedMs).clamp(0, 1 << 62);
+      // Резюм — точно с места паузы (влад. 2026-07-19 №5: «пауза должна
+      // ставить на паузу, а не начинать заново»; прежнее правило ПЛАН §3.3
+      // п.5 «фаза целиком с начала» отменено). Плеер стоит на позиции
+      // паузы — просто продолжаем; Stopwatch копит время сам. Без seek
+      // резюм ещё и надёжнее на вебе (seek там мог сорваться в старт файла).
       if (_audioMode && handler != null) {
-        await handler.seek(Duration(milliseconds: target));
-        _lastMs = target;
         // Как и на старте: play() не ждём (Ж1).
         unawaited(handler.play().catchError((_) {}));
       } else {
-        _visualBaseMs = target;
-        _lastMs = target;
-        _clock
-          ..reset()
-          ..start();
+        _clock.start();
       }
       try {
         _bgPlayer?.play().catchError((_) {});
